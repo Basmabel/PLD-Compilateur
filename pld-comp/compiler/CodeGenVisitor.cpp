@@ -53,7 +53,7 @@ antlrcpp::Any CodeGenVisitor::visitDeclaration(ifccParser::DeclarationContext *c
 antlrcpp::Any CodeGenVisitor::visitAffectation(ifccParser::AffectationContext *context)
 {
 	std::string var =context->VAR()->getText();
-
+	//symboltable->setValue(var, context->value);
 	std::cout<<" 	 movl	$";
 	visitValue(context->value());
 	std::cout<<", -"<<symboltable->getOffset(var)<<"(%rbp)";
@@ -67,6 +67,11 @@ antlrcpp::Any CodeGenVisitor::visitAffectation(ifccParser::AffectationContext *c
 antlrcpp::Any CodeGenVisitor::visitReturn_stmt(ifccParser::Return_stmtContext *context) 
 {
 	std::cout<<" 	 movl	$";
+	if(context->value()->VAR()!= nullptr){
+		std::string name = context->value()->VAR()->getText();
+		int val = stoi(symboltable->);
+		std::cout<<val;
+	}
 	visitValue(context->value());
 	std::cout<<", %eax\n"
 			   "    popq %rbp\n";

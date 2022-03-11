@@ -3,12 +3,20 @@ grammar ifcc;
 axiom : prog ;
 
 prog : INT 'main' OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET ;
-instr : declaration | return_stmt ; 
+instr : declaration | affectation | return_stmt ; 
 declaration: INT VAR SEMICOLON; 
-
+affectation: VAR EQUAL value SEMICOLON;
 return_stmt : RETURN value SEMICOLON;
 value : CONST | VAR;
 
+INT : 'int' ;
+CHAR : 'char' ;
+OPENPAR : '(' ;
+CLOSEPAR : ')' ;
+SEMICOLON : ';' ;
+OPENBRACKET : '{' ;
+CLOSEBRACKET : '}' ;
+EQUAL : '=';
 
 
 RETURN : 'return' ;
@@ -19,10 +27,3 @@ DIRECTIVE : '#' .*? '\n' -> skip ;
 WS    : [ \t\r\n] -> channel(HIDDEN);
 
 
-INT : 'int' ;
-CHAR : 'char' ;
-OPENPAR : '(' ;
-CLOSEPAR : ')' ;
-SEMICOLON : ';' ;
-OPENBRACKET : '{' ;
-CLOSEBRACKET : '}' ;

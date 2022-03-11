@@ -27,6 +27,8 @@ public:
 
     virtual antlrcpp::Any visitDeclaration(ifccParser::DeclarationContext *context) = 0;
 
+    virtual antlrcpp::Any visitAffectation(ifccParser::AffectationContext *context) = 0;
+
     virtual antlrcpp::Any visitReturn_stmt(ifccParser::Return_stmtContext *context) = 0;
 
     virtual antlrcpp::Any visitValue(ifccParser::ValueContext *context) = 0;

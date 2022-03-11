@@ -12,14 +12,14 @@
 class  ifccParser : public antlr4::Parser {
 public:
   enum {
-    T__0 = 1, RETURN = 2, CONST = 3, VAR = 4, COMMENT = 5, DIRECTIVE = 6, 
-    WS = 7, INT = 8, CHAR = 9, OPENPAR = 10, CLOSEPAR = 11, SEMICOLON = 12, 
-    OPENBRACKET = 13, CLOSEBRACKET = 14
+    T__0 = 1, INT = 2, CHAR = 3, OPENPAR = 4, CLOSEPAR = 5, SEMICOLON = 6, 
+    OPENBRACKET = 7, CLOSEBRACKET = 8, EQUAL = 9, RETURN = 10, CONST = 11, 
+    VAR = 12, COMMENT = 13, DIRECTIVE = 14, WS = 15
   };
 
   enum {
-    RuleAxiom = 0, RuleProg = 1, RuleInstr = 2, RuleDeclaration = 3, RuleReturn_stmt = 4, 
-    RuleValue = 5
+    RuleAxiom = 0, RuleProg = 1, RuleInstr = 2, RuleDeclaration = 3, RuleAffectation = 4, 
+    RuleReturn_stmt = 5, RuleValue = 6
   };
 
   ifccParser(antlr4::TokenStream *input);
@@ -36,6 +36,7 @@ public:
   class ProgContext;
   class InstrContext;
   class DeclarationContext;
+  class AffectationContext;
   class Return_stmtContext;
   class ValueContext; 
 
@@ -74,6 +75,7 @@ public:
     InstrContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     DeclarationContext *declaration();
+    AffectationContext *affectation();
     Return_stmtContext *return_stmt();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -95,6 +97,21 @@ public:
   };
 
   DeclarationContext* declaration();
+
+  class  AffectationContext : public antlr4::ParserRuleContext {
+  public:
+    AffectationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *VAR();
+    antlr4::tree::TerminalNode *EQUAL();
+    ValueContext *value();
+    antlr4::tree::TerminalNode *SEMICOLON();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  AffectationContext* affectation();
 
   class  Return_stmtContext : public antlr4::ParserRuleContext {
   public:

@@ -1,0 +1,8 @@
+line 2:8 token recognition error at: 'x'
+line 3:4 token recognition error at: 'x'
+line 3:5 token recognition error at: '='
+line 4:11 token recognition error at: 'x'
+line 2:4 mismatched input 'int' expecting 'return'
+error: syntax error during parsing
+
+return code: 1

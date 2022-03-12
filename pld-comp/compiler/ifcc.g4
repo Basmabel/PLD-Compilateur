@@ -4,7 +4,8 @@ axiom : prog ;
 
 prog : INT 'main' OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET ;
 instr : declaration | affectation | return_stmt ; 
-declaration: INT VAR SEMICOLON; 
+declaration: INT variables* SEMICOLON; 
+variables: VAR | VAR COMMA;
 affectation: VAR EQUAL value SEMICOLON;
 return_stmt : RETURN value SEMICOLON;
 value : CONST | VAR;
@@ -22,6 +23,7 @@ EQUAL : '=';
 RETURN : 'return' ;
 CONST : [0-9]+ ;
 VAR : [a-zA-Z]+;
+COMMA : ',';
 COMMENT : '/*' .*? '*/' -> skip ;
 DIRECTIVE : '#' .*? '\n' -> skip ;
 WS    : [ \t\r\n] -> channel(HIDDEN);

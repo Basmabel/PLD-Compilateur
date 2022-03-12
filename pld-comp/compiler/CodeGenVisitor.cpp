@@ -1,5 +1,7 @@
 #include "CodeGenVisitor.h"
 
+
+
 antlrcpp::Any CodeGenVisitor::visitProg(ifccParser::ProgContext *ctx) 
 {
 	symboltable = new symbolTable();
@@ -28,14 +30,13 @@ antlrcpp::Any CodeGenVisitor::visitProg(ifccParser::ProgContext *ctx)
 antlrcpp::Any CodeGenVisitor::visitInstr(ifccParser::InstrContext *context)
 {
 	
-	if(context->declaration()!= nullptr){
+	if(context->declaration()){
 		visitDeclaration(context->declaration());
-	} else if(context->affectation()!= nullptr){
+	} else if(context->affectation()){
 		visitAffectation(context->affectation());
-	} else if(context->return_stmt()!= nullptr){
+	} else if(context->return_stmt()){
 		visitReturn_stmt(context->return_stmt());
-	}
-	
+	}	
 	
 
 	return 0;
@@ -43,9 +44,20 @@ antlrcpp::Any CodeGenVisitor::visitInstr(ifccParser::InstrContext *context)
 
 antlrcpp::Any CodeGenVisitor::visitDeclaration(ifccParser::DeclarationContext *context)
 {
+	
+	for(int i=0 ; i<context->variables().size(); i++){
+			linectr++;
+			visitVariables(context->variables().at(i));
+	}
+	return 0;
+}
+
+
+antlrcpp::Any CodeGenVisitor::visitVariables(ifccParser::VariablesContext *context){
+	
 	std::string var =context->VAR()->getText();
 
-	symboltable->add(var,4,"int",linectr);
+	symboltable->add(var,"int",linectr);	
 
 	return 0;
 }
@@ -68,11 +80,12 @@ antlrcpp::Any CodeGenVisitor::visitReturn_stmt(ifccParser::Return_stmtContext *c
 {
 	std::cout<<" 	 movl	$";
 	if(context->value()->VAR()!= nullptr){
-		std::string name = context->value()->VAR()->getText();
-		int val = stoi(symboltable->);
-		std::cout<<val;
+		std::string var =context->value()->VAR()->getText();
+		std::cout<<"-"<<symboltable->getOffset(var)<<"(%rbp)";
+	}else{
+		visitValue(context->value());
 	}
-	visitValue(context->value());
+	
 	std::cout<<", %eax\n"
 			   "    popq %rbp\n";
 	return 0;

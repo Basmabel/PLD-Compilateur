@@ -4,8 +4,8 @@ axiom : prog ;
 
 prog : INT 'main' OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET ;
 instr : declaration | affectation | return_stmt ; 
-declaration: INT variables* SEMICOLON; 
-variables: VAR | VAR COMMA;
+declaration: INT variables* VAR SEMICOLON; 
+variables: VAR COMMA;
 affectation: VAR EQUAL value SEMICOLON;
 return_stmt : RETURN value SEMICOLON;
 value : CONST | VAR;

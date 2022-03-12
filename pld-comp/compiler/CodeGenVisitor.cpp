@@ -49,6 +49,10 @@ antlrcpp::Any CodeGenVisitor::visitDeclaration(ifccParser::DeclarationContext *c
 			linectr++;
 			visitVariables(context->variables().at(i));
 	}
+
+	std::string var =context->VAR()->getText();
+
+	symboltable->add(var,"int",linectr);
 	return 0;
 }
 

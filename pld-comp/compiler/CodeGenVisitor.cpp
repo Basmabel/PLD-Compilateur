@@ -52,7 +52,8 @@ antlrcpp::Any CodeGenVisitor::visitDeclaration(ifccParser::DeclarationContext *c
 
 	std::string var =context->VAR()->getText();
 
-	symboltable->add(var,"int",linectr);
+	symboltable->add(var,"int",linectr);	
+	
 	return 0;
 }
 
@@ -70,7 +71,7 @@ antlrcpp::Any CodeGenVisitor::visitAffectation(ifccParser::AffectationContext *c
 {
 	std::string var =context->VAR()->getText();
 	//symboltable->setValue(var, context->value);
-	std::cout<<" 	 movl	$";
+	std::cout<<" 	 movl	";
 	visitValue(context->value());
 	std::cout<<", -"<<symboltable->getOffset(var)<<"(%rbp)";
 	std::cout<<"\n";
@@ -82,7 +83,7 @@ antlrcpp::Any CodeGenVisitor::visitAffectation(ifccParser::AffectationContext *c
 
 antlrcpp::Any CodeGenVisitor::visitReturn_stmt(ifccParser::Return_stmtContext *context) 
 {
-	std::cout<<" 	 movl	$";
+	std::cout<<" 	 movl	";
 	if(context->value()->VAR()!= nullptr){
 		std::string var =context->value()->VAR()->getText();
 		std::cout<<"-"<<symboltable->getOffset(var)<<"(%rbp)";
@@ -90,8 +91,7 @@ antlrcpp::Any CodeGenVisitor::visitReturn_stmt(ifccParser::Return_stmtContext *c
 		visitValue(context->value());
 	}
 	
-	std::cout<<", %eax\n"
-			   "    popq %rbp\n";
+	std::cout<<", %eax\n";
 	return 0;
 }
 
@@ -103,7 +103,7 @@ antlrcpp::Any CodeGenVisitor::visitValue(ifccParser::ValueContext *context)
 		std::cout <<var;
 	}else if(context->CONST()!=nullptr){
 		int val = stoi(context->CONST()->getText());
-		std::cout<<val;
+		std::cout<<"$"<<val;
 	}
 	
 

@@ -1,0 +1,12 @@
+line 7:18 token recognition error at: '+'
+line 4:14 no viable alternative at input 'number1'
+line 4:14 missing '=' at '1'
+line 4:15 mismatched input ',' expecting ';'
+line 4:23 missing '=' at '2'
+line 5:10 extraneous input '1' expecting '='
+line 6:10 extraneous input '2' expecting '='
+line 7:17 mismatched input '1' expecting ';'
+line 7:25 missing '=' at '2'
+error: syntax error during parsing
+
+return code: 1

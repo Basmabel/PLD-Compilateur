@@ -13,8 +13,9 @@ class  ifccLexer : public antlr4::Lexer {
 public:
   enum {
     T__0 = 1, INT = 2, CHAR = 3, OPENPAR = 4, CLOSEPAR = 5, SEMICOLON = 6, 
-    OPENBRACKET = 7, CLOSEBRACKET = 8, EQUAL = 9, RETURN = 10, CONST = 11, 
-    VAR = 12, COMMENT = 13, DIRECTIVE = 14, WS = 15
+    OPENBRACKET = 7, CLOSEBRACKET = 8, EQUAL = 9, PLUS = 10, MINUS = 11, 
+    MULTIPLY = 12, DIVIDE = 13, RETURN = 14, CONST = 15, VAR = 16, COMMA = 17, 
+    COMMENT = 18, DIRECTIVE = 19, WS = 20
   };
 
   ifccLexer(antlr4::CharStream *input);

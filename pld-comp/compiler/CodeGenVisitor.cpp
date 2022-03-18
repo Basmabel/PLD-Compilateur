@@ -6,8 +6,13 @@ antlrcpp::Any CodeGenVisitor::visitProg(ifccParser::ProgContext *ctx)
 {
 	symboltable = new symbolTable();
 	linectr++;
+	#ifdef __APPLE__
+	std::cout<<".globl    _main\n"
+        " _main: \n"
+	#else
 	std::cout<<".globl    main\n"
         " main: \n"
+	#endif
         "    # prologue\n"
         "    pushq %rbp\n"
         "    movq %rsp, %rbp\n"
@@ -15,7 +20,7 @@ antlrcpp::Any CodeGenVisitor::visitProg(ifccParser::ProgContext *ctx)
 		std::cout<<"    #body\n";
 		for(int i=0 ; i<ctx->instr().size(); i++){
 			linectr++;
-			visitInstr(ctx->instr().at(i));
+			visit(ctx->instr().at(i));
 		}
 
 		std::cout<<"    #epilogue\n"
@@ -29,7 +34,7 @@ antlrcpp::Any CodeGenVisitor::visitProg(ifccParser::ProgContext *ctx)
 	return 0;
 }
 
-antlrcpp::Any CodeGenVisitor::visitInstr(ifccParser::InstrContext *context)
+/*antlrcpp::Any CodeGenVisitor::visitInstr(ifccParser::InstrContext *context)
 {
 	
 	if(context->declaration()){
@@ -41,6 +46,21 @@ antlrcpp::Any CodeGenVisitor::visitInstr(ifccParser::InstrContext *context)
 	}
 	
 
+	return 0;
+}*/
+
+antlrcpp::Any CodeGenVisitor::visitDeclarationInstr(ifccParser::DeclarationInstrContext *context){
+	visitDeclaration(context->declaration());
+	return 0;
+}
+
+antlrcpp::Any CodeGenVisitor::visitAffectationInstr(ifccParser::AffectationInstrContext *context){
+	visitAffectation(context->affectation());
+	return 0;
+}
+
+antlrcpp::Any CodeGenVisitor::visitReturn_stmtInstr(ifccParser::Return_stmtInstrContext *context){
+	visitReturn_stmt(context->return_stmt());
 	return 0;
 }
 
@@ -71,20 +91,93 @@ antlrcpp::Any CodeGenVisitor::visitAffectation(ifccParser::AffectationContext *c
 
 	erreurVariableNonDeclare(var);
 
-	std::cout<<" 	 movl	";
-	visitValue(context->value());
+	//std::cout<<" 	 movl	";
+	
 
-	if(context->value()->VAR()){
+	if(context->value()->CONST()){
+		std::cout<<" 	 movl	";
+		int val = (int) visitValue(context->value());
+		std::cout<<"$"<<val;
+	}else{
+		visit(context->value());
+		std::cout<<" 	 movl	%eax,		-"<<symboltable->getOffset(var)<<"(%rbp)\n";
+	}
+
+	/*if(context->value()->VAR()){
 		std::cout<<", %eax\n"
 				   " 	 movl	%eax";		
-	}
+	}*/
 	
-	affichageOffsetVariable(var);
+	
 	std::cout<<"\n";
 	
 	symboltable->setUsed(var,true);
 
 	return 0;
+}
+
+/*antlrcpp::Any CodeGenVisitor::visitExpression(ifccParser::ExpressionContext *context)
+{
+	return 0;
+}*/
+
+antlrcpp::Any CodeGenVisitor::visitPlus(ifccParser::PlusContext *context) 
+{
+	std::string var= visit(context->expression(0));
+	std::cout<<",		-"<<symboltable->getOffset(var)<<"(%rbp)\n";
+	
+	//récuparation du nom de la deuxieme variable
+	std:: string var2=visit(context->expression(1));
+	std::cout<<",		%eax\n";
+	std::cout<<" 	 addl	-"<<symboltable->getOffset(var)<<"(%rbp),		%eax\n";
+	//Creation d'une nouvelle variable résultat
+	countTmp++;
+	std:: string vartmp = "tmp"+countTmp;
+	addSymbol(vartmp);
+	
+	std::cout<<" 	 movl	%eax,		-"<<symboltable->getOffset(vartmp)<<"(%rbp)\n";
+
+
+	return vartmp;
+}
+
+antlrcpp::Any CodeGenVisitor::visitMinus(ifccParser::MinusContext *context) 
+{
+	return 0;
+}
+
+antlrcpp::Any CodeGenVisitor::visitMult(ifccParser::MultContext *context) 
+{
+	return 0;
+}
+
+antlrcpp::Any CodeGenVisitor::visitDivide(ifccParser::DivideContext *context) 
+{
+	return 0;
+}
+
+antlrcpp::Any CodeGenVisitor::visitPar(ifccParser::ParContext *context) 
+{
+	return 0;
+}
+
+antlrcpp::Any CodeGenVisitor::visitVar(ifccParser::VarContext *context) 
+{
+	std::string var =context->VAR()->getText();
+	std::cout<<" 	 movl	-"<<symboltable->getOffset(var)<<"(%rbp)";
+	return var;
+	
+}
+
+antlrcpp::Any CodeGenVisitor::visitConst(ifccParser::ConstContext *context)
+{
+	int val = stoi(context->CONST()->getText());
+	countTmp++;
+	std:: string var = "tmp"+countTmp;
+	addSymbol(var);
+	
+	std::cout<<" 	 movl	$"<<val;
+	return var;
 }
 
 
@@ -98,15 +191,28 @@ antlrcpp::Any CodeGenVisitor::visitReturn_stmt(ifccParser::Return_stmtContext *c
 
 antlrcpp::Any CodeGenVisitor::visitValue(ifccParser::ValueContext *context)
 {
-
-
-	if(context->VAR()){
+	/*if(context->VAR()){
 		std::string var =context->VAR()->getText();
 		erreurVariableNonDeclare(var);
 		affichageOffsetVariable(var);
 	}else if(context->CONST()){
 		int val = stoi(context->CONST()->getText());
 		std::cout<<"$"<<val;
+	}*/
+
+	
+	if(context->expression()){
+		std::string var=visit(context->expression());
+		return var;
+	}else if(context->CONST()){
+		//int val = stoi(context->CONST()->getText());
+		//countTmp++;
+		//addSymbol("tmp"+countTmp);
+		//return val;
+
+		int val = stoi(context->CONST()->getText());
+		//std::cout<<"$"<<val;
+		return val;
 	}
 	
 

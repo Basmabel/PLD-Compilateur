@@ -124,11 +124,10 @@ antlrcpp::Any CodeGenVisitor::visitAffectation(ifccParser::AffectationContext *c
 antlrcpp::Any CodeGenVisitor::visitPlus(ifccParser::PlusContext *context) 
 {
 	std::string var= visit(context->expression(0));
-	std::cout<<",		-"<<symboltable->getOffset(var)<<"(%rbp)\n";
 	
 	//récuparation du nom de la deuxieme variable
 	std:: string var2=visit(context->expression(1));
-	std::cout<<",		%eax\n";
+	std::cout<<" 	 movl %eax,		-"<<symboltable->getOffset(var2)<<"(%rbp)\n";
 	std::cout<<" 	 addl	-"<<symboltable->getOffset(var)<<"(%rbp),		%eax\n";
 	//Creation d'une nouvelle variable résultat
 	countTmp++;
@@ -164,7 +163,7 @@ antlrcpp::Any CodeGenVisitor::visitPar(ifccParser::ParContext *context)
 antlrcpp::Any CodeGenVisitor::visitVar(ifccParser::VarContext *context) 
 {
 	std::string var =context->VAR()->getText();
-	std::cout<<" 	 movl	-"<<symboltable->getOffset(var)<<"(%rbp)";
+	std::cout<<" 	 movl	-"<<symboltable->getOffset(var)<<"(%rbp),		%eax\n";
 	return var;
 	
 }
@@ -176,7 +175,7 @@ antlrcpp::Any CodeGenVisitor::visitConst(ifccParser::ConstContext *context)
 	std:: string var = "tmp"+countTmp;
 	addSymbol(var);
 	
-	std::cout<<" 	 movl	$"<<val;
+	std::cout<<" 	 movl	$"<<val<<",		-"<<symboltable->getOffset(var)<<"(%rbp)\n";
 	return var;
 }
 

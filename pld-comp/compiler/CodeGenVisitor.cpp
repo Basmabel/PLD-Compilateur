@@ -48,7 +48,6 @@ antlrcpp::Any CodeGenVisitor::visitDeclaration(ifccParser::DeclarationContext *c
 {
 	
 	for(int i=0 ; i<context->variables().size(); i++){
-			linectr++;
 			visitVariables(context->variables().at(i));
 	}
 

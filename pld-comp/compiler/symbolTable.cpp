@@ -1,33 +1,61 @@
 #include "symbolTable.h"
 
 
+
 	symbolTable::symbolTable(){}
-	void symbolTable::add(string name, size_t offsetsize, string typeStr, size_t lineSz)
+	void symbolTable::add(string name, string typeStr, size_t lineSz)
 	{
-		offset.insert(make_pair(name, offsetsize));
-		value.insert(make_pair(name, null));
-		type.insert(make_pair(name, typeStr));
-		line.insert(make_pair(name, lineSz));
-		used.insert(make_pair(name, false));
+		size_t index =0;
+		if(typeStr=="int" || typeStr=="char"){
+			index = 4*(symbols.size()+1);
+		}
+
+		symbols.insert(make_pair(name, new symbol(name,index,typeStr,lineSz)));
+
 	
 	}
 	void symbolTable::remove(string name)
 	{
-		offset.erase(name);
-		value.erase(name);
-		type.erase(name);
-		line.erase(name);
-		used.erase(name);
-	}
-	size_t symbolTable::getOffset(string name){
-		return offset.at(name);
-		
-	}
-	int symbolTable::getValue(string name){
-		return value.at(name);
-		
+		symbols.erase(name);
 	}
 
-	void symbolTable:: setValue(string name,int valueIn){
-		value.at(name)= valueIn;
+	void symbolTable::setUsed(string name, bool used){
+		symbols.at(name)->setUsed(used);
+	}
+
+	bool symbolTable::isUsed(string name){
+		return symbols.at(name)->isUsed();
+	}
+
+	size_t symbolTable::getOffset(string name){
+		if(!this->contains(name)){
+			return 0;
+		}
+		return symbols.at(name)->getOffset();
+	}
+
+	string symbolTable::getType(string name){
+		if(!this->contains(name)){
+			return 0;
+		}
+		return symbols.at(name)->getType();
+	}
+
+	bool symbolTable::contains(string name){
+		if(symbols.count(name)>0){
+			return true;
+		}
+		return false;
+	}
+
+	map<string,size_t> symbolTable::checkIfSymbolsUsed(){
+		map<string, size_t> ret;
+
+		for(auto i : symbols){
+			if(!i.second->isUsed()){
+				ret.insert(make_pair(i.first,i.second->getLine()));
+			}
+		}
+
+		return ret;
 	}

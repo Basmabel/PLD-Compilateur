@@ -17,12 +17,14 @@ antlrcpp::Any CodeGenVisitor::visitProg(ifccParser::ProgContext *ctx)
 			linectr++;
 			visitInstr(ctx->instr().at(i));
 		}
-		//visitReturn_stmt(ctx->return_stmt());
-		//visitinstr(ctx->return_stmt());
 
 		std::cout<<"    #epilogue\n"
         "    popq %rbp\n"
         "    ret\n";
+
+		for(auto i : symboltable->checkIfSymbolsUsed()){
+			std::cout<<"warning : variable '"<<i.first<<"' was declared but never referenced"<<endl;
+		}
 
 	return 0;
 }
@@ -36,7 +38,7 @@ antlrcpp::Any CodeGenVisitor::visitInstr(ifccParser::InstrContext *context)
 		visitAffectation(context->affectation());
 	} else if(context->return_stmt()){
 		visitReturn_stmt(context->return_stmt());
-	}	
+	}
 	
 
 	return 0;
@@ -51,31 +53,37 @@ antlrcpp::Any CodeGenVisitor::visitDeclaration(ifccParser::DeclarationContext *c
 	}
 
 	std::string var =context->VAR()->getText();
-
-	symboltable->add(var,"int",linectr);	
+	addSymbol(var);	
 	
 	return 0;
 }
 
 
 antlrcpp::Any CodeGenVisitor::visitVariables(ifccParser::VariablesContext *context){
-	
 	std::string var =context->VAR()->getText();
-
-	symboltable->add(var,"int",linectr);	
-
+	addSymbol(var);
 	return 0;
 }
 
 antlrcpp::Any CodeGenVisitor::visitAffectation(ifccParser::AffectationContext *context)
 {
+
 	std::string var =context->VAR()->getText();
-	//symboltable->setValue(var, context->value);
+
+	erreurVariableNonDeclare(var);
+
 	std::cout<<" 	 movl	";
 	visitValue(context->value());
-	std::cout<<", -"<<symboltable->getOffset(var)<<"(%rbp)";
+
+	if(context->value()->VAR()){
+		std::cout<<", %eax\n"
+				   " 	 movl	%eax";		
+	}
+	
+	affichageOffsetVariable(var);
 	std::cout<<"\n";
 	
+	symboltable->setUsed(var,true);
 
 	return 0;
 }
@@ -84,13 +92,7 @@ antlrcpp::Any CodeGenVisitor::visitAffectation(ifccParser::AffectationContext *c
 antlrcpp::Any CodeGenVisitor::visitReturn_stmt(ifccParser::Return_stmtContext *context) 
 {
 	std::cout<<" 	 movl	";
-	if(context->value()->VAR()!= nullptr){
-		std::string var =context->value()->VAR()->getText();
-		std::cout<<"-"<<symboltable->getOffset(var)<<"(%rbp)";
-	}else{
-		visitValue(context->value());
-	}
-	
+	visitValue(context->value());	
 	std::cout<<", %eax\n";
 	return 0;
 }
@@ -98,10 +100,12 @@ antlrcpp::Any CodeGenVisitor::visitReturn_stmt(ifccParser::Return_stmtContext *c
 antlrcpp::Any CodeGenVisitor::visitValue(ifccParser::ValueContext *context)
 {
 
-	if(context->VAR()!=nullptr){
+
+	if(context->VAR()){
 		std::string var =context->VAR()->getText();
-		std::cout <<var;
-	}else if(context->CONST()!=nullptr){
+		erreurVariableNonDeclare(var);
+		affichageOffsetVariable(var);
+	}else if(context->CONST()){
 		int val = stoi(context->CONST()->getText());
 		std::cout<<"$"<<val;
 	}
@@ -109,4 +113,31 @@ antlrcpp::Any CodeGenVisitor::visitValue(ifccParser::ValueContext *context)
 
 	return 0;
 }
+
+
+
+
+//private methods
+
+void CodeGenVisitor::addSymbol(string var){
+	
+	if(symboltable->contains(var)){
+		std::cerr << "error: redeclaration of '"<<symboltable->getType(var)<<" "<<var<<"'" << endl;
+		exit(1);
+	}
+
+	symboltable->add(var,"int",linectr);
+}
+
+void CodeGenVisitor::affichageOffsetVariable(string var){
+	std::cout<<"-"<<symboltable->getOffset(var)<<"(%rbp)";
+}
+
+void CodeGenVisitor::erreurVariableNonDeclare(string var){
+	if(!symboltable->contains(var)){
+		std::cerr << "error: '"<<var<<"' was not declared in this scope" << endl;
+		exit(1);
+	}
+}
+
 

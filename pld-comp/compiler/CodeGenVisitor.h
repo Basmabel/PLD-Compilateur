@@ -25,6 +25,11 @@ class  CodeGenVisitor : public ifccBaseVisitor {
 
 	private:
 
+		void addSymbol(string var);
+		void affichageOffsetVariable(string var);
+		//void setVariableUsed(string var);
+		void erreurVariableNonDeclare(string var);
+
 		symbolTable *symboltable;
 		int linectr =0;
 

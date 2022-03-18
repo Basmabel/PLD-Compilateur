@@ -6,8 +6,13 @@ antlrcpp::Any CodeGenVisitor::visitProg(ifccParser::ProgContext *ctx)
 {
 	symboltable = new symbolTable();
 	linectr++;
-	std::cout<<".globl    main\n"
-        " main: \n"
+	#ifdef __APPLE__
+	std::cout<<".globl    _main\n"
+        " _main: \n"
+	#else 
+	std::cout<<".globl	main\n"
+		" main: \n"
+	#endif
         "    # prologue\n"
         "    pushq %rbp\n"
         "    movq %rsp, %rbp\n"

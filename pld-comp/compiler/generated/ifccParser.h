@@ -1,5 +1,5 @@
 
-// Generated from ifcc.g4 by ANTLR 4.9.2
+// Generated from ifcc.g4 by ANTLR 4.7.2
 
 #pragma once
 
@@ -22,7 +22,7 @@ public:
     RuleAffectation = 5, RuleReturn_stmt = 6, RuleValue = 7
   };
 
-  explicit ifccParser(antlr4::TokenStream *input);
+  ifccParser(antlr4::TokenStream *input);
   ~ifccParser();
 
   virtual std::string getGrammarFileName() const override;
@@ -47,7 +47,6 @@ public:
     virtual size_t getRuleIndex() const override;
     ProgContext *prog();
 
-
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
   };
@@ -66,7 +65,6 @@ public:
     std::vector<InstrContext *> instr();
     InstrContext* instr(size_t i);
 
-
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
   };
@@ -80,7 +78,6 @@ public:
     DeclarationContext *declaration();
     AffectationContext *affectation();
     Return_stmtContext *return_stmt();
-
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -98,7 +95,6 @@ public:
     std::vector<VariablesContext *> variables();
     VariablesContext* variables(size_t i);
 
-
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
   };
@@ -111,7 +107,6 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *VAR();
     antlr4::tree::TerminalNode *COMMA();
-
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -128,7 +123,6 @@ public:
     ValueContext *value();
     antlr4::tree::TerminalNode *SEMICOLON();
 
-
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
   };
@@ -143,7 +137,6 @@ public:
     ValueContext *value();
     antlr4::tree::TerminalNode *SEMICOLON();
 
-
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
   };
@@ -156,7 +149,6 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *CONST();
     antlr4::tree::TerminalNode *VAR();
-
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    

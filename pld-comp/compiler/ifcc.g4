@@ -18,6 +18,9 @@ SEMICOLON : ';' ;
 OPENBRACKET : '{' ;
 CLOSEBRACKET : '}' ;
 EQUAL : '=';
+PLUS : '+';
+MINUS : '-';
+MULT : '*';
 
 
 RETURN : 'return' ;

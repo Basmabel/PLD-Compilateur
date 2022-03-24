@@ -3,7 +3,8 @@
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/pld-comp/antlr/include"
             ],
             "defines": [],
             "macFrameworkPath": [],

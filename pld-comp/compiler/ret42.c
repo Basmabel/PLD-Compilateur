@@ -1,5 +1,7 @@
 int main() {
-    int x;
-    x=5+5+6;
-    return 42;
+    int a,b;
+    a=3;
+    b=4;
+    a=a+1+b;
+    return a;
 }

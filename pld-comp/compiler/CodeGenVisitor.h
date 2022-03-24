@@ -6,6 +6,8 @@
 #include "symbolTable.h"
 #include <map> 
 
+using namespace std;
+
 
 class  CodeGenVisitor : public ifccBaseVisitor {
 	public:
@@ -27,17 +29,23 @@ class  CodeGenVisitor : public ifccBaseVisitor {
 
 		//virtual antlrcpp::Any visitExpression(ifccParser::ExpressionContext *context) override;
 
-		virtual antlrcpp::Any visitPlus(ifccParser::PlusContext *context) override;
+		virtual antlrcpp::Any visitPlusminus(ifccParser::PlusminusContext *context) override;
 
-		virtual antlrcpp::Any visitMinus(ifccParser::MinusContext *context) override;
+		//virtual antlrcpp::Any visitMinus(ifccParser::MinusContext *context) override;
 
-		virtual antlrcpp::Any visitMult(ifccParser::MultContext *context) override;
+		virtual antlrcpp::Any visitMultdiv(ifccParser::MultdivContext *context) override;
 
-		virtual antlrcpp::Any visitDivide(ifccParser::DivideContext *context) override;
+		//virtual antlrcpp::Any visitDivide(ifccParser::DivideContext *context) override;
 
 		virtual antlrcpp::Any visitPar(ifccParser::ParContext *context) override;
 
 		virtual antlrcpp::Any visitVar(ifccParser::VarContext *context) override;
+
+		virtual antlrcpp::Any visitOppose(ifccParser::OpposeContext *context) override;
+
+		//virtual antlrcpp::Any visitPostfix(ifccParser::PostfixContext *context) override;
+
+		//virtual antlrcpp::Any visitPrefix(ifccParser::PrefixContext *context) override;
 
 		virtual antlrcpp::Any visitConst(ifccParser::ConstContext *context) override;
 
@@ -51,10 +59,13 @@ class  CodeGenVisitor : public ifccBaseVisitor {
 		void affichageOffsetVariable(string var);
 		//void setVariableUsed(string var);
 		void erreurVariableNonDeclare(string var);
+		std::string creationSymboleTemp();
 
 		symbolTable *symboltable;
 		int linectr =0;
+		//int colonctr=0;
 		int countTmp =0;
+
 
 };
 

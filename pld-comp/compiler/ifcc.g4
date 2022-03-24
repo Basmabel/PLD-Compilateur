@@ -6,15 +6,14 @@ prog : INT 'main' OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET ;
 instr : declaration #declarationInstr | affectation #affectationInstr | return_stmt #return_stmtInstr ; 
 declaration: INT variables* VAR SEMICOLON; 
 variables: VAR COMMA;
-affectation: VAR EQUAL value SEMICOLON;
-expression: expression PLUS expression #plus
-| expression MINUS expression #minus
-| expression MULTIPLY expression #mult 
-| expression DIVIDE expression #divide
-| OPENPAR expression CLOSEPAR #par
+affectation: VAR EQUAL expression SEMICOLON;
+expression: OPENPAR expression CLOSEPAR #par
+| expression (MULTIPLY | DIVIDE) expression #multdiv
+| expression (PLUS | MINUS) expression #plusminus
 | VAR #var
+| (MINUS) expression #oppose
 | CONST #const;
-return_stmt : RETURN value SEMICOLON;
+return_stmt : RETURN expression SEMICOLON;
 value : CONST | expression;
 
 INT : 'int' ;
@@ -29,6 +28,8 @@ PLUS : '+' ;
 MINUS : '-' ;
 MULTIPLY : '*' ;
 DIVIDE : '/' ;
+OPM: MULTIPLY | DIVIDE;
+OPA: PLUS | MINUS;
 
 
 RETURN : 'return' ;

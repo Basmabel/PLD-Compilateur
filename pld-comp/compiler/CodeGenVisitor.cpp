@@ -33,7 +33,6 @@ antlrcpp::Any CodeGenVisitor::visitProg(ifccParser::ProgContext *ctx)
 	return 0;
 }
 
-
 antlrcpp::Any CodeGenVisitor::visitDeclarationInstr(ifccParser::DeclarationInstrContext *context){
 	visitDeclaration(context->declaration());
 	return 0;
@@ -62,7 +61,6 @@ antlrcpp::Any CodeGenVisitor::visitDeclaration(ifccParser::DeclarationContext *c
 	return 0;
 }
 
-
 antlrcpp::Any CodeGenVisitor::visitVariables(ifccParser::VariablesContext *context){
 	std::string var =context->VAR()->getText();
 	addSymbol(var);
@@ -73,6 +71,7 @@ antlrcpp::Any CodeGenVisitor::visitAffectation(ifccParser::AffectationContext *c
 {
 
 	std::string var =context->VAR()->getText();
+
 
 	erreurVariableNonDeclare(var);
 
@@ -86,7 +85,9 @@ antlrcpp::Any CodeGenVisitor::visitAffectation(ifccParser::AffectationContext *c
 }
 
 
+
 antlrcpp::Any CodeGenVisitor::visitPlusminus(ifccParser::PlusminusContext *context) 
+
 {
 	bool op = (context->PLUS())? true : false;
 
@@ -94,6 +95,7 @@ antlrcpp::Any CodeGenVisitor::visitPlusminus(ifccParser::PlusminusContext *conte
 	
 	//récuparation du nom de la deuxieme variable
 	std:: string var2=visit(context->expression(1));
+
 
 
 	//Element neutre
@@ -160,18 +162,22 @@ antlrcpp::Any CodeGenVisitor::visitMultdiv(ifccParser::MultdivContext *context)
 	std:: string vartmp = creationSymboleTemp();
 
 
+
 	return vartmp;
 }
 
 antlrcpp::Any CodeGenVisitor::visitPar(ifccParser::ParContext *context) 
 {
+
 	string var = visit(context->expression());
 	return var;	
+
 }
 
 antlrcpp::Any CodeGenVisitor::visitVar(ifccParser::VarContext *context) 
 {
 	std::string var =context->VAR()->getText();
+
 
 	erreurVariableNonDeclare(var);
 
@@ -208,11 +214,13 @@ antlrcpp::Any CodeGenVisitor::visitConst(ifccParser::ConstContext *context)
 
 antlrcpp::Any CodeGenVisitor::visitReturn_stmt(ifccParser::Return_stmtContext *context) 
 {
+
 	
 	std:string ret = visit(context->expression());
 	std::cout<<" 	 movl	-"<<symboltable->getOffset(ret)<<"(%rbp), %eax\n";
 	
 	
+
 	return 0;
 }
 
@@ -222,10 +230,11 @@ antlrcpp::Any CodeGenVisitor::visitValue(ifccParser::ValueContext *context)
 	
 	if(context->expression()){
 		std::string var=visit(context->expression());
+		//std::cout<<" 	 movl	-"<<symboltable->getOffset(var)<<"(%rbp), %eax\n";
 		return var;
 	}else if(context->CONST()){
 		int val = stoi(context->CONST()->getText());
-		
+
 		return val;
 	}
 	

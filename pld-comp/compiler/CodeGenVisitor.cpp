@@ -109,12 +109,12 @@ antlrcpp::Any CodeGenVisitor::visitPlusminus(ifccParser::PlusminusContext *conte
 		}
 	}
 
-	std::cout<<" 	 movl  -"<<symboltable->getOffset(var2)<<"(%rbp), %eax\n";
+	std::cout<<" 	 movl  -"<<symboltable->getOffset(var)<<"(%rbp), %eax\n";
 
 	if(op){
-		std::cout<<" 	 addl	-"<<symboltable->getOffset(var)<<"(%rbp), %eax\n";
+		std::cout<<" 	 addl	-"<<symboltable->getOffset(var2)<<"(%rbp), %eax\n";
 	}else {
-		std::cout<<" 	 subl	-"<<symboltable->getOffset(var)<<"(%rbp), %eax\n";
+		std::cout<<" 	 subl	-"<<symboltable->getOffset(var2)<<"(%rbp), %eax\n";
 	}
 
 	//Creation d'une nouvelle variable résultat

@@ -56,6 +56,40 @@ void IRInstr::gen_asm(ostream &o){
 
 }
 
+IRInstr::BasicBlock(CFG* cfg, string entry_label){
+	this->cfg = cfg;
+	this->label = entry_label;	
+}
+
+void BasicBlock::add_IRInstr(IRInstr::Operation op, Type t, vector<string> params) {
+    instrs.push_back(new IRInstr(this, op, t, params));
+}
+
+void BasicBlock::gen_asm(ostream &o){
+#ifdef _APPLE_
+    if(label == "main"){
+        out << endl << "_main" << ":" << endl;
+    } else {
+        out << endl << label << ":" << endl;
+    }
+#else
+    out << endl << label << ":" << endl;
+#endif
+	if (label == cfg->ast->getName()) {
+        	cfg->gen_asm_prologue(o);
+    	}
+
+    	for (auto instr : instrs) {
+        	instr->gen_asm(o);
+   	}
+
+    	if (exit_true) {
+        	o << "jmp " << exit_true->label << endl;
+    	} else if (!exit_false) {
+        	cfg->gen_asm_epilogue(o);
+    	}
+}
+
 
 CFG::CFG(DefFonction* ast){
     this->ast = ast;

@@ -7,8 +7,10 @@
 	void symbolTable::add(string name, string typeStr, size_t lineSz)
 	{
 		size_t index =0;
-		if(typeStr=="int" || typeStr=="char"){
-			index = 4*(symbols.size()+1);
+		if(typeStr=="int"){
+			index = sizeof(int)*(symbols.size()+1);
+		}else if(typeStr=="char"){
+			index = sizeof(char)*(symbols.size()+1);		
 		}
 
 		symbols.insert(make_pair(name, new symbol(name,index,typeStr,lineSz)));

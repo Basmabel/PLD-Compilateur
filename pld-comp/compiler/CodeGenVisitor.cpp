@@ -26,9 +26,9 @@ antlrcpp::Any CodeGenVisitor::visitProg(ifccParser::ProgContext *ctx)
         "    popq %rbp\n"
         "    ret\n";
 
-		/*for(auto i : symboltable->checkIfSymbolsUsed()){
-			std::cout<<"warning : variable '"<<i.first<<"' was declared but never referenced"<<endl;
-		}*/
+		for(auto i : symboltable->checkIfSymbolsUsed()){
+			std::cerr<<"warning : variable '"<<i.first<<"' was declared but never referenced"<<endl;
+		}
 
 	return 0;
 }
@@ -206,6 +206,7 @@ antlrcpp::Any CodeGenVisitor::visitConst(ifccParser::ConstContext *context)
 	countTmp++;
 	std::string var = "tmp"+std::to_string(countTmp);
 	addSymbol(var);
+	symboltable->setUsed(var,true);
 	
 	std::cout<<" 	 movl	$"<<val<<", -"<<symboltable->getOffset(var)<<"(%rbp)\n";
 	return var;
@@ -273,6 +274,7 @@ std::string CodeGenVisitor::creationSymboleTemp(){
 	countTmp++;
 	std:: string vartmp = "tmp"+std::to_string(countTmp);
 	addSymbol(vartmp);
+	symboltable->setUsed(vartmp,true);
 	
 	std::cout<<" 	 movl	%eax, -"<<symboltable->getOffset(vartmp)<<"(%rbp)\n";
 

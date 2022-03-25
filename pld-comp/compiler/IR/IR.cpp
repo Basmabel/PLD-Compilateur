@@ -168,7 +168,7 @@ void CFG::add_to_symbol_table(string name, Type t, size_t line){
             break;
     }
 
-    symbolTable.add(name,type,line);
+    symbolTable->add(name,type,line);
     nextFreeSymbolIndex++;
 }
 

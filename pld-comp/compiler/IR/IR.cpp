@@ -13,6 +13,7 @@ void IRInstr::gen_asm(ostream &o){
     int varDest;
     int var1;
     int var2;
+    
 +
     switch(op){
         case Operation::ldconst:

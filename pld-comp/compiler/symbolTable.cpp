@@ -3,6 +3,7 @@
 
 
 	symbolTable::symbolTable(){}
+	
 	void symbolTable::add(string name, string typeStr, size_t lineSz)
 	{
 		size_t index =0;
@@ -39,6 +40,13 @@
 			return 0;
 		}
 		return symbols.at(name)->getType();
+	}
+
+	size_t symbolTable::getLine(string name){
+		if(!this->contains(name)){
+			return 0;
+		}
+		return symbols.at(name)->getLine();
 	}
 
 	bool symbolTable::contains(string name){

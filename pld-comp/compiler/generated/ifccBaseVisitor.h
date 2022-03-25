@@ -51,11 +51,7 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitMinus(ifccParser::MinusContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitMult(ifccParser::MultContext *ctx) override {
+  virtual antlrcpp::Any visitPlusminus(ifccParser::PlusminusContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -67,11 +63,11 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitDivide(ifccParser::DivideContext *ctx) override {
+  virtual antlrcpp::Any visitMultdiv(ifccParser::MultdivContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitPlus(ifccParser::PlusContext *ctx) override {
+  virtual antlrcpp::Any visitOppose(ifccParser::OpposeContext *ctx) override {
     return visitChildren(ctx);
   }
 

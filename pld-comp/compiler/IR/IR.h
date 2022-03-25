@@ -22,6 +22,7 @@ class IRInstr {
 	/** The instructions themselves -- feel free to subclass instead */
 	typedef enum {
 		ldconst,
+		neg,
 		copy,
 		add,
 		sub,

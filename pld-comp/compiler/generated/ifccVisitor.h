@@ -37,17 +37,15 @@ public:
 
     virtual antlrcpp::Any visitPar(ifccParser::ParContext *context) = 0;
 
-    virtual antlrcpp::Any visitMinus(ifccParser::MinusContext *context) = 0;
-
-    virtual antlrcpp::Any visitMult(ifccParser::MultContext *context) = 0;
+    virtual antlrcpp::Any visitPlusminus(ifccParser::PlusminusContext *context) = 0;
 
     virtual antlrcpp::Any visitConst(ifccParser::ConstContext *context) = 0;
 
     virtual antlrcpp::Any visitVar(ifccParser::VarContext *context) = 0;
 
-    virtual antlrcpp::Any visitDivide(ifccParser::DivideContext *context) = 0;
+    virtual antlrcpp::Any visitMultdiv(ifccParser::MultdivContext *context) = 0;
 
-    virtual antlrcpp::Any visitPlus(ifccParser::PlusContext *context) = 0;
+    virtual antlrcpp::Any visitOppose(ifccParser::OpposeContext *context) = 0;
 
     virtual antlrcpp::Any visitReturn_stmt(ifccParser::Return_stmtContext *context) = 0;
 

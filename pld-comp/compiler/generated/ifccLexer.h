@@ -14,8 +14,8 @@ public:
   enum {
     T__0 = 1, INT = 2, CHAR = 3, OPENPAR = 4, CLOSEPAR = 5, SEMICOLON = 6, 
     OPENBRACKET = 7, CLOSEBRACKET = 8, EQUAL = 9, PLUS = 10, MINUS = 11, 
-    MULTIPLY = 12, DIVIDE = 13, RETURN = 14, CONST = 15, VAR = 16, COMMA = 17, 
-    COMMENT = 18, DIRECTIVE = 19, WS = 20
+    MULTIPLY = 12, DIVIDE = 13, OPM = 14, OPA = 15, RETURN = 16, CONST = 17, 
+    VAR = 18, COMMA = 19, COMMENT = 20, DIRECTIVE = 21, WS = 22
   };
 
   ifccLexer(antlr4::CharStream *input);

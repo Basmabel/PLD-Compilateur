@@ -1,5 +1,5 @@
 
-// Generated from ifcc.g4 by ANTLR 4.7.2
+// Generated from ifcc.g4 by ANTLR 4.9.2
 
 #pragma once
 
@@ -23,7 +23,15 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitInstr(ifccParser::InstrContext *ctx) override {
+  virtual antlrcpp::Any visitDeclarationInstr(ifccParser::DeclarationInstrContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitAffectationInstr(ifccParser::AffectationInstrContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitReturn_stmtInstr(ifccParser::Return_stmtInstrContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -31,7 +39,35 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitVariables(ifccParser::VariablesContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitAffectation(ifccParser::AffectationContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitPar(ifccParser::ParContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitPlusminus(ifccParser::PlusminusContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitConst(ifccParser::ConstContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitVar(ifccParser::VarContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitMultdiv(ifccParser::MultdivContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitOppose(ifccParser::OpposeContext *ctx) override {
     return visitChildren(ctx);
   }
 

@@ -3,12 +3,18 @@ grammar ifcc;
 axiom : prog ;
 
 prog : INT 'main' OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET ;
-instr : declaration | affectation | return_stmt ; 
+instr : declaration #declarationInstr | affectation #affectationInstr | return_stmt #return_stmtInstr ; 
 declaration: INT variables* VAR SEMICOLON; 
 variables: VAR COMMA;
-affectation: VAR EQUAL value SEMICOLON;
-return_stmt : RETURN value SEMICOLON;
-value : CONST | VAR;
+affectation: VAR EQUAL expression SEMICOLON;
+expression: OPENPAR expression CLOSEPAR #par
+| expression (MULTIPLY | DIVIDE) expression #multdiv
+| expression (PLUS | MINUS) expression #plusminus
+| VAR #var
+| (MINUS) expression #oppose
+| CONST #const;
+return_stmt : RETURN expression SEMICOLON;
+value : CONST | expression;
 
 INT : 'int' ;
 CHAR : 'char' ;
@@ -18,6 +24,12 @@ SEMICOLON : ';' ;
 OPENBRACKET : '{' ;
 CLOSEBRACKET : '}' ;
 EQUAL : '=';
+PLUS : '+' ;
+MINUS : '-' ;
+MULTIPLY : '*' ;
+DIVIDE : '/' ;
+OPM: MULTIPLY | DIVIDE;
+OPA: PLUS | MINUS;
 
 
 RETURN : 'return' ;

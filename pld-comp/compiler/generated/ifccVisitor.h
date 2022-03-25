@@ -1,5 +1,5 @@
 
-// Generated from ifcc.g4 by ANTLR 4.7.2
+// Generated from ifcc.g4 by ANTLR 4.9.2
 
 #pragma once
 
@@ -23,11 +23,29 @@ public:
 
     virtual antlrcpp::Any visitProg(ifccParser::ProgContext *context) = 0;
 
-    virtual antlrcpp::Any visitInstr(ifccParser::InstrContext *context) = 0;
+    virtual antlrcpp::Any visitDeclarationInstr(ifccParser::DeclarationInstrContext *context) = 0;
+
+    virtual antlrcpp::Any visitAffectationInstr(ifccParser::AffectationInstrContext *context) = 0;
+
+    virtual antlrcpp::Any visitReturn_stmtInstr(ifccParser::Return_stmtInstrContext *context) = 0;
 
     virtual antlrcpp::Any visitDeclaration(ifccParser::DeclarationContext *context) = 0;
 
+    virtual antlrcpp::Any visitVariables(ifccParser::VariablesContext *context) = 0;
+
     virtual antlrcpp::Any visitAffectation(ifccParser::AffectationContext *context) = 0;
+
+    virtual antlrcpp::Any visitPar(ifccParser::ParContext *context) = 0;
+
+    virtual antlrcpp::Any visitPlusminus(ifccParser::PlusminusContext *context) = 0;
+
+    virtual antlrcpp::Any visitConst(ifccParser::ConstContext *context) = 0;
+
+    virtual antlrcpp::Any visitVar(ifccParser::VarContext *context) = 0;
+
+    virtual antlrcpp::Any visitMultdiv(ifccParser::MultdivContext *context) = 0;
+
+    virtual antlrcpp::Any visitOppose(ifccParser::OpposeContext *context) = 0;
 
     virtual antlrcpp::Any visitReturn_stmt(ifccParser::Return_stmtContext *context) = 0;
 

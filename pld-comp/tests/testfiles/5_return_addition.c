@@ -1,8 +1,8 @@
 #include <stdio.h>
 int main() {    
 
-    int number1, number2;
-    number1 = 5;
-    number2 = 4;
-    return number1+number2;
+    int a, b;
+    a = 5;
+    b = 4;
+    return a+b;
 }

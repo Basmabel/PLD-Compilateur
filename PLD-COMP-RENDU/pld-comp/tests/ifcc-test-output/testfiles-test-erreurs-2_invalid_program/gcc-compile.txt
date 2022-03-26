@@ -1,0 +1,20 @@
+input.c:1:4: error: stray ‘\303’ in program
+    1 | Si ça c'est du C, moi je suis prof de manga.
+      |    ^
+input.c:1:5: error: stray ‘\247’ in program
+    1 | Si ça c'est du C, moi je suis prof de manga.
+      |     ^
+input.c:1:1: error: unknown type name ‘Si’
+    1 | Si ça c'est du C, moi je suis prof de manga.
+      | ^~
+input.c:1:8: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘c’
+    1 | Si ça c'est du C, moi je suis prof de manga.
+      |        ^
+input.c:1:9: warning: missing terminating ' character
+    1 | Si ça c'est du C, moi je suis prof de manga.
+      |         ^
+input.c:1:9: error: missing terminating ' character
+    1 | Si ça c'est du C, moi je suis prof de manga.
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+return code: 1

@@ -1,0 +1,3 @@
+<source>:6: error: 'c' was not declared in this scope
+
+return code: 1

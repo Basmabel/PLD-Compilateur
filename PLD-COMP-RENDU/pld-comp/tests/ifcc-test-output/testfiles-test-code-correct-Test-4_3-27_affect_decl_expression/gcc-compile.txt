@@ -1,0 +1,6 @@
+input.c: In function ‘main’:
+input.c:1:5: warning: type of ‘args’ defaults to ‘int’ [-Wimplicit-int]
+    1 | int main(args){
+      |     ^~~~
+
+return code: 0

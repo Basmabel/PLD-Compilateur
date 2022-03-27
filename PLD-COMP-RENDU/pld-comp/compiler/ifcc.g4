@@ -8,7 +8,7 @@ declaration: INT variables* VAR SEMICOLON;
 variables: VAR COMMA;
 affectation: VAR EQUAL expression SEMICOLON;
 expression: OPENPAR expression CLOSEPAR #par
-| (MINUS) expression #oppose
+| (MINUS) expression #oppose 
 | expression (MULTIPLY | DIVIDE) expression #multdiv
 | expression (PLUS | MINUS) expression #plusminus
 | VAR #var

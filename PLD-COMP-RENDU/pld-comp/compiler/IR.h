@@ -25,6 +25,7 @@ typedef enum {
 		DIV,
 		CONST,
 		MOV,
+		CALL,
 		RET,
 		DEFAULT
 } Type;

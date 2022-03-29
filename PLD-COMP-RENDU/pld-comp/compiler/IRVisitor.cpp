@@ -64,6 +64,35 @@ antlrcpp::Any IRVisitor::visitDeclaration(ifccParser::DeclarationContext *contex
 	return 0;
 }
 
+/*
+*	Visite l'appel de fonction
+*/
+antlrcpp::Any IRVisitor::visitFunctionCall(ifccParser::FunctionCallContext *context)
+{
+	std::string nomFonction = context->NAME()->getText();
+
+	/*if(nomFonction == "putchar"){
+
+	}
+
+	if (!symbolTable->symbolExists(nomFonction, FUNCTION))
+	{
+		throwError(new AlreadyDeclaredSymbolError(funcName, context->NAME()));
+		return nullptr;
+	}
+
+	FuncSymbol *symbol = (FuncSymbol *)symbolTable->getSymbol(funcName);
+	symbol->used();
+
+	visitChildren(context);*/
+
+	vector<string> params;
+	params.push_back(nomFonction);
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::call, Type::CALL, params);
+	
+	return 0;
+}
+
 
 /*
 *	Visite d'une variable, retourne son nom 

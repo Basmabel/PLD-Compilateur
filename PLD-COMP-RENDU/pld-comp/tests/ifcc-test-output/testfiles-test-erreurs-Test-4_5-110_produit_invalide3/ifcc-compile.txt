@@ -1,5 +1,0 @@
-line 5:18 token recognition error at: ':'
-line 3:11 mismatched input '*' expecting {'(', '-', CONST, VAR}
-error: syntax error during parsing
-
-return code: 1

@@ -1,0 +1,4 @@
+line 4:4 missing ';' at 'var'
+error: syntax error during parsing
+
+return code: 1

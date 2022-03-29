@@ -1,0 +1,6 @@
+input.c:6:16: error: expression is not assignable
+    res = (10*a=b)/(3*c*20+5);
+           ~~~~^
+1 error generated.
+
+return code: 1

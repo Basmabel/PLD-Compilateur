@@ -1,0 +1,18 @@
+input.c:5:9: warning: using the result of an assignment as a condition without parentheses [-Wparentheses]
+    if(a=a+4){
+       ~^~~~
+input.c:5:9: note: place parentheses around the assignment to silence this warning
+    if(a=a+4){
+        ^
+       (    )
+input.c:5:9: note: use '==' to turn this assignment into an equality comparison
+    if(a=a+4){
+        ^
+        ==
+input.c:7:17: error: expected ';' after expression
+    }else(a=a+2){
+                ^
+                ;
+1 warning and 1 error generated.
+
+return code: 1

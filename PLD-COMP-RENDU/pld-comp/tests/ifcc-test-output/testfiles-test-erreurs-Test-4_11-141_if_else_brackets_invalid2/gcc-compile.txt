@@ -1,0 +1,12 @@
+input.c:6:6: error: expected identifier or '('
+    }else {
+     ^
+input.c:9:5: error: expected identifier or '('
+    return a;
+    ^
+input.c:10:1: error: extraneous closing brace ('}')
+}
+^
+3 errors generated.
+
+return code: 1

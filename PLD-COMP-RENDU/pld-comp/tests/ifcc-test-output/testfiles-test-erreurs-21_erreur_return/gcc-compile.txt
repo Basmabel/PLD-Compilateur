@@ -1,0 +1,14 @@
+input.c:3:21: error: expression is not assignable
+    var = 2*var + 2 = 4
+          ~~~~~~~~~ ^
+input.c:3:24: error: expected ';' after expression
+    var = 2*var + 2 = 4
+                       ^
+                       ;
+input.c:4:15: error: expected ';' after return statement
+    return var
+              ^
+              ;
+3 errors generated.
+
+return code: 1

@@ -1,0 +1,7 @@
+line 2:10 no viable alternative at input 'a ='
+line 3:10 no viable alternative at input 'b ='
+line 4:7 missing '=' at '('
+line 4:10 mismatched input '=' expecting ')'
+error: syntax error during parsing
+
+return code: 1

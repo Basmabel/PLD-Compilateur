@@ -1,0 +1,3 @@
+<source>:7: error: 'e' was not declared in this scope
+
+return code: 1

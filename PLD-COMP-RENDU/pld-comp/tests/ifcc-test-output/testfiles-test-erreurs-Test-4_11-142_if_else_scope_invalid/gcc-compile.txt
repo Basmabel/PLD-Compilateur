@@ -1,0 +1,9 @@
+input.c:11:5: error: use of undeclared identifier 'i'
+    i=8;
+    ^
+input.c:12:12: error: use of undeclared identifier 'i'
+    return i;
+           ^
+2 errors generated.
+
+return code: 1

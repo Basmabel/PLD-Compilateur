@@ -1,0 +1,6 @@
+input.c:3:13: warning: division by zero is undefined [-Wdivision-by-zero]
+    return 2/0;
+            ^~
+1 warning generated.
+
+return code: 0

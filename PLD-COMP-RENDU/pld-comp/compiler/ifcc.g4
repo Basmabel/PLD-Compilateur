@@ -27,6 +27,13 @@ PLUS : '+' ;
 MINUS : '-' ;
 MULTIPLY : '*' ;
 DIVIDE : '/' ;
+DIFFERENT : '!' ;
+GREATER : '>' ;
+SMALLER : '<' ;
+ISEQUAL : '==' ;
+ISDIFFERENT : '!=' ; 
+GREATEREQUAL : '>=' ;
+SMALLEREQUAL : '<=' ;
 OPM: MULTIPLY | DIVIDE;
 OPA: PLUS | MINUS;
 

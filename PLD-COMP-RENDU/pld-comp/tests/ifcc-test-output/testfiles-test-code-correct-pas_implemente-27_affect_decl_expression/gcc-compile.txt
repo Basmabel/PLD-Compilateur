@@ -1,0 +1,6 @@
+input.c:1:5: warning: only one parameter on 'main' declaration [-Wmain]
+int main(args){
+    ^
+1 warning generated.
+
+return code: 0

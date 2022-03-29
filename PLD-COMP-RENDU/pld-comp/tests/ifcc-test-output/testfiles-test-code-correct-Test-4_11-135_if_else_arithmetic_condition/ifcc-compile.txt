@@ -1,0 +1,6 @@
+line 12:18 token recognition error at: ':'
+line 5:6 missing '=' at '('
+line 5:11 mismatched input '=' expecting ')'
+error: syntax error during parsing
+
+return code: 1

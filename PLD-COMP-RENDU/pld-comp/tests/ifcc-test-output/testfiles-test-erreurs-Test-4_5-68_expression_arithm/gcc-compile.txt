@@ -1,0 +1,9 @@
+input.c:7:5: error: use of undeclared identifier 'e'
+    e = 2;
+    ^
+input.c:8:15: error: use of undeclared identifier 'e'
+    res = 5*a*e+b*(b+c+d);
+              ^
+2 errors generated.
+
+return code: 1

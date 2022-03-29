@@ -1,0 +1,6 @@
+input.c:3:14: error: indirection requires pointer operand ('int' invalid)
+    return 2**1;
+             ^~
+1 error generated.
+
+return code: 1

@@ -1,0 +1,6 @@
+line 11:18 token recognition error at: ':'
+line 4:6 missing '=' at '('
+line 5:7 missing ';' at 'a'
+error: syntax error during parsing
+
+return code: 1

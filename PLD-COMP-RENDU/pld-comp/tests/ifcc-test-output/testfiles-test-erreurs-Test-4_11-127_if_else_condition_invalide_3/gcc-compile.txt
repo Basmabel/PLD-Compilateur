@@ -1,0 +1,6 @@
+input.c:3:9: error: expected expression
+    if (= 4) {
+        ^
+1 error generated.
+
+return code: 1

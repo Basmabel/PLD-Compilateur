@@ -1,0 +1,7 @@
+input.c:2:13: error: expected ';' after return statement
+   return 55
+            ^
+            ;
+1 error generated.
+
+return code: 1

@@ -1,0 +1,7 @@
+input.c:4:22: error: expected ';' at end of declaration
+    int var2 = var2/3
+                     ^
+                     ;
+1 error generated.
+
+return code: 1

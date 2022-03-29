@@ -1,0 +1,12 @@
+input.c:6:5: error: expected expression
+    else {
+    ^
+input.c:11:28: error: expected '}'
+//expected result : invalid
+                           ^
+input.c:1:12: note: to match this '{'
+int main (){
+           ^
+2 errors generated.
+
+return code: 1

@@ -1,0 +1,9 @@
+input.c:2:11: error: redefinition of 'x'
+    int x,x;
+          ^
+input.c:2:9: note: previous definition is here
+    int x,x;
+        ^
+1 error generated.
+
+return code: 1

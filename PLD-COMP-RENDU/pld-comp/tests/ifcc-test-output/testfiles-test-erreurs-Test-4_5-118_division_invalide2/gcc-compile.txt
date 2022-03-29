@@ -1,0 +1,6 @@
+input.c:3:14: error: expected expression
+    return 2/;
+             ^
+1 error generated.
+
+return code: 1

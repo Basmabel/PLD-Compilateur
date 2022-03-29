@@ -1,0 +1,6 @@
+input.c:2:12: error: use of undeclared identifier 'x'
+    return x;
+           ^
+1 error generated.
+
+return code: 1

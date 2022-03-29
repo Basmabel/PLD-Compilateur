@@ -1,0 +1,7 @@
+line 2:10 no viable alternative at input 'a ='
+line 3:7 extraneous input '(' expecting '='
+line 3:11 mismatched input ')' expecting ';'
+line 4:9 mismatched input '+' expecting '='
+error: syntax error during parsing
+
+return code: 1

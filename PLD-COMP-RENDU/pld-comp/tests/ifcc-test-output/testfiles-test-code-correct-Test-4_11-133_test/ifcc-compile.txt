@@ -1,4 +1,0 @@
-line 1:0 mismatched input '<EOF>' expecting 'int'
-error: syntax error during parsing
-
-return code: 1

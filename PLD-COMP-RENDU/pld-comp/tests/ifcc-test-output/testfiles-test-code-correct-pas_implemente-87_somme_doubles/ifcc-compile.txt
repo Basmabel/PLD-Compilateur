@@ -1,9 +1,0 @@
-line 3:12 token recognition error at: '.'
-line 3:16 token recognition error at: '.'
-line 3:20 token recognition error at: '.'
-line 3:24 token recognition error at: '.'
-line 5:18 token recognition error at: ':'
-line 3:13 mismatched input '2' expecting ';'
-error: syntax error during parsing
-
-return code: 1

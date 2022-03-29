@@ -1,0 +1,4 @@
+line 1:4 mismatched input 'boo' expecting 'main'
+error: syntax error during parsing
+
+return code: 1

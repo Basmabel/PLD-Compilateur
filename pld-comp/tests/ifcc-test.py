@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# This scripts runs GCC as well as IFCC on each test-case provided and compares the results.
+# This scripts runs GCC as well as IF CC on each test-case provided and compares the results.
 #
 # input: the test-cases are specified either as individual
 #         command-line arguments, or as part of a directory tree

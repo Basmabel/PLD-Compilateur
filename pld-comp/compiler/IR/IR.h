@@ -7,12 +7,18 @@
 #include <initializer_list>
 
 // Declarations from the parser -- replace with your own
-#include "type.h"
 #include "symboleTable.h"
+
+using namespace std;
 
 class BasicBlock;
 class CFG;
 class DefFonction;
+
+typedef enum {
+		INT,
+		CHAR
+} Type;
 
 
 //! The class for one 3-address instruction
@@ -115,9 +121,7 @@ class BasicBlock {
  */
 class CFG {
  public:
-	CFG(DefFonction* ast);
-
-	DefFonction* ast; /**< The AST this CFG comes from */
+	CFG();
 	
 	void add_bb(BasicBlock* bb); 
 
@@ -128,23 +132,23 @@ class CFG {
 	void gen_asm_epilogue(ostream& o);
 
 	// symbol table methods
-	void add_to_symbol_table(string name, Type t);
-	string create_new_tempvar(Type t);
-	int get_var_index(string name);
+	void add_to_symbol_table(string name, Type t, size_t line);
+	string create_new_tempvar(Type t, string blockName, size_t line);
+	size_t get_var_index(string name);
 	Type get_var_type(string name);
 
 	// basic block management
-	string new_BB_name();
+	string new_BB_name(size_t line);
 	BasicBlock* current_bb;
+	BasicBlock* return_bb;
 
  protected:
 	symboleTable* symbolTable;
-	map <string, Type> SymbolType; /**< part of the symbol table  */
-	map <string, int> SymbolIndex; /**< part of the symbol table  */
 	int nextFreeSymbolIndex; /**< to allocate new symbols in the symbol table */
 	int nextBBnumber; /**< just for naming */
 	
 	vector <BasicBlock*> bbs; /**< all the basic blocks of this CFG*/
+	
 };
 
 

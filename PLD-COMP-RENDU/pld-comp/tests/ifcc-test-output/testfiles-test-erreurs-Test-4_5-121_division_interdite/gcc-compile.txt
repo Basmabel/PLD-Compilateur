@@ -1,0 +1,6 @@
+input.c: In function ‘main’:
+input.c:3:13: warning: division by zero [-Wdiv-by-zero]
+    3 |     return 2/0;
+      |             ^
+
+return code: 0

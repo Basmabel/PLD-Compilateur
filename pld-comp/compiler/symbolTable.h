@@ -40,7 +40,7 @@ class  symbolTable {
 
 	private:
 
-	//------------------------------------------------------------------ Attributes
+	//------------------------------------------------------------------ Attributs
 
 		map<string,symbol*> symbols;
 		size_t temp=0;

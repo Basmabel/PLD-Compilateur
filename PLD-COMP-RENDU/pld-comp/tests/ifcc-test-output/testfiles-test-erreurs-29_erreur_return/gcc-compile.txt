@@ -1,0 +1,13 @@
+input.c: In function ‘main’:
+input.c:3:12: error: expected ‘;’ before ‘var’
+    3 |     var = 5
+      |            ^
+      |            ;
+    4 |     var = var*4+var/2;
+      |     ~~~     
+input.c: At top level:
+input.c:6:1: error: expected identifier or ‘(’ before ‘return’
+    6 | return var;
+      | ^~~~~~
+
+return code: 1

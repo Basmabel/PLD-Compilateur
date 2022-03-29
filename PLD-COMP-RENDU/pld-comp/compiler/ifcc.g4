@@ -3,7 +3,10 @@ grammar ifcc;
 axiom : prog ;
 
 prog : INT 'main' OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET ;
-instr : declaration #declarationInstr | affectation #affectationInstr | return_stmt #return_stmtInstr ; 
+instr :     declaration     #declarationInstr 
+        |   affectation     #affectationInstr 
+        |   return_stmt     #return_stmtInstr 
+        |   if_then_else    #if_then_elseInstr ; 
 declaration: INT variables* VAR SEMICOLON; 
 variables: VAR COMMA;
 affectation: VAR EQUAL expression SEMICOLON;
@@ -13,6 +16,7 @@ expression: OPENPAR expression CLOSEPAR #par
 | expression (PLUS | MINUS) expression #plusminus
 | VAR #var
 | CONST #const;
+if_then_else : IF OPENPAR expression CLOSEPAR OPENBRACKET instr* CLOSEBRACKET ELSE OPENBRACKET instr* CLOSEBRACKET ;
 return_stmt : RETURN expression SEMICOLON;
 
 INT : 'int' ;
@@ -22,18 +26,23 @@ CLOSEPAR : ')' ;
 SEMICOLON : ';' ;
 OPENBRACKET : '{' ;
 CLOSEBRACKET : '}' ;
-EQUAL : '=';
-PLUS : '+' ;
-MINUS : '-' ;
-MULTIPLY : '*' ;
-DIVIDE : '/' ;
-DIFFERENT : '!' ;
-GREATER : '>' ;
-SMALLER : '<' ;
 ISEQUAL : '==' ;
 ISDIFFERENT : '!=' ; 
 GREATEREQUAL : '>=' ;
 SMALLEREQUAL : '<=' ;
+EQUAL : '=';
+DIFFERENT : '!' ;
+GREATER : '>' ;
+SMALLER : '<' ;
+PLUS : '+' ;
+MINUS : '-' ;
+MULTIPLY : '*' ;
+DIVIDE : '/' ;
+AND : '&' ;
+OR : '|' ;
+IF : 'if' ;
+ELSE : 'else' ;
+
 OPM: MULTIPLY | DIVIDE;
 OPA: PLUS | MINUS;
 
@@ -45,5 +54,3 @@ COMMA : ',';
 COMMENT : '/*' .*? '*/' -> skip ;
 DIRECTIVE : '#' .*? '\n' -> skip ;
 WS    : [ \t\r\n] -> channel(HIDDEN);
-
-

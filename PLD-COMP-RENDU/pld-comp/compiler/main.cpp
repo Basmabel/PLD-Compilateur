@@ -9,6 +9,7 @@
 #include "generated/ifccBaseVisitor.h"
 
 #include "CodeGenVisitor.h"
+#include "IRVisitor.h"
 
 using namespace antlr4;
 using namespace std;
@@ -47,5 +48,8 @@ int main(int argn, const char **argv)
   CodeGenVisitor v;
   v.visit(tree);
 
+  /*IRVisitor ir;
+  ir.visit(tree);
+*/
   return 0;
 }

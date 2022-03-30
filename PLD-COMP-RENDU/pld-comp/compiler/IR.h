@@ -22,9 +22,14 @@ typedef enum {
 		SUB,
 		MUL,
 		NEG,
+		SETZ,
 		DIV,
+		AND,
+		OR,
+		XOR,
 		CONST,
 		MOV,
+		WMEM,
 		RET,
 		DEFAULT
 } Type;
@@ -38,6 +43,7 @@ class IRInstr {
 	typedef enum {
 		ldconst,
 		neg,
+		setz,
 		copy,
 		add,
 		sub,
@@ -45,6 +51,9 @@ class IRInstr {
 		mov,
 		ret,
 		div,
+		andq,
+		orq,
+		xorq,
 		rmem,
 		wmem,
 		call, 
@@ -144,16 +153,16 @@ class CFG {
 	void gen_asm_epilogue(ostream& o);
 
 	// symbol table methods
-	void add_to_symbol_table(string name, Type t, size_t line);
-	void redeclarationError(size_t linectr, string name);
-	void erreurVariableNonDeclare(string name, size_t linectr);
-	string create_new_tempvar(Type t, string blockName, size_t line);
-	size_t get_var_index(string name);
+	void add_to_symbol_table(string name, Type t, int line);
+	void redeclarationError(int linectr, string name);
+	void erreurVariableNonDeclare(string name, int linectr);
+	string create_new_tempvar(Type t, string blockName, int line);
+	int get_var_index(string name);
 	Type get_var_type(string name);
 	void set_var_used(string name, bool used);
 
 	// basic block management
-	string new_BB_name(size_t line);
+	string new_BB_name(int line);
 	BasicBlock* current_bb;
 	BasicBlock* return_bb;
 

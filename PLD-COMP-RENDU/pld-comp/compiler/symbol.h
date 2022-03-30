@@ -24,25 +24,28 @@ class  symbol{
         
         public:
 		
-                symbol(string name, size_t offset, string type, size_t line);
+                symbol(string name, int offset, string type, int line);
 
                 string getName();
-                size_t getOffset();
+                int getOffset();
                 string getType();
-                size_t getLine();
+                int getLine();
                 bool isUsed();
-                
+                bool isNull();
+
                 void setUsed(bool used);
+                void setNull(bool null);
 
 	private:
 
         //------------------------------------------------------------------ Attributes
 
                 string name;
-                size_t offset;
+                int offset;
                 string type;
-                size_t line;
+                int line;
                 bool used;
+                bool null;
 
 };
 #endif //SYMBOL_H

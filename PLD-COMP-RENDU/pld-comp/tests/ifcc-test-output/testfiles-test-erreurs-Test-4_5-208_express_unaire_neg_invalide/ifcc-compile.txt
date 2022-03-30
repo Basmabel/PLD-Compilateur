@@ -1,0 +1,4 @@
+line 3:4 extraneous input '!' expecting {'int', '}', 'return', VAR}
+error: syntax error during parsing
+
+return code: 1

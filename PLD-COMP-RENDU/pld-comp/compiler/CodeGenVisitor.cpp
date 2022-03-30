@@ -65,6 +65,7 @@ antlrcpp::Any CodeGenVisitor::visitReturn_stmtInstr(ifccParser::Return_stmtInstr
 }
 
 
+
 /*
 *	Visite la déclaration de variables, les ajoute à la table des symboles mais ne génère pas de code assembleur
 */
@@ -99,7 +100,7 @@ antlrcpp::Any CodeGenVisitor::visitVariables(ifccParser::VariablesContext *conte
 antlrcpp::Any CodeGenVisitor::visitAffectation(ifccParser::AffectationContext *context)
 {
 
-	std::string var =context->VAR()->getText();
+	std::string var =visit(context->lvalue());
 
 	erreurVariableNonDeclare(var);
 
@@ -109,6 +110,12 @@ antlrcpp::Any CodeGenVisitor::visitAffectation(ifccParser::AffectationContext *c
 	
 	symboltable->setUsed(var,true);
 
+	return 0;
+}
+
+
+
+antlrcpp::Any CodeGenVisitor::visitLvalVar(ifccParser::LvalVarContext *context){
 	return 0;
 }
 
@@ -245,6 +252,38 @@ antlrcpp::Any CodeGenVisitor::visitOppose(ifccParser::OpposeContext *context){
 	std:: string vartmp = creationSymboleTemp();
 
 	return vartmp;
+}
+
+antlrcpp::Any CodeGenVisitor::visitNegation(ifccParser::NegationContext *context){
+	return 0;
+}
+
+/*
+*	Visite d'un et logique.
+*	Récupère le nom des variables var obtenues par la visite des expressions précédant et suivant le &.
+*	Stock et retourne le nom du résultat dans une nouvelle variable temporaire
+*/
+antlrcpp::Any CodeGenVisitor::visitAndlogiq(ifccParser::AndlogiqContext *context){
+	return 0;
+}
+
+
+/*
+*	Visite d'un xor logique.
+*	Récupère le nom des variables var obtenues par la visite des expressions précédant et suivant le ^.
+*	Stock et retourne le nom du résultat dans une nouvelle variable temporaire
+*/
+antlrcpp::Any CodeGenVisitor::visitXorlogiq(ifccParser::XorlogiqContext *context){
+	return 0;
+}
+
+/*
+*	Visite d'un ou logique.
+*	Récupère le nom des variables var obtenues par la visite des expressions précédant et suivant le |.
+*	Stock et retourne le nom du résultat dans une nouvelle variable temporaire
+*/
+antlrcpp::Any CodeGenVisitor::visitOrlogiq(ifccParser::OrlogiqContext *context){
+	return 0;
 }
 
 

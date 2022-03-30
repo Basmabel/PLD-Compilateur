@@ -1,36 +1,54 @@
 .globl    main
  main: 
-    # prologue
+    #prologue
     pushq %rbp
     movq %rsp, %rbp
-
-    #body
- 	 movl	$1, -16(%rbp)
-	 movl   -16(%rbp), %eax
-	 movl   %eax, -4(%rbp)
- 	 movl	$2, -20(%rbp)
-	 movl   -20(%rbp), %eax
-	 movl   %eax, -8(%rbp)
- 	 movl	$3, -24(%rbp)
-	 movl   -24(%rbp), %eax
-	 movl   %eax, -12(%rbp)
- 	 movl	$4, -32(%rbp)
- 	 movl  -32(%rbp), %eax
- 	 imul	-4(%rbp), %eax
- 	 movl	%eax, -36(%rbp)
- 	 movl	$5, -40(%rbp)
- 	 movl  -36(%rbp), %eax
- 	 addl	-40(%rbp), %eax
- 	 movl	%eax, -44(%rbp)
- 	 movl  -12(%rbp), %eax
- 	 imul	-8(%rbp), %eax
- 	 movl	%eax, -48(%rbp)
- 	 movl  -44(%rbp), %eax
- 	 addl	-48(%rbp), %eax
- 	 movl	%eax, -52(%rbp)
-	 movl   -52(%rbp), %eax
-	 movl   %eax, -28(%rbp)
- 	 movl	-28(%rbp), %eax
+    movq    $1, -32(%rbp)
+    movq    $-8, -40(%rbp)
+    movq    %rbp, %rax
+    addq    -40(%rbp), %rax
+    movq    %rax, -40(%rbp)
+    movq    -40(%rbp), %rax
+    movq    -32(%rbp), %r10
+    movq    %r10, (%rax)
+    movq    $2, -48(%rbp)
+    movq    $-16, -56(%rbp)
+    movq    %rbp, %rax
+    addq    -56(%rbp), %rax
+    movq    %rax, -56(%rbp)
+    movq    -56(%rbp), %rax
+    movq    -48(%rbp), %r10
+    movq    %r10, (%rax)
+    movq    $3, -64(%rbp)
+    movq    $-24, -72(%rbp)
+    movq    %rbp, %rax
+    addq    -72(%rbp), %rax
+    movq    %rax, -72(%rbp)
+    movq    -72(%rbp), %rax
+    movq    -64(%rbp), %r10
+    movq    %r10, (%rax)
+    movq    $4, -88(%rbp)
+    movq    -88(%rbp), %rax
+    imulq    -8(%rbp), %rax
+    movq    %rax, -96(%rbp)
+    movq    $5, -104(%rbp)
+    movq    -96(%rbp), %rax
+    addq    -104(%rbp), %rax
+    movq    %rax, -112(%rbp)
+    movq    -24(%rbp), %rax
+    imulq    -16(%rbp), %rax
+    movq    %rax, -120(%rbp)
+    movq    -112(%rbp), %rax
+    addq    -120(%rbp), %rax
+    movq    %rax, -128(%rbp)
+    movq    $-80, -136(%rbp)
+    movq    %rbp, %rax
+    addq    -136(%rbp), %rax
+    movq    %rax, -136(%rbp)
+    movq    -136(%rbp), %rax
+    movq    -128(%rbp), %r10
+    movq    %r10, (%rax)
+    movq    -80(%rbp), %rax
     #epilogue
     popq %rbp
     ret

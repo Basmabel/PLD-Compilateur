@@ -1,45 +1,63 @@
 .globl    main
  main: 
-    # prologue
+    #prologue
     pushq %rbp
     movq %rsp, %rbp
-
-    #body
- 	 movl	$4, -20(%rbp)
-	 movl   -20(%rbp), %eax
-	 movl   %eax, -4(%rbp)
- 	 movl	$1, -24(%rbp)
-	 movl   -24(%rbp), %eax
-	 movl   %eax, -8(%rbp)
- 	 movl	$3, -28(%rbp)
-	 movl   -28(%rbp), %eax
-	 movl   %eax, -12(%rbp)
- 	 movl	$10, -32(%rbp)
- 	 movl  -4(%rbp), %eax
- 	 addl	-8(%rbp), %eax
- 	 movl	%eax, -36(%rbp)
- 	 movl  -36(%rbp), %eax
- 	 imul	-32(%rbp), %eax
- 	 movl	%eax, -40(%rbp)
- 	 movl	$3, -44(%rbp)
- 	 movl  -12(%rbp), %eax
- 	 imul	-44(%rbp), %eax
- 	 movl	%eax, -48(%rbp)
- 	 movl	$20, -52(%rbp)
- 	 movl  -52(%rbp), %eax
- 	 imul	-48(%rbp), %eax
- 	 movl	%eax, -56(%rbp)
- 	 movl	$5, -60(%rbp)
- 	 movl  -56(%rbp), %eax
- 	 addl	-60(%rbp), %eax
- 	 movl	%eax, -64(%rbp)
- 	 movl  -40(%rbp), %eax
- 	 cltd
- 	 idivl	-64(%rbp)
- 	 movl	%eax, -68(%rbp)
-	 movl   -68(%rbp), %eax
-	 movl   %eax, -16(%rbp)
- 	 movl	-16(%rbp), %eax
+    movq    $4, -40(%rbp)
+    movq    $-8, -48(%rbp)
+    movq    %rbp, %rax
+    addq    -48(%rbp), %rax
+    movq    %rax, -48(%rbp)
+    movq    -48(%rbp), %rax
+    movq    -40(%rbp), %r10
+    movq    %r10, (%rax)
+    movq    $1, -56(%rbp)
+    movq    $-16, -64(%rbp)
+    movq    %rbp, %rax
+    addq    -64(%rbp), %rax
+    movq    %rax, -64(%rbp)
+    movq    -64(%rbp), %rax
+    movq    -56(%rbp), %r10
+    movq    %r10, (%rax)
+    movq    $3, -72(%rbp)
+    movq    $-24, -80(%rbp)
+    movq    %rbp, %rax
+    addq    -80(%rbp), %rax
+    movq    %rax, -80(%rbp)
+    movq    -80(%rbp), %rax
+    movq    -72(%rbp), %r10
+    movq    %r10, (%rax)
+    movq    $10, -88(%rbp)
+    movq    -8(%rbp), %rax
+    addq    -16(%rbp), %rax
+    movq    %rax, -96(%rbp)
+    movq    -96(%rbp), %rax
+    imulq    -88(%rbp), %rax
+    movq    %rax, -104(%rbp)
+    movq    $3, -112(%rbp)
+    movq    -24(%rbp), %rax
+    imulq    -112(%rbp), %rax
+    movq    %rax, -120(%rbp)
+    movq    $20, -128(%rbp)
+    movq    -128(%rbp), %rax
+    imulq    -120(%rbp), %rax
+    movq    %rax, -136(%rbp)
+    movq    $5, -144(%rbp)
+    movq    -136(%rbp), %rax
+    addq    -144(%rbp), %rax
+    movq    %rax, -152(%rbp)
+    movq    -104(%rbp), %rax
+    cltd
+ 	 idivl    -152(%rbp)
+    movq    %rax, -160(%rbp)
+    movq    $-32, -168(%rbp)
+    movq    %rbp, %rax
+    addq    -168(%rbp), %rax
+    movq    %rax, -168(%rbp)
+    movq    -168(%rbp), %rax
+    movq    -160(%rbp), %r10
+    movq    %r10, (%rax)
+    movq    -32(%rbp), %rax
     #epilogue
     popq %rbp
     ret

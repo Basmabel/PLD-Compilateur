@@ -1,3 +1,4 @@
+
 #include "IRVisitor.h"
 using namespace std;
 
@@ -44,6 +45,9 @@ antlrcpp::Any IRVisitor::visitReturn_stmtInstr(ifccParser::Return_stmtInstrConte
 }
 
 
+
+
+
 /*
 *	Visite la déclaration de variables, les ajoute à la table des symboles du cfg
 */
@@ -73,6 +77,8 @@ antlrcpp::Any IRVisitor::visitVariables(ifccParser::VariablesContext *context){
 }
 
 
+
+
 /*
 *	Visite de l'affectation d'une variable et création de l'instruction dans le block.
 *	Si la variable a bien été déclarée au préalable, on lui affecte la valeur produite par la visite de l'expression et on 
@@ -80,22 +86,50 @@ antlrcpp::Any IRVisitor::visitVariables(ifccParser::VariablesContext *context){
 */
 antlrcpp::Any IRVisitor::visitAffectation(ifccParser::AffectationContext *context)
 {
-
-	std::string var =context->VAR()->getText();
-
-    cfg->erreurVariableNonDeclare(var,linectr);
-
-	string local = visit(context->expression());
 	
-	cfg->set_var_used(var,true);
+
+	//Recuperation nouvelle variable droite
+	string local = visit(context->expression());
+
+	//Recuperation nouvelle variable gauche
+	std::string var =visit(context->lvalue());
 
     vector<string> params = {var,local};
 
-    cfg->current_bb->add_IRInstr(IRInstr::Operation::mov, Type::MOV, params);
+    cfg->current_bb->add_IRInstr(IRInstr::Operation::wmem, Type::WMEM, params);
 
 	return 0;
 }
 
+
+/*
+*	Visiteur de lvalue
+*/
+antlrcpp::Any IRVisitor::visitLvalVar(ifccParser::LvalVarContext *context){
+
+	string var = context->VAR()->getText();
+
+	//Check si la var a été déclaree
+	cfg->erreurVariableNonDeclare(var,linectr);
+
+	//Recupere son offset dans la table des symboles
+	string offset = "-"+to_string(cfg->get_var_index(var));
+	
+	//Creation d'une nouvelle variable pour stocker l'offset
+	std:: string newVar = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+
+	vector<string> params = {newVar,offset};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::ldconst, Type::CONST, params);
+
+	vector<string> params2 = {newVar,"%rbp",newVar};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::add, Type::ADD, params2);
+
+	cfg->set_var_used(var,true);
+
+	return newVar;
+}
 
 /*
 *	Visite de l'expression plus ou de l'expression moins. 
@@ -205,6 +239,99 @@ antlrcpp::Any IRVisitor::visitOppose(ifccParser::OpposeContext *context){
 
 	return vartmp;
 }
+
+
+/*
+*	Visite d'un ! unaire qui signifie une négation boolean.
+*	Récupère le nom de la variable var obtenue par la visite de l'expression suivant le !.
+*	Stock et retourne le nom du résultat dans une nouvelle variable temporaire
+*/
+antlrcpp::Any IRVisitor::visitNegation(ifccParser::NegationContext *context){
+	string var = visit(context->expression());
+
+	//Creation d'une nouvelle variable résultat
+	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+
+    vector<string> params = {vartmp,var};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::setz, Type::SETZ, params);
+
+	return vartmp;
+}
+
+
+/*
+*	Visite d'un et logique.
+*	Récupère le nom des variables var obtenues par la visite des expressions précédant et suivant le &.
+*	Stock et retourne le nom du résultat dans une nouvelle variable temporaire
+*/
+antlrcpp::Any IRVisitor::visitAndlogiq(ifccParser::AndlogiqContext *context){
+
+	//récuparation du nom de la première variable
+	std::string var= visit(context->expression(0));
+	
+	//récuparation du nom de la deuxieme variable
+	std:: string var2=visit(context->expression(1));	
+
+
+	//Creation d'une nouvelle variable résultat
+	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+
+    vector<string> params = {vartmp,var,var2};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::andq, Type::AND, params);
+
+	return vartmp;
+}
+
+/*
+*	Visite d'un xor logique.
+*	Récupère le nom des variables var obtenues par la visite des expressions précédant et suivant le ^.
+*	Stock et retourne le nom du résultat dans une nouvelle variable temporaire
+*/
+antlrcpp::Any IRVisitor::visitXorlogiq(ifccParser::XorlogiqContext *context){
+
+	//récuparation du nom de la première variable
+	std::string var= visit(context->expression(0));
+	
+	//récuparation du nom de la deuxieme variable
+	std:: string var2=visit(context->expression(1));	
+
+
+	//Creation d'une nouvelle variable résultat
+	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+
+    vector<string> params = {vartmp,var,var2};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::xorq, Type::XOR, params);
+
+	return vartmp;
+}
+
+
+/*
+*	Visite d'un ou logique.
+*	Récupère le nom des variables var obtenues par la visite des expressions précédant et suivant le |.
+*	Stock et retourne le nom du résultat dans une nouvelle variable temporaire
+*/
+antlrcpp::Any IRVisitor::visitOrlogiq(ifccParser::OrlogiqContext *context){
+	//récuparation du nom de la première variable
+	std::string var= visit(context->expression(0));
+	
+	//récuparation du nom de la deuxieme variable
+	std:: string var2=visit(context->expression(1));	
+
+
+	//Creation d'une nouvelle variable résultat
+	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+
+    vector<string> params = {vartmp,var,var2};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::orq, Type::OR, params);
+
+	return vartmp;
+}
+
 
 
 /*

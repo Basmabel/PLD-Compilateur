@@ -1,33 +1,41 @@
 .globl    main
  main: 
-    # prologue
+    #prologue
     pushq %rbp
     movq %rsp, %rbp
-
-    #body
- 	 movl	$5, -12(%rbp)
-	 movl   -12(%rbp), %eax
-	 movl   %eax, -4(%rbp)
- 	 movl	$4, -16(%rbp)
- 	 movl	$8, -20(%rbp)
- 	 movl  -20(%rbp), %eax
- 	 cltd
- 	 idivl	-4(%rbp)
- 	 movl	%eax, -24(%rbp)
- 	 movl	$5, -28(%rbp)
- 	 movl  -28(%rbp), %eax
- 	 imul	-24(%rbp), %eax
- 	 movl	%eax, -32(%rbp)
- 	 movl  -16(%rbp), %eax
- 	 addl	-32(%rbp), %eax
- 	 movl	%eax, -36(%rbp)
- 	 movl	$9, -40(%rbp)
- 	 movl  -36(%rbp), %eax
- 	 subl	-40(%rbp), %eax
- 	 movl	%eax, -44(%rbp)
-	 movl   -44(%rbp), %eax
-	 movl   %eax, -8(%rbp)
- 	 movl	-8(%rbp), %eax
+    movq    $5, -24(%rbp)
+    movq    $-8, -32(%rbp)
+    movq    %rbp, %rax
+    addq    -32(%rbp), %rax
+    movq    %rax, -32(%rbp)
+    movq    -32(%rbp), %rax
+    movq    -24(%rbp), %r10
+    movq    %r10, (%rax)
+    movq    $4, -40(%rbp)
+    movq    $8, -48(%rbp)
+    movq    -48(%rbp), %rax
+    cltd
+ 	 idivl    -8(%rbp)
+    movq    %rax, -56(%rbp)
+    movq    $5, -64(%rbp)
+    movq    -64(%rbp), %rax
+    imulq    -56(%rbp), %rax
+    movq    %rax, -72(%rbp)
+    movq    -40(%rbp), %rax
+    addq    -72(%rbp), %rax
+    movq    %rax, -80(%rbp)
+    movq    $9, -88(%rbp)
+    movq    -80(%rbp), %rax
+    subq    -88(%rbp), %rax
+    movq    %rax, -96(%rbp)
+    movq    $-16, -104(%rbp)
+    movq    %rbp, %rax
+    addq    -104(%rbp), %rax
+    movq    %rax, -104(%rbp)
+    movq    -104(%rbp), %rax
+    movq    -96(%rbp), %r10
+    movq    %r10, (%rax)
+    movq    -16(%rbp), %rax
     #epilogue
     popq %rbp
     ret

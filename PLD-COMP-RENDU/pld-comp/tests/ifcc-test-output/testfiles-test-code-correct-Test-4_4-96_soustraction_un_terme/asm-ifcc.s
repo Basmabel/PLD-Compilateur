@@ -1,15 +1,13 @@
 .globl    main
  main: 
-    # prologue
+    #prologue
     pushq %rbp
     movq %rsp, %rbp
-
-    #body
- 	 movl	$2, -4(%rbp)
- 	 movl	-4(%rbp),		%eax
- 	 negl	%eax
- 	 movl	%eax, -8(%rbp)
- 	 movl	-8(%rbp), %eax
+    movq    $2, -8(%rbp)
+ 	 movq   -8(%rbp), %rax
+ 	 negq   %rax
+ 	 movq   %rax, -16(%rbp)
+    movq    -16(%rbp), %rax
     #epilogue
     popq %rbp
     ret

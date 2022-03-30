@@ -1,0 +1,6 @@
+input.c: In function ‘main’:
+input.c:3:7: error: lvalue required as left operand of assignment
+    3 |     !x=5;
+      |       ^
+
+return code: 1

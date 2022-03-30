@@ -11,7 +11,7 @@ line 7:5 mismatched input '=' expecting ';'
 line 8:16 missing '=' at 'result'
 line 8:25 missing ';' at 'TEST'
 line 8:30 missing '=' at 'OK'
-line 9:5 extraneous input '/' expecting {'(', '-', CONST, VAR}
+line 9:5 extraneous input '/' expecting {'(', '-', '!', CONST, VAR}
 line 9:11 missing ';' at 'the'
 line 9:15 missing '=' at 'compiler'
 line 9:24 missing ';' at 'doesn'

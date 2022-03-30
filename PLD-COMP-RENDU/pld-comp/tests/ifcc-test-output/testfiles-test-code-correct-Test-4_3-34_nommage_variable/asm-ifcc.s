@@ -1,24 +1,27 @@
 .globl    main
  main: 
-    # prologue
+    #prologue
     pushq %rbp
     movq %rsp, %rbp
-
-    #body
- 	 movl	$2, -16(%rbp)
- 	 movl  -4(%rbp), %eax
- 	 imul	-16(%rbp), %eax
- 	 movl	%eax, -20(%rbp)
- 	 movl  -20(%rbp), %eax
- 	 addl	-12(%rbp), %eax
- 	 movl	%eax, -24(%rbp)
- 	 movl	$2, -28(%rbp)
- 	 movl  -24(%rbp), %eax
- 	 addl	-28(%rbp), %eax
- 	 movl	%eax, -32(%rbp)
-	 movl   -32(%rbp), %eax
-	 movl   %eax, -12(%rbp)
- 	 movl	-4(%rbp), %eax
+    movq    $2, -32(%rbp)
+    movq    -8(%rbp), %rax
+    imulq    -32(%rbp), %rax
+    movq    %rax, -40(%rbp)
+    movq    -40(%rbp), %rax
+    addq    -24(%rbp), %rax
+    movq    %rax, -48(%rbp)
+    movq    $2, -56(%rbp)
+    movq    -48(%rbp), %rax
+    addq    -56(%rbp), %rax
+    movq    %rax, -64(%rbp)
+    movq    $-24, -72(%rbp)
+    movq    %rbp, %rax
+    addq    -72(%rbp), %rax
+    movq    %rax, -72(%rbp)
+    movq    -72(%rbp), %rax
+    movq    -64(%rbp), %r10
+    movq    %r10, (%rax)
+    movq    -8(%rbp), %rax
     #epilogue
     popq %rbp
     ret

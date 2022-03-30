@@ -1,5 +1,2 @@
-warning : variable 'a' was declared but never referenced
-warning : variable 'b' was declared but never referenced
-warning : variable 'c' was declared but never referenced
 
 return code: 0

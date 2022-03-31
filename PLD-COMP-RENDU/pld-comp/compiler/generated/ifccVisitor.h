@@ -51,6 +51,18 @@ public:
 
     virtual antlrcpp::Any visitIf_then_else(ifccParser::If_then_elseContext *context) = 0;
 
+    virtual antlrcpp::Any visitBlock(ifccParser::BlockContext *context) = 0;
+
+    virtual antlrcpp::Any visitCondition_affectation(ifccParser::Condition_affectationContext *context) = 0;
+
+    virtual antlrcpp::Any visitCondition_expression(ifccParser::Condition_expressionContext *context) = 0;
+
+    virtual antlrcpp::Any visitCondition_comparison(ifccParser::Condition_comparisonContext *context) = 0;
+
+    virtual antlrcpp::Any visitComparison_equal(ifccParser::Comparison_equalContext *context) = 0;
+
+    virtual antlrcpp::Any visitComparison_different(ifccParser::Comparison_differentContext *context) = 0;
+
     virtual antlrcpp::Any visitReturn_stmt(ifccParser::Return_stmtContext *context) = 0;
 
 

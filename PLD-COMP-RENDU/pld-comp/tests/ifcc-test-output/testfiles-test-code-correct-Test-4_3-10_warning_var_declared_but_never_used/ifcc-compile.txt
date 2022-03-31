@@ -1,3 +1,0 @@
-warning : variable 'y' was declared but never referenced
-
-return code: 0

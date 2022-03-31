@@ -3,21 +3,32 @@ grammar ifcc;
 axiom : prog ;
 
 prog : INT 'main' OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET ;
-instr :     declaration     #declarationInstr 
-        |   affectation     #affectationInstr 
-        |   return_stmt     #return_stmtInstr 
-        |   if_then_else    #if_then_elseInstr ; 
+instr :     declaration                 #declarationInstr 
+        |   affectation  SEMICOLON      #affectationInstr 
+        |   return_stmt                 #return_stmtInstr 
+        |   if_then_else                #if_then_elseInstr ; 
 declaration: INT variables* VAR SEMICOLON; 
 variables: VAR COMMA;
-affectation: VAR EQUAL expression SEMICOLON;
+affectation: VAR EQUAL expression;
 expression: OPENPAR expression CLOSEPAR #par
 | (MINUS) expression #oppose
 | expression (MULTIPLY | DIVIDE) expression #multdiv
 | expression (PLUS | MINUS) expression #plusminus
-| VAR #var
+| VAR #var 
 | CONST #const;
-if_then_else : IF OPENPAR expression CLOSEPAR OPENBRACKET instr* CLOSEBRACKET ELSE OPENBRACKET instr* CLOSEBRACKET ;
+
+if_then_else : IF OPENPAR condition CLOSEPAR OPENBRACKET block CLOSEBRACKET ELSE OPENBRACKET block CLOSEBRACKET ;
+block: instr*;
+
+condition :     affectation                     #condition_affectation
+        |       expression                      #condition_expression
+        |       comparison                      #condition_comparison ;   
+
+comparison : expression ISEQUAL expression      #comparison_equal
+        |    expression ISDIFFERENT expression  #comparison_different ;                         
+
 return_stmt : RETURN expression SEMICOLON;
+
 
 INT : 'int' ;
 CHAR : 'char' ;

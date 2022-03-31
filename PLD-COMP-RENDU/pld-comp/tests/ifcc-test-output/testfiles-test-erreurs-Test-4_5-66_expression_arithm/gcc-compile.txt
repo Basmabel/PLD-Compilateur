@@ -1,9 +1,0 @@
-input.c:7:5: error: use of undeclared identifier 'e'
-    e = 2;
-    ^
-input.c:8:11: error: use of undeclared identifier 'e'
-    res = e*((2*a+(b+d))/(a*c+d));
-          ^
-2 errors generated.
-
-return code: 1

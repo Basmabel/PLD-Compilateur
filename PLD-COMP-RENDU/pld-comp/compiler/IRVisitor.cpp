@@ -1,3 +1,4 @@
+#include <iostream>
 #include "IRVisitor.h"
 using namespace std;
 
@@ -32,6 +33,15 @@ antlrcpp::Any IRVisitor::visitDeclarationInstr(ifccParser::DeclarationInstrConte
 */
 antlrcpp::Any IRVisitor::visitAffectationInstr(ifccParser::AffectationInstrContext *context){
 	visitAffectation(context->affectation());
+	return 0;
+}
+
+/*
+*	Visiteur de l'instruction if then else 
+*/
+antlrcpp::Any IRVisitor::visitIf_then_elseInstr(ifccParser::If_then_elseInstrContext *context){
+
+	visitIf_then_else(context->if_then_else());
 	return 0;
 }
 
@@ -93,7 +103,7 @@ antlrcpp::Any IRVisitor::visitAffectation(ifccParser::AffectationContext *contex
 
     cfg->current_bb->add_IRInstr(IRInstr::Operation::mov, Type::MOV, params);
 
-	return 0;
+	return var;
 }
 
 
@@ -227,6 +237,122 @@ antlrcpp::Any IRVisitor::visitConst(ifccParser::ConstContext *context)
 	return var;
 }
 
+/*
+*	Visite du if else statement. 
+*/
+antlrcpp::Any IRVisitor :: visitIf_then_else(ifccParser::If_then_elseContext *context) {
+	string var = visit(context->condition());
+
+	string nameBlock1= cfg->new_BB_name("then");
+    BasicBlock* block1 = new BasicBlock(cfg,nameBlock1);
+	cfg->add_bb(block1);
+	cfg->nextBBnumber++;
+
+	string nameBlock2= cfg->new_BB_name("else");
+    BasicBlock* block2 = new BasicBlock(cfg,nameBlock2);
+	cfg->add_bb(block2);
+	cfg->nextBBnumber++;
+
+	string nameBlock3= cfg->new_BB_name("endif");
+    BasicBlock* block3 = new BasicBlock(cfg,nameBlock3);
+	cfg->add_bb(block3);
+	cfg->nextBBnumber++;
+
+	cfg->current_bb->exit_true= block1;
+	cfg->current_bb->exit_false= block2;
+
+	cfg->current_bb=block1;
+	block1->exit_true= block3;
+	block1->exit_false= nullptr;
+	
+
+	visit(context->block(0));
+	
+	
+
+	
+	cfg->current_bb=block2;
+	block2->exit_true= nullptr;
+	block2->exit_false= nullptr;
+
+	visit(context->block(1));
+
+	cfg->current_bb=block3;
+	block3->exit_true=cfg->return_bb;
+	block3->exit_false=nullptr;
+
+
+	return 0;
+}
+
+/*
+*	.. 
+*/
+antlrcpp::Any IRVisitor::visitBlock(ifccParser::BlockContext *context){
+
+	for(int i=0 ; i<context->instr().size(); i++){
+		linectr=context->instr().at(i)->getStart()->getLine();
+		visit(context->instr().at(i));
+	}
+
+	return 0;
+}
+
+/*
+*	.. 
+*/
+antlrcpp::Any IRVisitor :: visitCondition_affectation(ifccParser::Condition_affectationContext *context) {
+	string var = visit(context->affectation());
+
+    vector<string> params = {"$0",var};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params); 
+
+	return var;
+}
+
+/*
+*	.. 
+*/
+antlrcpp::Any IRVisitor :: visitCondition_expression(ifccParser::Condition_expressionContext *context) {
+	string var = visit(context->expression());
+	return 0;
+}
+
+/*
+*	.. 
+*/
+antlrcpp::Any IRVisitor :: visitCondition_comparison(ifccParser::Condition_comparisonContext *context) {
+	string var = visit(context->comparison());
+	return 0;
+}
+
+/*
+*	.. 
+*/
+antlrcpp::Any IRVisitor :: visitComparison_equal(ifccParser::Comparison_equalContext *context) {
+	
+	//récuparation du nom de la première variable
+	std::string var= visit(context->expression(0));
+	
+	//récuparation du nom de la deuxieme variable
+	std:: string var2=visit(context->expression(1));	
+	return 0;
+}
+
+/*
+*	.. 
+*/
+antlrcpp::Any IRVisitor :: visitComparison_different(ifccParser::Comparison_differentContext *context) {
+
+	//récuparation du nom de la première variable
+	std::string var= visit(context->expression(0));
+	
+	//récuparation du nom de la deuxieme variable
+	std:: string var2=visit(context->expression(1));
+
+	return 0;
+}
 
 /*
 *	Visite du return. Génère le code assembleur associé en utilisant le 

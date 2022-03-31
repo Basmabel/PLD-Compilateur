@@ -36,6 +36,8 @@ class  IRVisitor : public ifccBaseVisitor {
 
 		virtual antlrcpp::Any visitReturn_stmtInstr(ifccParser::Return_stmtInstrContext *context) override;
 
+		virtual antlrcpp::Any visitIf_then_elseInstr(ifccParser::If_then_elseInstrContext *context) override;
+
 		virtual antlrcpp::Any visitDeclaration(ifccParser::DeclarationContext *context) override;
 
 		virtual antlrcpp::Any visitVariables(ifccParser::VariablesContext *context) override;
@@ -53,6 +55,20 @@ class  IRVisitor : public ifccBaseVisitor {
 		virtual antlrcpp::Any visitOppose(ifccParser::OpposeContext *context) override;
 
 		virtual antlrcpp::Any visitConst(ifccParser::ConstContext *context) override;
+
+		virtual antlrcpp::Any visitIf_then_else(ifccParser::If_then_elseContext *context) override;
+
+		virtual antlrcpp::Any visitBlock(ifccParser::BlockContext *context) override;
+
+		virtual antlrcpp::Any visitCondition_affectation(ifccParser::Condition_affectationContext *context) override;
+
+		virtual antlrcpp::Any visitCondition_expression(ifccParser::Condition_expressionContext *context) override;
+
+		virtual antlrcpp::Any visitCondition_comparison(ifccParser::Condition_comparisonContext *context) override;
+
+		virtual antlrcpp::Any visitComparison_equal(ifccParser::Comparison_equalContext *context) override;
+
+		virtual antlrcpp::Any visitComparison_different(ifccParser::Comparison_differentContext *context) override;
 
 		virtual antlrcpp::Any visitReturn_stmt(ifccParser::Return_stmtContext *context) override ;
 

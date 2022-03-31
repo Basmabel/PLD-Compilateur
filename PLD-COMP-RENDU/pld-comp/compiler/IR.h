@@ -26,6 +26,7 @@ typedef enum {
 		CONST,
 		MOV,
 		RET,
+		CMP_EQ,
 		DEFAULT
 } Type;
 
@@ -153,14 +154,15 @@ class CFG {
 	void set_var_used(string name, bool used);
 
 	// basic block management
-	string new_BB_name(size_t line);
+	string new_BB_name(string name);
 	BasicBlock* current_bb;
 	BasicBlock* return_bb;
+	int nextBBnumber; /**< just for naming */
 
  protected:
 	symbolTable* symboleTable;
 	int nextFreeSymbolIndex; /**< to allocate new symbols in the symbol table */
-	int nextBBnumber; /**< just for naming */
+	
 	
 	vector <BasicBlock*> bbs; /**< all the basic blocks of this CFG*/
 	

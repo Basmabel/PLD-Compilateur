@@ -1,7 +1,0 @@
-line 12:18 token recognition error at: ':'
-line 5:6 missing '=' at '('
-line 5:8 mismatched input '=' expecting ')'
-line 5:10 mismatched input '+' expecting '='
-error: syntax error during parsing
-
-return code: 1

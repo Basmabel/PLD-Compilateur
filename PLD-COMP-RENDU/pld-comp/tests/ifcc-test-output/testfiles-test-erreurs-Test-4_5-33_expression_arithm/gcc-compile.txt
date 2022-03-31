@@ -1,9 +1,0 @@
-input.c:6:5: error: use of undeclared identifier 'c'
-    c = a - (b*5+3);
-    ^
-input.c:7:12: error: use of undeclared identifier 'c'
-    return c;
-           ^
-2 errors generated.
-
-return code: 1

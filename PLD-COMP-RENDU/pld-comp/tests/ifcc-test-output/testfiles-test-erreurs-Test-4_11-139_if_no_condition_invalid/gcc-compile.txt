@@ -1,6 +1,0 @@
-input.c:4:7: error: expected '(' after 'if'
-    if{
-      ^
-1 error generated.
-
-return code: 1

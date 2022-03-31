@@ -64,6 +64,13 @@ antlrcpp::Any CodeGenVisitor::visitReturn_stmtInstr(ifccParser::Return_stmtInstr
 	return 0;
 }
 
+/*
+*	Visiteur de l'instruction if then else 
+*/
+antlrcpp::Any CodeGenVisitor::visitIf_then_elseInstr(ifccParser::If_then_elseInstrContext *context){
+	return 0;
+}
+
 
 /*
 *	Visite la déclaration de variables, les ajoute à la table des symboles mais ne génère pas de code assembleur
@@ -154,7 +161,6 @@ antlrcpp::Any CodeGenVisitor::visitPlusminus(ifccParser::PlusminusContext *conte
 
 	//Creation d'une nouvelle variable résultat
 	std:: string vartmp = creationSymboleTemp();
-
 
 	return vartmp;
 }
@@ -267,6 +273,55 @@ antlrcpp::Any CodeGenVisitor::visitConst(ifccParser::ConstContext *context)
 	std::cout<<" 	 movl	$"<<val<<", -"<<symboltable->getOffset(var)<<"(%rbp)\n";
 
 	return var;
+}
+
+/*
+*	Visite du if else statement. 
+*/
+antlrcpp::Any CodeGenVisitor :: visitIf_then_else(ifccParser::If_then_elseContext *context) {
+	return 0;
+}
+
+/*
+*	.. 
+*/
+antlrcpp::Any CodeGenVisitor::visitBlock(ifccParser::BlockContext *context){
+	return 0;
+}
+
+/*
+*	.. 
+*/
+antlrcpp::Any CodeGenVisitor :: visitCondition_affectation(ifccParser::Condition_affectationContext *context) {
+	return 0;
+}
+
+/*
+*	.. 
+*/
+antlrcpp::Any CodeGenVisitor :: visitCondition_expression(ifccParser::Condition_expressionContext *context) {
+	return 0;
+}
+
+/*
+*	.. 
+*/
+antlrcpp::Any CodeGenVisitor :: visitCondition_comparison(ifccParser::Condition_comparisonContext *context) {
+	return 0;
+}
+
+/*
+*	.. 
+*/
+antlrcpp::Any CodeGenVisitor :: visitComparison_equal(ifccParser::Comparison_equalContext *context) {
+	return 0;
+}
+
+/*
+*	.. 
+*/
+antlrcpp::Any CodeGenVisitor :: visitComparison_different(ifccParser::Comparison_differentContext *context) {
+	return 0;
 }
 
 

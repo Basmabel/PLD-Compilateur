@@ -1,7 +1,0 @@
-line 9:18 token recognition error at: ':'
-line 2:6 missing '=' at '('
-line 2:7 mismatched input ')' expecting {'(', '-', CONST, VAR}
-line 2:8 mismatched input '{' expecting ';'
-error: syntax error during parsing
-
-return code: 1

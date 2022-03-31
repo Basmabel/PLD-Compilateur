@@ -187,6 +187,76 @@ public interface ifccListener extends ParseTreeListener {
 	 */
 	void exitIf_then_else(ifccParser.If_then_elseContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ifccParser#block}.
+	 * @param ctx the parse tree
+	 */
+	void enterBlock(ifccParser.BlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ifccParser#block}.
+	 * @param ctx the parse tree
+	 */
+	void exitBlock(ifccParser.BlockContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code condition_affectation}
+	 * labeled alternative in {@link ifccParser#condition}.
+	 * @param ctx the parse tree
+	 */
+	void enterCondition_affectation(ifccParser.Condition_affectationContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code condition_affectation}
+	 * labeled alternative in {@link ifccParser#condition}.
+	 * @param ctx the parse tree
+	 */
+	void exitCondition_affectation(ifccParser.Condition_affectationContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code condition_expression}
+	 * labeled alternative in {@link ifccParser#condition}.
+	 * @param ctx the parse tree
+	 */
+	void enterCondition_expression(ifccParser.Condition_expressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code condition_expression}
+	 * labeled alternative in {@link ifccParser#condition}.
+	 * @param ctx the parse tree
+	 */
+	void exitCondition_expression(ifccParser.Condition_expressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code condition_comparison}
+	 * labeled alternative in {@link ifccParser#condition}.
+	 * @param ctx the parse tree
+	 */
+	void enterCondition_comparison(ifccParser.Condition_comparisonContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code condition_comparison}
+	 * labeled alternative in {@link ifccParser#condition}.
+	 * @param ctx the parse tree
+	 */
+	void exitCondition_comparison(ifccParser.Condition_comparisonContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code comparison_equal}
+	 * labeled alternative in {@link ifccParser#comparison}.
+	 * @param ctx the parse tree
+	 */
+	void enterComparison_equal(ifccParser.Comparison_equalContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code comparison_equal}
+	 * labeled alternative in {@link ifccParser#comparison}.
+	 * @param ctx the parse tree
+	 */
+	void exitComparison_equal(ifccParser.Comparison_equalContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code comparison_different}
+	 * labeled alternative in {@link ifccParser#comparison}.
+	 * @param ctx the parse tree
+	 */
+	void enterComparison_different(ifccParser.Comparison_differentContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code comparison_different}
+	 * labeled alternative in {@link ifccParser#comparison}.
+	 * @param ctx the parse tree
+	 */
+	void exitComparison_different(ifccParser.Comparison_differentContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ifccParser#return_stmt}.
 	 * @param ctx the parse tree
 	 */

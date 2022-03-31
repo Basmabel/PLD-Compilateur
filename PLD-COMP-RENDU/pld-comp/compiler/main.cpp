@@ -45,11 +45,11 @@ int main(int argn, const char **argv)
   }
 
   
-  CodeGenVisitor v;
-  v.visit(tree);
+  /*CodeGenVisitor v;
+  v.visit(tree);*/
 
-  /*IRVisitor ir;
+  IRVisitor ir;
   ir.visit(tree);
-*/
+
   return 0;
 }

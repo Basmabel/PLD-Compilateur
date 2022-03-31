@@ -1,6 +1,0 @@
-input.c:2:8: error: expected expression
-    if(){
-       ^
-1 error generated.
-
-return code: 1

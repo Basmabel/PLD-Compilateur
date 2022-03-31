@@ -1,0 +1,17 @@
+asm-ifcc.s:6:1: error: invalid instruction mnemonic 'entry_block'
+entry_block
+^~~~~~~~~~~
+asm-ifcc.s:22:1: error: invalid instruction mnemonic 'thenblock1'
+thenblock1
+^~~~~~~~~~
+asm-ifcc.s:30:1: error: invalid instruction mnemonic 'elseblock2'
+elseblock2
+^~~~~~~~~~
+asm-ifcc.s:37:1: error: invalid instruction mnemonic 'endifblock3'
+endifblock3
+^~~~~~~~~~~
+asm-ifcc.s:43:1: error: invalid instruction mnemonic 'exit_block'
+exit_block
+^~~~~~~~~~
+
+return code: 1

@@ -22,7 +22,8 @@ public:
 
   enum {
     RuleAxiom = 0, RuleProg = 1, RuleInstr = 2, RuleDeclaration = 3, RuleVariables = 4, 
-    RuleAffectation = 5, RuleExpression = 6, RuleIf_then_else = 7, RuleReturn_stmt = 8
+    RuleAffectation = 5, RuleExpression = 6, RuleIf_then_else = 7, RuleBlock = 8, 
+    RuleCondition = 9, RuleComparison = 10, RuleReturn_stmt = 11
   };
 
   explicit ifccParser(antlr4::TokenStream *input);
@@ -43,6 +44,9 @@ public:
   class AffectationContext;
   class ExpressionContext;
   class If_then_elseContext;
+  class BlockContext;
+  class ConditionContext;
+  class ComparisonContext;
   class Return_stmtContext; 
 
   class  AxiomContext : public antlr4::ParserRuleContext {
@@ -104,6 +108,7 @@ public:
     AffectationInstrContext(InstrContext *ctx);
 
     AffectationContext *affectation();
+    antlr4::tree::TerminalNode *SEMICOLON();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
@@ -166,7 +171,6 @@ public:
     antlr4::tree::TerminalNode *VAR();
     antlr4::tree::TerminalNode *EQUAL();
     ExpressionContext *expression();
-    antlr4::tree::TerminalNode *SEMICOLON();
 
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -259,13 +263,27 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *IF();
     antlr4::tree::TerminalNode *OPENPAR();
-    ExpressionContext *expression();
+    ConditionContext *condition();
     antlr4::tree::TerminalNode *CLOSEPAR();
     std::vector<antlr4::tree::TerminalNode *> OPENBRACKET();
     antlr4::tree::TerminalNode* OPENBRACKET(size_t i);
+    std::vector<BlockContext *> block();
+    BlockContext* block(size_t i);
     std::vector<antlr4::tree::TerminalNode *> CLOSEBRACKET();
     antlr4::tree::TerminalNode* CLOSEBRACKET(size_t i);
     antlr4::tree::TerminalNode *ELSE();
+
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  If_then_elseContext* if_then_else();
+
+  class  BlockContext : public antlr4::ParserRuleContext {
+  public:
+    BlockContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
     std::vector<InstrContext *> instr();
     InstrContext* instr(size_t i);
 
@@ -274,7 +292,86 @@ public:
    
   };
 
-  If_then_elseContext* if_then_else();
+  BlockContext* block();
+
+  class  ConditionContext : public antlr4::ParserRuleContext {
+  public:
+    ConditionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+   
+    ConditionContext() = default;
+    void copyFrom(ConditionContext *context);
+    using antlr4::ParserRuleContext::copyFrom;
+
+    virtual size_t getRuleIndex() const override;
+
+   
+  };
+
+  class  Condition_affectationContext : public ConditionContext {
+  public:
+    Condition_affectationContext(ConditionContext *ctx);
+
+    AffectationContext *affectation();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  Condition_expressionContext : public ConditionContext {
+  public:
+    Condition_expressionContext(ConditionContext *ctx);
+
+    ExpressionContext *expression();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  Condition_comparisonContext : public ConditionContext {
+  public:
+    Condition_comparisonContext(ConditionContext *ctx);
+
+    ComparisonContext *comparison();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  ConditionContext* condition();
+
+  class  ComparisonContext : public antlr4::ParserRuleContext {
+  public:
+    ComparisonContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+   
+    ComparisonContext() = default;
+    void copyFrom(ComparisonContext *context);
+    using antlr4::ParserRuleContext::copyFrom;
+
+    virtual size_t getRuleIndex() const override;
+
+   
+  };
+
+  class  Comparison_differentContext : public ComparisonContext {
+  public:
+    Comparison_differentContext(ComparisonContext *ctx);
+
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    antlr4::tree::TerminalNode *ISDIFFERENT();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  Comparison_equalContext : public ComparisonContext {
+  public:
+    Comparison_equalContext(ComparisonContext *ctx);
+
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    antlr4::tree::TerminalNode *ISEQUAL();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  ComparisonContext* comparison();
 
   class  Return_stmtContext : public antlr4::ParserRuleContext {
   public:

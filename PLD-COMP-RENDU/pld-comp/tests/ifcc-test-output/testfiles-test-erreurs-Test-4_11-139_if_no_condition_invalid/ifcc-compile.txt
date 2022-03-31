@@ -1,5 +1,0 @@
-line 11:18 token recognition error at: ':'
-line 4:6 mismatched input '{' expecting '='
-error: syntax error during parsing
-
-return code: 1

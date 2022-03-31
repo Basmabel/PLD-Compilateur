@@ -1,6 +1,0 @@
-input.c:5:10: warning: multiple unsequenced modifications to 'a' [-Wunsequenced]
-    a = a++;
-      ~  ^
-1 warning generated.
-
-return code: 0

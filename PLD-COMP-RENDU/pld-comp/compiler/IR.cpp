@@ -60,9 +60,9 @@ void IRInstr::gen_asm(ostream &o){
         case Operation::neg:
             varDest = bb->cfg->get_var_index(params[0]);
             var1 = bb->cfg->get_var_index(params[1]);
-            o<<" 	 movl   -"<<var1<<"(%rbp), %eax"<<endl;
-            o<<" 	 negl   %eax"<<endl;
-            o<<" 	 movl   %eax, -"<<varDest<<"(%rbp);"<<endl;
+            o<<"    movl   -"<<var1<<"(%rbp), %eax"<<endl;
+            o<<"    negl   %eax"<<endl;
+            o<<"    movl   %eax, -"<<varDest<<"(%rbp);"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::mov:
@@ -70,6 +70,17 @@ void IRInstr::gen_asm(ostream &o){
             var1 = bb->cfg->get_var_index(params[1]);
             o<<"    movl    -"<<var1<<"(%rbp), %eax"<<endl;
             o<<"    movl    %eax, -"<<varDest<<"(%rbp)"<<endl;
+            //o<<";"<<params[0]<<endl;;
+            break;
+        case Operation::cmp_eq:
+            
+            var2= bb->cfg->get_var_index(params[1]);
+            if(params[0]=="$0"){
+                o<<"    cmpq    "<<params[0]<<", -"<<var2<<"(%rbp)"<<endl;
+            }else{
+                var1= bb->cfg->get_var_index(params[0]);
+            }
+            o<<"    je     "<<bb->exit_false->label<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::ret:
@@ -93,14 +104,14 @@ void BasicBlock::add_IRInstr(IRInstr::Operation op, Type t, vector<string> param
 }
 
 void BasicBlock::gen_asm(ostream &o){
-    
+    o<<label<<endl;
     for (auto instr : instrs) {
         instr->gen_asm(o);
     }
 
-    /*if (exit_true!=nullptr) {
+    if (exit_true!=nullptr) {
         o << "jmp " << exit_true->label << endl;
-    }*/
+    }
 }
 
 
@@ -229,7 +240,8 @@ void CFG::set_var_used(string name, bool used){
     symboleTable->setUsed(name,used);
 }
 
-string CFG::new_BB_name(size_t line){
-    return "block_"+to_string(line);
+string CFG::new_BB_name(string name){
+    //return "block_"+to_string(line);
+    return name+"block"+to_string(nextBBnumber);
 }
 

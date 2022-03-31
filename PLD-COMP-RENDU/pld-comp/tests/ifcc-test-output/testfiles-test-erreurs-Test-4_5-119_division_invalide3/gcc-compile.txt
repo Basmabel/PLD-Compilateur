@@ -1,9 +1,0 @@
-input.c:3:12: error: expected expression
-    return /;
-           ^
-input.c:3:13: error: expected expression
-    return /;
-            ^
-2 errors generated.
-
-return code: 1

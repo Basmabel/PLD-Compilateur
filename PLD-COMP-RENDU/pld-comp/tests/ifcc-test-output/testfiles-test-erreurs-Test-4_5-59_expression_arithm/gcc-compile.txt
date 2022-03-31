@@ -1,8 +1,0 @@
-input.c:6:21: error: expected ';' after expression
-    res = (10+a)+(b))/(3*c*20+5));
-                    ^
-                    ;
-input.c:6:21: error: expected expression
-2 errors generated.
-
-return code: 1

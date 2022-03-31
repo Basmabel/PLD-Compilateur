@@ -49,21 +49,32 @@ antlrcpp::Any IRVisitor::visitReturn_stmtInstr(ifccParser::Return_stmtInstrConte
 */
 antlrcpp::Any IRVisitor::visitDeclaration(ifccParser::DeclarationContext *context)
 {
-	
+	Type type = visit(context->type());
 
 	for(int i=0 ; i<context->variables().size(); i++){
 		string var =visitVariables(context->variables().at(i));
         cfg->redeclarationError(linectr,var);
-		cfg->add_to_symbol_table(var,Type::INT,linectr);
+		cfg->add_to_symbol_table(var,type,linectr);
 	}
 
 	string var =context->VAR()->getText();
 	cfg->redeclarationError(linectr,var);
-	cfg->add_to_symbol_table(var,Type::INT,linectr);
+	cfg->add_to_symbol_table(var,type,linectr);
 	
 	return 0;
 }
 
+/*
+*	Visite d'une type, retourne son type
+*/
+
+antlrcpp::Any IRVisitor::visitInt(ifccParser::IntContext *context){
+	return Type::INT;
+}
+
+antlrcpp::Any IRVisitor::visitChar(ifccParser::CharContext *context){
+	return Type::CHAR;
+}
 
 /*
 *	Visite d'une variable, retourne son nom 

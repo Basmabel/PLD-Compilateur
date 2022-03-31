@@ -181,6 +181,9 @@ void CFG::add_to_symbol_table(string name, Type t, size_t line){
         case Type::INT:
             type="int";
             break;
+        case Type::CHAR:
+            type="char";
+            break;
         default:
             type="int";
             break;
@@ -221,6 +224,9 @@ size_t CFG::get_var_index(string name){
 Type CFG::get_var_type(string name){
     if(symboleTable->getType(name)=="int"){
         return Type::INT;
+    }
+    if(symboleTable->getType(name)=="char"){
+        return Type::CHAR;
     }
     return Type::DEFAULT;
 }

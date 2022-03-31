@@ -25,6 +25,7 @@ typedef enum {
 		DIV,
 		CONST,
 		MOV,
+		MOVB,
 		RET,
 		DEFAULT
 } Type;
@@ -43,6 +44,7 @@ class IRInstr {
 		sub,
 		mul,
 		mov,
+		movb,
 		ret,
 		div,
 		rmem,

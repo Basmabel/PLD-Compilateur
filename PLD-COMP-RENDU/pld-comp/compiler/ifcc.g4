@@ -13,6 +13,7 @@ expression: OPENPAR expression CLOSEPAR #par
 | expression (MULTIPLY | DIVIDE) expression #multdiv
 | expression (PLUS | MINUS) expression #plusminus
 | VAR #var
+| CHARACTER #character
 | CONST #const;
 return_stmt : RETURN expression SEMICOLON;
 
@@ -35,6 +36,7 @@ OPA: PLUS | MINUS;
 RETURN : 'return' ;
 CONST : [0-9]+ ;
 VAR : [_a-zA-Z][_a-zA-Z0-9]*;
+CHARACTER : '\''.?'\'';
 COMMA : ',';
 COMMENT : '/*' .*? '*/' -> skip ;
 DIRECTIVE : '#' .*? '\n' -> skip ;

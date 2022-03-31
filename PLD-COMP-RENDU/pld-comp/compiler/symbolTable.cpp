@@ -13,9 +13,9 @@
 	{
 		size_t index =0;
 		if(typeStr=="int"){
-			index = sizeof(int)*(symbols.size()+1);
+			index = sizeof(int64_t)*(symbols.size()+1);
 		}else if(typeStr=="char"){
-			index = sizeof(char)*(symbols.size()+1);
+			index = sizeof(int64_t)*(symbols.size()+1);
 		}
 
 		symbols.insert(make_pair(name, new symbol(name,index,typeStr,lineSz)));

@@ -170,6 +170,11 @@ antlrcpp::Any CodeGenVisitor::visitPlusminus(ifccParser::PlusminusContext *conte
 	return vartmp;
 }
 
+antlrcpp::Any CodeGenVisitor::visitCharacter(ifccParser::CharacterContext *context) {
+	return 0;
+};
+
+
 /*
 *	Visite de l'expression multiply ou de l'expression divide. 
 * 	Génère le code assembleur correspondant à la multiplication ou à la division de deux variables var et var2 obtenues par la 

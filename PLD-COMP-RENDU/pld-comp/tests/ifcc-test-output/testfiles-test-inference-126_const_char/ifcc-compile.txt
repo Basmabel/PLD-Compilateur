@@ -1,0 +1,4 @@
+line 2:10 mismatched input 'char' expecting '='
+error: syntax error during parsing
+
+return code: 1

@@ -48,6 +48,8 @@ class  IRVisitor : public ifccBaseVisitor {
 
 		virtual antlrcpp::Any visitPlusminus(ifccParser::PlusminusContext *context) override;
 
+		virtual antlrcpp::Any visitCharacter(ifccParser::CharacterContext *context) override;
+
 		virtual antlrcpp::Any visitMultdiv(ifccParser::MultdivContext *context) override;
 
 		virtual antlrcpp::Any visitPar(ifccParser::ParContext *context) override;

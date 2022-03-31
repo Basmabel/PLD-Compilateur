@@ -1,4 +1,6 @@
 #include "IRVisitor.h"
+#include <string>
+#include <iostream>
 using namespace std;
 
 
@@ -91,13 +93,13 @@ antlrcpp::Any IRVisitor::visitVariables(ifccParser::VariablesContext *context){
 */
 antlrcpp::Any IRVisitor::visitAffectation(ifccParser::AffectationContext *context)
 {
-
+	
 	std::string var =context->VAR()->getText();
 
     cfg->erreurVariableNonDeclare(var,linectr);
 
 	string local = visit(context->expression());
-	
+
 	cfg->set_var_used(var,true);
 
     vector<string> params = {var,local};
@@ -142,6 +144,26 @@ antlrcpp::Any IRVisitor::visitPlusminus(ifccParser::PlusminusContext *context)
 
 	return vartmp;
 }
+
+antlrcpp::Any IRVisitor::visitCharacter(ifccParser::CharacterContext *context) 
+{
+	string character =context->CHARACTER()->getText();
+
+	int64_t temp = (int64_t) character[1];
+	string val = to_string(temp);
+
+
+	//Creation d'une nouvelle variable résultat
+	std:: string var = cfg->create_new_tempvar(Type::CHAR, cfg->current_bb->label,linectr);
+
+    vector<string> params = {var,val};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::ldconst, Type::CONST, params); 
+
+	return var;
+
+};
+
 
 /*
 *	Visite de l'expression multiply ou de l'expression divide. 

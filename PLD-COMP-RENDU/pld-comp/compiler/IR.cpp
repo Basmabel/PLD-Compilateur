@@ -260,9 +260,7 @@ string CFG::new_BB_name(size_t line){
 
 //FunctionTable
 void CFG::add_to_function_table(string name, string returnType, vector<pair<string,string>> args, size_t line){
-    cout<<fonctionTable->getFonctionsSize()<<endl;
     fonctionTable->add(name,returnType,args,line);
-    
     nextFreeFunctionIndex++;
 }
 

@@ -33,7 +33,6 @@ class  functionTable {
 		void remove(string name);
 		string getReturnType(string name);
         int getArgsSize(string name);
-        int getFonctionsSize();
 		bool contains(string name);
         size_t getLine(string name);
         fonction* getFonction(string name);

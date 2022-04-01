@@ -57,10 +57,6 @@
 		return fonctions.at(name)->getArgsSize();
     }
 
-    int functionTable::getFonctionsSize(){
-        return fonctions.size();
-    }
-
     fonction* functionTable::getFonction(string name){
         return fonctions.at(name);
     }

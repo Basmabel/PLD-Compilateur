@@ -1,5 +1,8 @@
 #include "IR.h"
+#include <string>
+#include <iostream>
 
+using std::hex;
 
 
 IRInstr::IRInstr(BasicBlock* bb, Operation op, Type t, vector<string> params){
@@ -14,10 +17,18 @@ void IRInstr::gen_asm(ostream &o){
     int varDest;
     int var1;
     int var2;
+    int temp;
     switch(op){
         case Operation::ldconst:
-        
             varDest = bb->cfg->get_var_index(params[0]);
+            //cout<<stoi(params[1])<<endl;
+            //cout<<hex<<strtol(params[1])<<endl;
+            try{
+                temp = stol(params[1]);
+            }
+            catch(std::out_of_range& e){
+                std::cerr<<"warning : variable too big"<<endl;   
+            }
             o<<"    movq    $"<<params[1]<<", -"<<varDest<<"(%rbp)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
@@ -67,11 +78,9 @@ void IRInstr::gen_asm(ostream &o){
             break;
         case Operation::mov:
             varDest = bb->cfg->get_var_index(params[0]);
-            var1 = bb->cfg->get_var_index(params[1]);
-
+            var1 = bb->cfg->get_var_index (params[1]);
             o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
             o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
-
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::ret:

@@ -36,7 +36,6 @@ OPA: PLUS | MINUS;
 RETURN : 'return' ;
 CONST : [0-9]+ ;
 VAR : [_a-zA-Z][_a-zA-Z0-9]*;
-NAME : [_a-zA-Z][_a-zA-Z0-9]*;
 COMMA : ',';
 COMMENT : '/*' .*? '*/' -> skip ;
 DIRECTIVE : '#' .*? '\n' -> skip ;

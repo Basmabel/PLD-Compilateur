@@ -1,3 +1,3 @@
-/bin/sh: 1: /home/basma/PLD-Compilateur/PLD-COMP-RENDU/pld-comp/tests/ifcc-wrapper.sh: Permission denied
+/home/basma/PLD-Compilateur/PLD-COMP-RENDU/pld-comp/tests/ifcc-wrapper.sh: 22: /home/basma/PLD-Compilateur/PLD-COMP-RENDU/pld-comp/tests/../compiler/ifcc: not found
 
-return code: 126
+return code: 127

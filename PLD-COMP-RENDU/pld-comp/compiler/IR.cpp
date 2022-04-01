@@ -133,6 +133,8 @@ CFG::CFG(){
 
     //Aucun symbol pour l'instant
     nextFreeSymbolIndex=0;
+    nextFreeFunctionIndex=0;
+
     nextBBnumber=0;
 
     //Création des premiers blocs
@@ -198,7 +200,7 @@ void CFG::gen_asm_epilogue(ostream& o){
         "    ret\n";
 }
 
-
+//SymbolTable
 void CFG::add_to_symbol_table(string name, Type t, size_t line){
     string type;
     switch(t){
@@ -254,5 +256,44 @@ void CFG::set_var_used(string name, bool used){
 
 string CFG::new_BB_name(size_t line){
     return "block_"+to_string(line);
+}
+
+//FunctionTable
+void CFG::add_to_function_table(string name, string returnType, vector<pair<string,string>> args, size_t line){
+    cout<<fonctionTable->getFonctionsSize()<<endl;
+    fonctionTable->add(name,returnType,args,line);
+    
+    nextFreeFunctionIndex++;
+}
+
+void CFG::redeclarationFunctionError(size_t linectr, string name, string returnType, vector<pair<string,string>> args){
+    if(fonctionTable->contains(name) && fonctionTable->getReturnType(name)==returnType && fonctionTable->getArgsSize(name)==args.size() ){  
+		cerr << "<source>:"<<linectr<<": error: redeclaration of '"<<fonctionTable->getReturnType(name)<<" "<<name<<"'" << endl;
+		cerr << "<source>:"<<fonctionTable->getLine(name)<<": error: '"<<fonctionTable->getReturnType(name)<<" "<<name<<"' previously declared here" << endl;
+	}
+    cout<<"hey"<<endl;
+}
+
+void CFG::erreurFunctionNonDeclaree(string name, size_t linectr){
+	if(!fonctionTable->contains(name)){
+		cerr << "<source>:"<<linectr<<": error: '"<<name<<"' was not declared in this scope" << endl;
+		exit(1);
+	}
+}
+
+
+Type CFG::get_func_returnType(string name){
+    if(fonctionTable->getReturnType(name)=="int"){
+        return Type::INT;
+    }else if(fonctionTable->getReturnType(name)=="char"){
+        return Type::CHAR;
+    }else if(fonctionTable->getReturnType(name)=="void"){
+        return Type::VOID;
+    }
+    return Type::DEFAULT;
+}
+
+fonction* CFG::get_func(string name){
+    return fonctionTable->getFonction(name);
 }
 

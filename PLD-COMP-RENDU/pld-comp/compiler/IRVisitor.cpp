@@ -8,23 +8,26 @@ using namespace std;
 antlrcpp::Any IRVisitor::visitProg(ifccParser::ProgContext *context) 
 {
 	cfg = new CFG();
-	string functionName =context->VAR(0)->getText();
-	cfg->redeclarationError(linectr,functionName);
-	cfg->add_to_symbol_table(functionName,Type::FUNCTION,linectr);
-	
-	//gestion des paramètres d'une fonction
-	vector<string> args;
-	vector<string> varType;
-
-
-	for (int i = 1; i < context->VAR().size(); i++) {
+	string functionName = context->VAR(0)->getText();
+	vector<string> name;
+	for (int i =1; i < context->VAR().size(); i++) {
 		string newArg = context->VAR().at(i)->getText();
-		cfg->redeclarationError(linectr,newArg);
-		cfg->add_to_symbol_table(newArg,Type::INT,linectr);
-		args.push_back(newArg);
-		varType.push_back("int");
+		name.push_back(newArg);
+	}
+	//gestion des paramètres d'une fonction
+	vector<string> types;
+	for (int i =1; i < context->INT().size(); i++) {
+		string newTypeArg = context->INT().at(i)->getText();
+		types.push_back(newTypeArg);
 	}
 	
+	vector<pair<string,string>> args;
+	for (int i =0; i<name.size(); i++){
+		args.push_back(pair<string, string>(name.at(i),types.at(i)));
+	}
+	
+	//cfg->redeclarationFunctionError(linectr,functionName, context->INT(0)->getText(), args);
+	cfg->add_to_function_table(functionName, context->INT(0)->getText(),args, linectr);
     
     for(int i=0 ; i<context->instr().size(); i++){
 		linectr=context->instr().at(i)->getStart()->getLine();
@@ -95,25 +98,27 @@ antlrcpp::Any IRVisitor::visitDeclaration(ifccParser::DeclarationContext *contex
 antlrcpp::Any IRVisitor::visitFunctionCall(ifccParser::FunctionCallContext *context)
 {
 	string functionName = context->VAR()->getText();
-	//cfg->erreurVariableNonDeclare(functionName,linectr);
+	
+	cfg->erreurFunctionNonDeclaree(functionName,linectr);
 
-	vector<string> argCall;
+	fonction* actualFunction = cfg->get_func(functionName);
+		
+
+	if(actualFunction->getArgsSize() != context->expression().size()){
+		cerr << "Error : no function with this declaration exists" << endl;
+	}
 
 	if(context->expression().size() > 6 ) {
-			std::cerr << "Error : function can't have more than 6 arguments" << std::endl;
-			exit(-8);
+			cerr << "Error : function can't have more than 6 arguments" << endl;
+			exit(1);
 	}
 	vector<string> params = {"test", functionName};
 
 	for (int i = 0; i < context->expression().size(); i++) {
 			string arg = visit(context->expression().at(i));
-			argCall.push_back(arg);
 			params.push_back(arg);
-
 	}
 
-	
-	
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::call, Type::CALL, params);
 	
 	return 0;

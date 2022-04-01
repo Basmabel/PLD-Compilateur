@@ -8,6 +8,7 @@
 
 // Declarations from the parser -- replace with your own
 #include "symbolTable.h"
+#include "functionTable.h"
 
 using namespace std;
 
@@ -18,6 +19,7 @@ class DefFonction;
 typedef enum {
 		INT,
 		CHAR,
+		VOID,
 		ADD,
 		SUB,
 		MUL,
@@ -26,8 +28,6 @@ typedef enum {
 		CONST,
 		MOV,
 		CALL,
-		FUNCTION,
-		PARAMS,
 		RET,
 		DEFAULT
 } Type;
@@ -155,6 +155,13 @@ class CFG {
 	Type get_var_type(string name);
 	void set_var_used(string name, bool used);
 
+	// function table methods
+	void add_to_function_table(string name, string returnType, vector<pair<string,string>> args, size_t line);
+	void redeclarationFunctionError(size_t linectr, string name, string returnType, vector<pair<string,string>> args);
+	void erreurFunctionNonDeclaree(string name, size_t linectr);
+	Type get_func_returnType(string name);
+	fonction* get_func(string name);
+
 	// basic block management
 	string new_BB_name(size_t line);
 	BasicBlock* current_bb;
@@ -162,7 +169,9 @@ class CFG {
 
  protected:
 	symbolTable* symboleTable;
+	functionTable* fonctionTable;
 	int nextFreeSymbolIndex; /**< to allocate new symbols in the symbol table */
+	int nextFreeFunctionIndex; /**< to allocate new functions in the function table */
 	int nextBBnumber; /**< just for naming */
 	
 	vector <BasicBlock*> bbs; /**< all the basic blocks of this CFG*/

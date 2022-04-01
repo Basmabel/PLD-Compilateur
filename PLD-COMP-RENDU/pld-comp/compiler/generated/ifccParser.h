@@ -259,6 +259,8 @@ public:
   ExpressionContext* expression(int precedence);
   class  If_then_elseContext : public antlr4::ParserRuleContext {
   public:
+    ifccParser::BlockContext *blockthen = nullptr;
+    ifccParser::BlockContext *blockelse = nullptr;
     If_then_elseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *IF();
@@ -267,11 +269,11 @@ public:
     antlr4::tree::TerminalNode *CLOSEPAR();
     std::vector<antlr4::tree::TerminalNode *> OPENBRACKET();
     antlr4::tree::TerminalNode* OPENBRACKET(size_t i);
-    std::vector<BlockContext *> block();
-    BlockContext* block(size_t i);
     std::vector<antlr4::tree::TerminalNode *> CLOSEBRACKET();
     antlr4::tree::TerminalNode* CLOSEBRACKET(size_t i);
     antlr4::tree::TerminalNode *ELSE();
+    std::vector<BlockContext *> block();
+    BlockContext* block(size_t i);
 
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;

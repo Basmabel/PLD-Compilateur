@@ -80,7 +80,6 @@ void IRInstr::gen_asm(ostream &o){
             }else{
                 var1= bb->cfg->get_var_index(params[0]);
             }
-            o<<"    je     "<<bb->exit_false->label<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::ret:
@@ -104,14 +103,25 @@ void BasicBlock::add_IRInstr(IRInstr::Operation op, Type t, vector<string> param
 }
 
 void BasicBlock::gen_asm(ostream &o){
-    o<<label<<endl;
+    
     for (auto instr : instrs) {
         instr->gen_asm(o);
     }
 
     if (exit_true!=nullptr) {
-        o << "jmp " << exit_true->label << endl;
+        if(exit_false != nullptr) {
+            o<<"    je     "<<exit_false->label<<endl;
+        }
+                  
     }
+    o << "jmp " + exit_true->label <<endl;
+    
+
+     //exit_true->label=="endifblock3" 
+    // if (cfg->current_bb->label== "thenblock1") {
+    //     o << "jmp " << exit_true->label << endl;
+    // }
+
 }
 
 
@@ -154,6 +164,9 @@ void CFG::gen_asm(ostream& o){
     gen_asm_prologue(o);
     for(unsigned int i = 0; i < bbs.size(); i++)
     {
+        if(bbs[i]->label != "entry_block" && bbs[i]->label != "exit_block") {
+            o<<bbs[i]->label<<":"<<endl;
+        }
         bbs[i]->gen_asm(o);
     }
     gen_asm_epilogue(o);

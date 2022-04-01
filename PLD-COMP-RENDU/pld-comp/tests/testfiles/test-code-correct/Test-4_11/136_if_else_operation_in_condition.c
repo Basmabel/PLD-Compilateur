@@ -9,4 +9,3 @@ int main (){
     }
     return b+a;
 }
-//expected result : a=4, b=2 -> return 6

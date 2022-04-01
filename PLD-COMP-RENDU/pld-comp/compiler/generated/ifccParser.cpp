@@ -840,14 +840,6 @@ tree::TerminalNode* ifccParser::If_then_elseContext::OPENBRACKET(size_t i) {
   return getToken(ifccParser::OPENBRACKET, i);
 }
 
-std::vector<ifccParser::BlockContext *> ifccParser::If_then_elseContext::block() {
-  return getRuleContexts<ifccParser::BlockContext>();
-}
-
-ifccParser::BlockContext* ifccParser::If_then_elseContext::block(size_t i) {
-  return getRuleContext<ifccParser::BlockContext>(i);
-}
-
 std::vector<tree::TerminalNode *> ifccParser::If_then_elseContext::CLOSEBRACKET() {
   return getTokens(ifccParser::CLOSEBRACKET);
 }
@@ -858,6 +850,14 @@ tree::TerminalNode* ifccParser::If_then_elseContext::CLOSEBRACKET(size_t i) {
 
 tree::TerminalNode* ifccParser::If_then_elseContext::ELSE() {
   return getToken(ifccParser::ELSE, 0);
+}
+
+std::vector<ifccParser::BlockContext *> ifccParser::If_then_elseContext::block() {
+  return getRuleContexts<ifccParser::BlockContext>();
+}
+
+ifccParser::BlockContext* ifccParser::If_then_elseContext::block(size_t i) {
+  return getRuleContext<ifccParser::BlockContext>(i);
 }
 
 
@@ -897,7 +897,7 @@ ifccParser::If_then_elseContext* ifccParser::if_then_else() {
     setState(90);
     match(ifccParser::OPENBRACKET);
     setState(91);
-    block();
+    dynamic_cast<If_then_elseContext *>(_localctx)->blockthen = block();
     setState(92);
     match(ifccParser::CLOSEBRACKET);
     setState(93);
@@ -905,7 +905,7 @@ ifccParser::If_then_elseContext* ifccParser::if_then_else() {
     setState(94);
     match(ifccParser::OPENBRACKET);
     setState(95);
-    block();
+    dynamic_cast<If_then_elseContext *>(_localctx)->blockelse = block();
     setState(96);
     match(ifccParser::CLOSEBRACKET);
    

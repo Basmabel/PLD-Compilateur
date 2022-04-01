@@ -1,9 +1,10 @@
+tmp = exit_block
+tmp2 = exit_block
 .globl    _main
  _main: 
     #prologue
     pushq %rbp
     movq %rsp, %rbp
-entry_block
     movl    $0, -12(%rbp)
     movl    -12(%rbp), %eax
     movl    %eax, -4(%rbp)
@@ -19,7 +20,7 @@ entry_block
     cmpq    $0, -4(%rbp)
     je     elseblock2
 jmp thenblock1
-thenblock1
+thenblock1:
     movl    $2, -28(%rbp)
     movl    -8(%rbp), %eax
     addl    -28(%rbp), %eax
@@ -27,20 +28,17 @@ thenblock1
     movl    -32(%rbp), %eax
     movl    %eax, -8(%rbp)
 jmp endifblock3
-elseblock2
+elseblock2:
     movl    $3, -36(%rbp)
     movl    -8(%rbp), %eax
     addl    -36(%rbp), %eax
     movl    %eax, -40(%rbp)
     movl    -40(%rbp), %eax
     movl    %eax, -8(%rbp)
-endifblock3
+jmp endifblock3
+endifblock3:
     movl    -8(%rbp), %eax
     addl    -4(%rbp), %eax
     movl    %eax, -44(%rbp)
     movl    -44(%rbp), %eax
 jmp exit_block
-exit_block
-    #epilogue
-    popq %rbp
-    ret

@@ -17,7 +17,7 @@ expression: OPENPAR expression CLOSEPAR #par
 | VAR #var 
 | CONST #const;
 
-if_then_else : IF OPENPAR condition CLOSEPAR OPENBRACKET block CLOSEBRACKET ELSE OPENBRACKET block CLOSEBRACKET ;
+if_then_else : IF OPENPAR condition CLOSEPAR OPENBRACKET blockthen=block CLOSEBRACKET ELSE OPENBRACKET blockelse=block CLOSEBRACKET ;
 block: instr*;
 
 condition :     affectation                     #condition_affectation

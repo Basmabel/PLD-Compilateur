@@ -241,8 +241,15 @@ antlrcpp::Any IRVisitor::visitConst(ifccParser::ConstContext *context)
 *	Visite du if else statement. 
 */
 antlrcpp::Any IRVisitor :: visitIf_then_else(ifccParser::If_then_elseContext *context) {
-	string var = visit(context->condition());
 
+	//visite de la condition
+	string var = visit(context->condition());
+	
+	//sauvegarde de la sortie 
+	BasicBlock* blockTmp = cfg->current_bb->exit_true;
+	cout<<"tmp = "<<blockTmp->label<<endl;
+	
+	//créer les blocks then, else et endif
 	string nameBlock1= cfg->new_BB_name("then");
     BasicBlock* block1 = new BasicBlock(cfg,nameBlock1);
 	cfg->add_bb(block1);
@@ -258,27 +265,27 @@ antlrcpp::Any IRVisitor :: visitIf_then_else(ifccParser::If_then_elseContext *co
 	cfg->add_bb(block3);
 	cfg->nextBBnumber++;
 
-	cfg->current_bb->exit_true= block1;
-	cfg->current_bb->exit_false= block2;
+	cfg->current_bb->exit_true= block1; // true-> then
+	cfg->current_bb->exit_false= block2; // false->else
 
 	cfg->current_bb=block1;
 	block1->exit_true= block3;
 	block1->exit_false= nullptr;
 	
 
-	visit(context->block(0));
-	
-	
-
+	visit(context->blockthen); 
 	
 	cfg->current_bb=block2;
-	block2->exit_true= nullptr;
+	block2->exit_true= block3; //enlever le jump dans l'assembleur
 	block2->exit_false= nullptr;
 
-	visit(context->block(1));
+	visit(context->blockelse); 
 
 	cfg->current_bb=block3;
-	block3->exit_true=cfg->return_bb;
+	block3->exit_true = blockTmp;
+	cout<<"tmp2 = "<<block3->exit_true->label<<endl;
+
+	//block3->exit_true=cfg->return_bb; 
 	block3->exit_false=nullptr;
 
 

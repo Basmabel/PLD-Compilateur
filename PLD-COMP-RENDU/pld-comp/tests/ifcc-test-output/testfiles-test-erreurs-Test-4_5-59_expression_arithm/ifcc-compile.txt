@@ -1,3 +1,4 @@
-/home/basma/PLD-Compilateur/PLD-COMP-RENDU/pld-comp/tests/ifcc-wrapper.sh: 22: /home/basma/PLD-Compilateur/PLD-COMP-RENDU/pld-comp/tests/../compiler/ifcc: not found
+line 6:20 mismatched input ')' expecting ';'
+error: syntax error during parsing
 
-return code: 127
+return code: 1

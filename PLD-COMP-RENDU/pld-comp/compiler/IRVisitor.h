@@ -16,6 +16,7 @@
 #include "antlr4-runtime.h"
 #include "generated/ifccBaseVisitor.h"
 #include "IR.h"
+#include "functionTable.h"
 #include <map> 
 
 using namespace std;
@@ -60,10 +61,18 @@ class  IRVisitor : public ifccBaseVisitor {
 
 		virtual antlrcpp::Any visitReturn_stmt(ifccParser::Return_stmtContext *context) override ;
 
+		// function table methods
+		void add_to_function_table(string name, string returnType, vector<pair<string,string>> args, size_t line);
+		void redeclarationFunctionError(size_t linectr, string name, string returnType, vector<pair<string,string>> args);
+		void erreurFunctionNonDeclaree(string name, size_t linectr);
+		Type get_func_returnType(string name);
+		fonction* get_func(string name);
+
 	private:
 		
 		int linectr =0; //Ligne de l'instruction courante
-
+		int nextFreeFunctionIndex=0; /**< to allocate new functions in the function table */
+		functionTable* fonctionTable= new functionTable();
         CFG* cfg;
 };
 

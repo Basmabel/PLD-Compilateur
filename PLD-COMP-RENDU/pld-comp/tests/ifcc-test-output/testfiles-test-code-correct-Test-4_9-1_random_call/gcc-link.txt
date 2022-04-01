@@ -1,0 +1,5 @@
+/usr/bin/ld: /tmp/ccowznCh.o: in function `main':
+input.c:(.text+0x25): undefined reference to `test'
+collect2: error: ld returned 1 exit status
+
+return code: 1

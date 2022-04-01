@@ -82,23 +82,23 @@ void IRInstr::gen_asm(ostream &o){
             string function = params[1];
             //varDest = bb->cfg->get_var_index(params[0]);
             var2 = bb->cfg->get_var_index(params[2]);
-            o << "    movq    " << var2 << "(%rbp), %edi" << endl;
-            o << "    call    " << function << endl;
+            //o << "    movl    " << var2 << "(%rbp), %edi" << endl;
+            //o << "    call    " << function << endl;
 
             for (int i = 2; i < params.size(); i++) {
                 switch(i) {
-                    case 2: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %r8d" << endl; break;
-                    case 3: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdi" << endl; break;
-                    case 4: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rcx" << endl; break;
-                    case 5: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdx" << endl; break;
-                    case 6: o << "    movq    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %rsi" << endl; break;
-                    case 7: o << "    movq    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %rax" << endl; break;
+                    case 2: o << "    movl    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %r8d" << endl; break;
+                    case 3: o << "    movl    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %edi" << endl; break;
+                    case 4: o << "    movl    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %ecx" << endl; break;
+                    case 5: o << "    movl    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %edx" << endl; break;
+                    case 6: o << "    movl    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %esi" << endl; break;
+                    case 7: o << "    movl    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %eax" << endl; break;
                 }
             }
 
-            o << "    movq    %r8d, %r9d" <<endl;
-            o << "    movq    %rdi, %r8d" <<endl;
-            o << "    movq    %rax, %rdi" <<endl;
+            o << "    movl    %r8d, %r9d" <<endl;
+            o << "    movl    %edi, %r8d" <<endl;
+            o << "    movl    %eax, %edi" <<endl;
             o << "    call    " << function << endl;
             break;
         }
@@ -133,7 +133,6 @@ CFG::CFG(){
 
     //Aucun symbol pour l'instant
     nextFreeSymbolIndex=0;
-    nextFreeFunctionIndex=0;
 
     nextBBnumber=0;
 
@@ -166,8 +165,8 @@ void CFG::add_bb(BasicBlock* bb){
     bbs.insert(bbs.begin()+nextBBnumber,bb);
 }
 
-void CFG::gen_asm(ostream& o){
-    gen_asm_prologue(o);
+void CFG::gen_asm(ostream& o,string functionName){
+    gen_asm_prologue(o,functionName);
     for(unsigned int i = 0; i < bbs.size(); i++)
     {
         bbs[i]->gen_asm(o);
@@ -181,13 +180,13 @@ string CFG::IR_reg_to_asm(string reg){
     return string_var;
 }
 
-void CFG::gen_asm_prologue(ostream& o){
+void CFG::gen_asm_prologue(ostream& o,string functionName){
     #ifdef __APPLE__
-	    o<<".globl    _main\n"
-        " _main: \n"
+	    o<<".globl    _"<<functionName<<"\n"
+        " _"<<functionName<<": \n"
 	#else
-	    o<<".globl    main\n"
-        " main: \n"
+	    o<<".globl    "<<functionName<<"\n"
+        " "<<functionName<<": \n"
 	#endif
         "    #prologue\n"
         "    pushq %rbp\n"
@@ -238,6 +237,12 @@ string CFG::create_new_tempvar(Type t, string blockName, size_t line){
     return name;
 }
 
+string CFG::create_new_tempvar_function(Type t, string var, size_t line){
+    add_to_symbol_table(var,t,line);
+    symboleTable->setUsed(var,true);
+    return var;
+}
+
 
 size_t CFG::get_var_index(string name){
     return symboleTable->getOffset(name);
@@ -258,40 +263,5 @@ string CFG::new_BB_name(size_t line){
     return "block_"+to_string(line);
 }
 
-//FunctionTable
-void CFG::add_to_function_table(string name, string returnType, vector<pair<string,string>> args, size_t line){
-    fonctionTable->add(name,returnType,args,line);
-    nextFreeFunctionIndex++;
-}
 
-void CFG::redeclarationFunctionError(size_t linectr, string name, string returnType, vector<pair<string,string>> args){
-    if(fonctionTable->contains(name) && fonctionTable->getReturnType(name)==returnType && fonctionTable->getArgsSize(name)==args.size() ){  
-		cerr << "<source>:"<<linectr<<": error: redeclaration of '"<<fonctionTable->getReturnType(name)<<" "<<name<<"'" << endl;
-		cerr << "<source>:"<<fonctionTable->getLine(name)<<": error: '"<<fonctionTable->getReturnType(name)<<" "<<name<<"' previously declared here" << endl;
-	}
-    cout<<"hey"<<endl;
-}
-
-void CFG::erreurFunctionNonDeclaree(string name, size_t linectr){
-	if(!fonctionTable->contains(name)){
-		cerr << "<source>:"<<linectr<<": error: '"<<name<<"' was not declared in this scope" << endl;
-		exit(1);
-	}
-}
-
-
-Type CFG::get_func_returnType(string name){
-    if(fonctionTable->getReturnType(name)=="int"){
-        return Type::INT;
-    }else if(fonctionTable->getReturnType(name)=="char"){
-        return Type::CHAR;
-    }else if(fonctionTable->getReturnType(name)=="void"){
-        return Type::VOID;
-    }
-    return Type::DEFAULT;
-}
-
-fonction* CFG::get_func(string name){
-    return fonctionTable->getFonction(name);
-}
 

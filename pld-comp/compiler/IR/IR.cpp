@@ -67,7 +67,7 @@ void BasicBlock::add_IRInstr(IRInstr::Operation op, Type t, vector<string> param
     instrs.push_back(new IRInstr(this, op, t, params));
 }
 
-void BasicBlock::gen_asm(ostream &o){
+void BasicBlock::gen_asm(ostream &o, string functionName){
 #ifdef _APPLE_
     if(label == "main"){
         out << endl << "_main" << ":" << endl;
@@ -124,11 +124,11 @@ CFG::CFG(DefFonction* ast){
 
 }
 
-void CFG::gen_asm(ostream& o){
-    gen_asm_prologue(o);
+void CFG::gen_asm(ostream& o,string functionName){
+    gen_asm_prologue(o, functionName);
     for(unsigned int i = 0; i < bbs.size(); i++)
     {
-        bbs[i]->gen_asm(o);
+        bbs[i]->gen_asm(o, functionName);
     }
     gen_asm_epilogue(o);
 }

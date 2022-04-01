@@ -8,6 +8,7 @@ using namespace std;
 antlrcpp::Any IRVisitor::visitProg(ifccParser::ProgContext *context) 
 {
 	cfg = new CFG();
+	
 	string functionName = context->VAR(0)->getText();
 	vector<string> name;
 	for (int i =1; i < context->VAR().size(); i++) {
@@ -24,17 +25,25 @@ antlrcpp::Any IRVisitor::visitProg(ifccParser::ProgContext *context)
 	vector<pair<string,string>> args;
 	for (int i =0; i<name.size(); i++){
 		args.push_back(pair<string, string>(name.at(i),types.at(i)));
+		string nameVar = name.at(i);
+		string type = types.at(i);
+		if(type == "int"){
+			cfg->create_new_tempvar_function(Type::INT,nameVar,linectr);
+		}else if (type =="char"){
+			cfg->create_new_tempvar_function(Type::CHAR,nameVar,linectr);
+		}
 	}
 	
-	//cfg->redeclarationFunctionError(linectr,functionName, context->INT(0)->getText(), args);
-	cfg->add_to_function_table(functionName, context->INT(0)->getText(),args, linectr);
+	redeclarationFunctionError(linectr,functionName, context->INT(0)->getText(), args);
+	if(functionName != "main")
+		add_to_function_table(functionName, context->INT(0)->getText(),args, linectr);
     
     for(int i=0 ; i<context->instr().size(); i++){
 		linectr=context->instr().at(i)->getStart()->getLine();
 		visit(context->instr().at(i));
 	}
     
-    cfg->gen_asm(cout);
+    cfg->gen_asm(cout,functionName);
 	return 0;
 }
 
@@ -99,9 +108,9 @@ antlrcpp::Any IRVisitor::visitFunctionCall(ifccParser::FunctionCallContext *cont
 {
 	string functionName = context->VAR()->getText();
 	
-	cfg->erreurFunctionNonDeclaree(functionName,linectr);
+	erreurFunctionNonDeclaree(functionName,linectr);
 
-	fonction* actualFunction = cfg->get_func(functionName);
+	fonction* actualFunction = get_func(functionName);
 		
 
 	if(actualFunction->getArgsSize() != context->expression().size()){
@@ -241,7 +250,7 @@ antlrcpp::Any IRVisitor::visitVar(ifccParser::VarContext *context)
 {
 	std::string var =context->VAR()->getText();
 
-	cfg->erreurVariableNonDeclare(var,linectr);
+	//cfg->erreurVariableNonDeclare(var,linectr);
 
 	return var;
 	
@@ -305,7 +314,41 @@ antlrcpp::Any IRVisitor::visitReturn_stmt(ifccParser::Return_stmtContext *contex
 }
 
 
+//FunctionTable
+void IRVisitor::add_to_function_table(string name, string returnType, vector<pair<string,string>> args, size_t line){
+    fonctionTable->add(name,returnType,args,line);
+    nextFreeFunctionIndex++;
+}
 
+void IRVisitor::redeclarationFunctionError(size_t linectr, string name, string returnType, vector<pair<string,string>> args){
+    if(fonctionTable->contains(name) && fonctionTable->getReturnType(name)==returnType && fonctionTable->getArgsSize(name)==args.size() ){  
+		cerr << "<source>:"<<linectr<<": error: redeclaration of '"<<fonctionTable->getReturnType(name)<<" "<<name<<"'" << endl;
+		cerr << "<source>:"<<fonctionTable->getLine(name)<<": error: '"<<fonctionTable->getReturnType(name)<<" "<<name<<"' previously declared here" << endl;
+	}
+}
+
+void IRVisitor::erreurFunctionNonDeclaree(string name, size_t linectr){
+	if(!fonctionTable->contains(name)){
+		cerr << "<source>:"<<linectr<<": error: '"<<name<<"' was not declared in this scope" << endl;
+		exit(1);
+	}
+}
+
+
+Type IRVisitor::get_func_returnType(string name){
+    if(fonctionTable->getReturnType(name)=="int"){
+        return Type::INT;
+    }else if(fonctionTable->getReturnType(name)=="char"){
+        return Type::CHAR;
+    }else if(fonctionTable->getReturnType(name)=="void"){
+        return Type::VOID;
+    }
+    return Type::DEFAULT;
+}
+
+fonction* IRVisitor::get_func(string name){
+    return fonctionTable->getFonction(name);
+}
 
 
 

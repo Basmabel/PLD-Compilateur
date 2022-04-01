@@ -1,3 +1,9 @@
-/home/basma/PLD-Compilateur/PLD-COMP-RENDU/pld-comp/tests/ifcc-wrapper.sh: 22: /home/basma/PLD-Compilateur/PLD-COMP-RENDU/pld-comp/tests/../compiler/ifcc: not found
+line 3:12 token recognition error at: '.'
+line 3:16 token recognition error at: '.'
+line 3:22 token recognition error at: '.'
+line 5:18 token recognition error at: ':'
+line 5:23 token recognition error at: '.'
+line 3:13 mismatched input '5' expecting ';'
+error: syntax error during parsing
 
-return code: 127
+return code: 1

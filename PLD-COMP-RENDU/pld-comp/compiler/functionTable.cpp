@@ -1,6 +1,7 @@
 #include "functionTable.h"
 
 #include <iostream>
+#include <algorithm>
 
 	functionTable::functionTable(){}
 	
@@ -9,7 +10,7 @@
 	*	A DEFINIR
     *
 	*/
-	void functionTable::add(string name, string returnType, vector<pair<string,string>> args, size_t line)
+	void functionTable::add(string name, string returnType, vector<pair<string,string>> arguments, size_t line)
 	{
 		/*size_t index =0;
 		if(returnType=="int"){
@@ -19,8 +20,11 @@
 		}else if(returnType=="void"){
 			index = sizeof(void)*(functions.size()+1);
         }*/
+        for(int i =0; i<arguments.size(); i++){
+            args.push_back(arguments.at(i).first);
+        }
 
-		fonctions.insert(make_pair(name, new fonction(name,returnType,args, line)));
+		fonctions.insert(make_pair(name, new fonction(name,returnType,arguments, line)));
 	}
 
 	/*
@@ -55,6 +59,13 @@
 
     int functionTable::getArgsSize(string name){
 		return fonctions.at(name)->getArgsSize();
+    }
+
+    bool functionTable :: argsContains(string variable){
+        if(count(args.begin(), args.end(),variable)>0){
+			return true;
+		}
+		return false;
     }
 
     fonction* functionTable::getFonction(string name){

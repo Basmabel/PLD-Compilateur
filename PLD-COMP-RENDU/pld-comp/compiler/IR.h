@@ -8,7 +8,6 @@
 
 // Declarations from the parser -- replace with your own
 #include "symbolTable.h"
-#include "functionTable.h"
 
 using namespace std;
 
@@ -141,9 +140,9 @@ class CFG {
 	void add_bb(BasicBlock* bb); 
 
 	// x86 code generation: could be encapsulated in a processor class in a retargetable compiler
-	void gen_asm(ostream& o);
+	void gen_asm(ostream& o,string functionName);
 	string IR_reg_to_asm(string reg); /**< helper method: inputs a IR reg or input variable, returns e.g. "-24(%rbp)" for the proper value of 24 */
-	void gen_asm_prologue(ostream& o);
+	void gen_asm_prologue(ostream& o,string functionName);
 	void gen_asm_epilogue(ostream& o);
 
 	// symbol table methods
@@ -151,16 +150,10 @@ class CFG {
 	void redeclarationError(size_t linectr, string name);
 	void erreurVariableNonDeclare(string name, size_t linectr);
 	string create_new_tempvar(Type t, string blockName, size_t line);
+	string create_new_tempvar_function(Type t, string var, size_t line);
 	size_t get_var_index(string name);
 	Type get_var_type(string name);
 	void set_var_used(string name, bool used);
-
-	// function table methods
-	void add_to_function_table(string name, string returnType, vector<pair<string,string>> args, size_t line);
-	void redeclarationFunctionError(size_t linectr, string name, string returnType, vector<pair<string,string>> args);
-	void erreurFunctionNonDeclaree(string name, size_t linectr);
-	Type get_func_returnType(string name);
-	fonction* get_func(string name);
 
 	// basic block management
 	string new_BB_name(size_t line);
@@ -169,9 +162,7 @@ class CFG {
 
  protected:
 	symbolTable* symboleTable;
-	functionTable* fonctionTable;
 	int nextFreeSymbolIndex; /**< to allocate new symbols in the symbol table */
-	int nextFreeFunctionIndex; /**< to allocate new functions in the function table */
 	int nextBBnumber; /**< just for naming */
 	
 	vector <BasicBlock*> bbs; /**< all the basic blocks of this CFG*/

@@ -33,6 +33,7 @@ class  functionTable {
 		void remove(string name);
 		string getReturnType(string name);
         int getArgsSize(string name);
+        bool argsContains (string variable);
 		bool contains(string name);
         size_t getLine(string name);
         fonction* getFonction(string name);
@@ -41,6 +42,7 @@ class  functionTable {
 
 	//------------------------------------------------------------------ Attributes
 	map<string,fonction*> fonctions;
+    vector<string> args;
 
 };
 

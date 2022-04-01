@@ -2,6 +2,6 @@ line 1:6 no viable alternative at input 'int a ='
 line 3:13 no viable alternative at input 'var1 ='
 line 4:13 no viable alternative at input 'var2 ='
 line 5:4 missing ';' at 'return'
-error: syntax error during parsing
+Segmentation fault
 
-return code: 1
+return code: 139

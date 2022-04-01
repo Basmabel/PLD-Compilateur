@@ -51,6 +51,8 @@ class  IRVisitor : public ifccBaseVisitor {
 
 		virtual antlrcpp::Any visitMultdiv(ifccParser::MultdivContext *context) override;
 
+		virtual antlrcpp::Any visitFuncCall(ifccParser::FuncCallContext *context) override;
+
 		virtual antlrcpp::Any visitPar(ifccParser::ParContext *context) override;
 
 		virtual antlrcpp::Any visitVar(ifccParser::VarContext *context) override;

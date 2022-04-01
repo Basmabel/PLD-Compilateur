@@ -1,5 +1,5 @@
 line 3:13 no viable alternative at input 'b ='
 line 4:10 no viable alternative at input 'c ='
-error: syntax error during parsing
+Segmentation fault
 
-return code: 1
+return code: 139

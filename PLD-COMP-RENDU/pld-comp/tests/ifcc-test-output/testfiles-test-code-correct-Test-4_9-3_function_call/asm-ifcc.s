@@ -23,7 +23,15 @@
     movl    %eax, -24(%rbp)
     movl    -24(%rbp), %eax
     movl    %eax, -8(%rbp)
-    movl    -4(%rbp), %eax
+    movl    $2, -32(%rbp)
+    movl    28(%rbp), %r8d
+    movl    32(%rbp), %edi
+    movl    %r8d, %r9d
+    movl    %edi, %r8d
+    movl    %eax, %edi
+    call    test
+    movl    $2, -36(%rbp)
+    movl    -36(%rbp), %eax
     #epilogue
     popq %rbp
     ret

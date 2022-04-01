@@ -13,6 +13,7 @@ expression: OPENPAR expression CLOSEPAR #par
 | (MINUS) expression #oppose
 | expression (MULTIPLY | DIVIDE) expression #multdiv
 | expression (PLUS | MINUS) expression #plusminus
+| VAR OPENPAR (expression COMMA)* expression CLOSEPAR #funcCall
 | VAR #var
 | CONST #const;
 return_stmt : RETURN expression SEMICOLON;

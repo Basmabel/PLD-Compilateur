@@ -111,6 +111,9 @@ antlrcpp::Any IRVisitor::visitFunctionCall(ifccParser::FunctionCallContext *cont
 	erreurFunctionNonDeclaree(functionName,linectr);
 
 	fonction* actualFunction = get_func(functionName);
+
+	//Creation d'une nouvelle variable résultat
+	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
 		
 
 	if(actualFunction->getArgsSize() != context->expression().size()){
@@ -121,7 +124,7 @@ antlrcpp::Any IRVisitor::visitFunctionCall(ifccParser::FunctionCallContext *cont
 			cerr << "Error : function can't have more than 6 arguments" << endl;
 			exit(1);
 	}
-	vector<string> params = {"test", functionName};
+	vector<string> params = {"test", functionName, vartmp};
 
 	for (int i = 0; i < context->expression().size(); i++) {
 			string arg = visit(context->expression().at(i));
@@ -130,7 +133,7 @@ antlrcpp::Any IRVisitor::visitFunctionCall(ifccParser::FunctionCallContext *cont
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::call, Type::CALL, params);
 	
-	return 0;
+	return vartmp;
 }
 
 
@@ -231,6 +234,41 @@ antlrcpp::Any IRVisitor::visitMultdiv(ifccParser::MultdivContext *context)
 
 
 	return vartmp;
+}
+
+/*
+*	Visite de l'expression d'appel de fonction
+*/
+antlrcpp::Any IRVisitor::visitFuncCall(ifccParser::FuncCallContext *context) 
+{
+	string functionName = context->VAR()->getText();
+	
+	erreurFunctionNonDeclaree(functionName,linectr);
+
+	fonction* actualFunction = get_func(functionName);
+
+	//Creation d'une nouvelle variable résultat
+	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+		
+
+	if(actualFunction->getArgsSize() != context->expression().size()){
+		cerr << "Error : no function with this declaration exists" << endl;
+	}
+
+	if(context->expression().size() > 6 ) {
+			cerr << "Error : function can't have more than 6 arguments" << endl;
+			exit(1);
+	}
+	vector<string> params = {"test", functionName, vartmp};
+
+	for (int i = 0; i < context->expression().size(); i++) {
+			string arg = visit(context->expression().at(i));
+			params.push_back(arg);
+	}
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::call, Type::CALL, params);
+	
+	return vartmp;	 	
 }
 
 /*

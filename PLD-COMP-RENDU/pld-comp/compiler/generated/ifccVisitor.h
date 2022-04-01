@@ -51,6 +51,8 @@ public:
 
     virtual antlrcpp::Any visitOppose(ifccParser::OpposeContext *context) = 0;
 
+    virtual antlrcpp::Any visitFuncCall(ifccParser::FuncCallContext *context) = 0;
+
     virtual antlrcpp::Any visitReturn_stmt(ifccParser::Return_stmtContext *context) = 0;
 
 

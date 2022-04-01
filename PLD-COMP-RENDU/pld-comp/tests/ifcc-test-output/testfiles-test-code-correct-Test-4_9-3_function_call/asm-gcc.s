@@ -30,10 +30,13 @@ main:
 	.cfi_offset 6, -16
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register 6
+	subq	$16, %rsp
 	movl	$6, -8(%rbp)
 	movl	$9, -4(%rbp)
-	movl	-8(%rbp), %eax
-	popq	%rbp
+	movl	$2, %edi
+	call	test
+	movl	$2, %eax
+	leave
 	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc

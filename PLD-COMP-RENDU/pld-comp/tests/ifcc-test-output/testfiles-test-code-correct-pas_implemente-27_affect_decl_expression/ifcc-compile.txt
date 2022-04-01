@@ -1,4 +1,4 @@
 line 1:9 no viable alternative at input 'int main(args'
-error: syntax error during parsing
+Segmentation fault
 
-return code: 1
+return code: 139

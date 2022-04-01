@@ -5,6 +5,5 @@ line 3:26 token recognition error at: '.'
 line 5:18 token recognition error at: ':'
 line 5:21 token recognition error at: '.'
 line 3:14 mismatched input '4' expecting ';'
-error: syntax error during parsing
 
-return code: 1
+return code: 0

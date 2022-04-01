@@ -26,6 +26,8 @@ typedef enum {
 		CONST,
 		MOV,
 		CALL,
+		FUNCTION,
+		PARAMS,
 		RET,
 		DEFAULT
 } Type;

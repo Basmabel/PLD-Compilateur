@@ -32,11 +32,15 @@ class  IRVisitor : public ifccBaseVisitor {
 
 		virtual antlrcpp::Any visitDeclarationInstr(ifccParser::DeclarationInstrContext *context) override;
 
+		virtual antlrcpp::Any visitFunctionCallInstr(ifccParser::FunctionCallInstrContext *context) override;
+
 		virtual antlrcpp::Any visitAffectationInstr(ifccParser::AffectationInstrContext *context) override;
 
 		virtual antlrcpp::Any visitReturn_stmtInstr(ifccParser::Return_stmtInstrContext *context) override;
 
 		virtual antlrcpp::Any visitDeclaration(ifccParser::DeclarationContext *context) override;
+
+		virtual antlrcpp::Any visitFunctionCall(ifccParser::FunctionCallContext *context) override;
 
 		virtual antlrcpp::Any visitVariables(ifccParser::VariablesContext *context) override;
 

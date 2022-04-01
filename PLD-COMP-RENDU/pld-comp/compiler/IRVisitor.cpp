@@ -5,13 +5,30 @@ using namespace std;
 /*
 *	Visite les instructions du programme et génère le CFG correspondant
 */
-antlrcpp::Any IRVisitor::visitProg(ifccParser::ProgContext *ctx) 
+antlrcpp::Any IRVisitor::visitProg(ifccParser::ProgContext *context) 
 {
+	cfg = new CFG();
+	string functionName =context->VAR(0)->getText();
+	cfg->redeclarationError(linectr,functionName);
+	cfg->add_to_symbol_table(functionName,Type::FUNCTION,linectr);
 	
-    cfg = new CFG();
-    for(int i=0 ; i<ctx->instr().size(); i++){
-		linectr=ctx->instr().at(i)->getStart()->getLine();
-		visit(ctx->instr().at(i));
+	//gestion des paramètres d'une fonction
+	vector<string> args;
+	vector<string> varType;
+
+
+	for (int i = 1; i < context->VAR().size(); i++) {
+		string newArg = context->VAR().at(i)->getText();
+		cfg->redeclarationError(linectr,newArg);
+		cfg->add_to_symbol_table(newArg,Type::INT,linectr);
+		args.push_back(newArg);
+		varType.push_back("int");
+	}
+	
+    
+    for(int i=0 ; i<context->instr().size(); i++){
+		linectr=context->instr().at(i)->getStart()->getLine();
+		visit(context->instr().at(i));
 	}
     
     cfg->gen_asm(cout);
@@ -43,6 +60,14 @@ antlrcpp::Any IRVisitor::visitReturn_stmtInstr(ifccParser::Return_stmtInstrConte
 	return 0;
 }
 
+/*
+*	Visiteur de l'instruction d'appel de fonction 
+*/
+antlrcpp::Any IRVisitor::visitFunctionCallInstr(ifccParser::FunctionCallInstrContext *context){
+	visitFunctionCall(context->functionCall());
+	return 0;
+}
+
 
 /*
 *	Visite la déclaration de variables, les ajoute à la table des symboles du cfg
@@ -69,25 +94,26 @@ antlrcpp::Any IRVisitor::visitDeclaration(ifccParser::DeclarationContext *contex
 */
 antlrcpp::Any IRVisitor::visitFunctionCall(ifccParser::FunctionCallContext *context)
 {
-	std::string nomFonction = context->NAME()->getText();
+	string functionName = context->VAR()->getText();
+	//cfg->erreurVariableNonDeclare(functionName,linectr);
 
-	/*if(nomFonction == "putchar"){
+	vector<string> argCall;
+
+	if(context->expression().size() > 6 ) {
+			std::cerr << "Error : function can't have more than 6 arguments" << std::endl;
+			exit(-8);
+	}
+	vector<string> params = {"test", functionName};
+
+	for (int i = 0; i < context->expression().size(); i++) {
+			string arg = visit(context->expression().at(i));
+			argCall.push_back(arg);
+			params.push_back(arg);
 
 	}
 
-	if (!symbolTable->symbolExists(nomFonction, FUNCTION))
-	{
-		throwError(new AlreadyDeclaredSymbolError(funcName, context->NAME()));
-		return nullptr;
-	}
-
-	FuncSymbol *symbol = (FuncSymbol *)symbolTable->getSymbol(funcName);
-	symbol->used();
-
-	visitChildren(context);*/
-
-	vector<string> params;
-	params.push_back(nomFonction);
+	
+	
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::call, Type::CALL, params);
 	
 	return 0;

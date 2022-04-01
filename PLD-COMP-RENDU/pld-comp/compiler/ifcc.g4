@@ -1,12 +1,12 @@
 grammar ifcc;
 
-axiom : prog ;
+axiom : prog* ;
 
-prog : INT 'main' OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET ;
-instr : declaration #declarationInstr | affectation #affectationInstr | return_stmt #return_stmtInstr ; 
-declaration: INT variables* VAR SEMICOLON | functionCall; 
-functionCall: NAME OPENPAR param* expression CLOSEPAR;
-param : expression COMMA; 
+prog : INT VAR OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET
+    |  INT VAR OPENPAR INT VAR (COMMA INT VAR)* CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET;
+instr : declaration #declarationInstr | functionCall #functionCallInstr | affectation #affectationInstr | return_stmt #return_stmtInstr ; 
+declaration: INT variables* VAR SEMICOLON; 
+functionCall: VAR OPENPAR (expression COMMA)* expression CLOSEPAR SEMICOLON; 
 variables: VAR COMMA;
 affectation: VAR EQUAL expression SEMICOLON;
 expression: OPENPAR expression CLOSEPAR #par
@@ -36,7 +36,7 @@ OPA: PLUS | MINUS;
 RETURN : 'return' ;
 CONST : [0-9]+ ;
 VAR : [_a-zA-Z][_a-zA-Z0-9]*;
-NAME : /^([a-zA-Z]+[a-zA-Z_0-9]*)/g
+NAME : [_a-zA-Z][_a-zA-Z0-9]*;
 COMMA : ',';
 COMMENT : '/*' .*? '*/' -> skip ;
 DIRECTIVE : '#' .*? '\n' -> skip ;

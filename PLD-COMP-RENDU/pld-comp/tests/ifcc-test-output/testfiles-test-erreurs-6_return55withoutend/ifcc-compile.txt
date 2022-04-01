@@ -1,4 +1,3 @@
-line 3:0 missing ';' at '}'
-error: syntax error during parsing
+/bin/sh: 1: /home/basma/PLD-Compilateur/PLD-COMP-RENDU/pld-comp/tests/ifcc-wrapper.sh: Permission denied
 
-return code: 1
+return code: 126

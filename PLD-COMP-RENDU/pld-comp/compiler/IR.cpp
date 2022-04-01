@@ -78,28 +78,30 @@ void IRInstr::gen_asm(ostream &o){
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::call:
-            std::string function = params[1];
-            varDest = bb->cfg->get_var_index(params[0]);
+        {
+            string function = params[1];
+            //varDest = bb->cfg->get_var_index(params[0]);
             var2 = bb->cfg->get_var_index(params[2]);
-            o << "movq " << var2 << "(%rbp), %edi" << endl;
-            o << "call " << function << endl;
+            o << "    movq    " << var2 << "(%rbp), %edi" << endl;
+            o << "    call    " << function << endl;
 
             for (int i = 2; i < params.size(); i++) {
                 switch(i) {
-                    case 2: o << "movq " << bb->cfg->get_var_index(params[i]) << "(%rbp), %r8d" << endl; break;
-                    case 3: o << "movq " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdi" << endl; break;
-                    case 4: o << "movq " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rcx" << endl; break;
-                    case 5: o << "movq " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdx" << endl; break;
-                    case 6: o << "movq "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %rsi" << endl; break;
-                    case 7: o << "movq "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %rax" << endl; break;
+                    case 2: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %r8d" << endl; break;
+                    case 3: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdi" << endl; break;
+                    case 4: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rcx" << endl; break;
+                    case 5: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdx" << endl; break;
+                    case 6: o << "    movq    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %rsi" << endl; break;
+                    case 7: o << "    movq    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %rax" << endl; break;
                 }
             }
 
-            o << "movq %r8d, %r9d" <<endl;
-            o << "movq %rdi, %r8d" <<endl;
-            o << "movq %rax, %rdi" <<endl;
-            o << "call " << function << endl;
+            o << "    movq    %r8d, %r9d" <<endl;
+            o << "    movq    %rdi, %r8d" <<endl;
+            o << "    movq    %rax, %rdi" <<endl;
+            o << "    call    " << function << endl;
             break;
+        }
         default:
             break;
     }
@@ -199,7 +201,6 @@ void CFG::gen_asm_epilogue(ostream& o){
 
 void CFG::add_to_symbol_table(string name, Type t, size_t line){
     string type;
-
     switch(t){
         case Type::INT:
             type="int";
@@ -208,7 +209,6 @@ void CFG::add_to_symbol_table(string name, Type t, size_t line){
             type="int";
             break;
     }
-        
     symboleTable->add(name,type,line);
     nextFreeSymbolIndex++;
 }

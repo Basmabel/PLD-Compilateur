@@ -1,5 +1,5 @@
 
-// Generated from ifcc.g4 by ANTLR 4.9.2
+// Generated from ifcc.g4 by ANTLR 4.7.2
 
 #pragma once
 
@@ -20,7 +20,7 @@ public:
     COMMA = 30, COMMENT = 31, DIRECTIVE = 32, WS = 33
   };
 
-  explicit ifccLexer(antlr4::CharStream *input);
+  ifccLexer(antlr4::CharStream *input);
   ~ifccLexer();
 
   virtual std::string getGrammarFileName() const override;

@@ -200,7 +200,7 @@ antlrcpp::Any IRVisitor::visitVar(ifccParser::VarContext *context)
 /*
 *	Visite d'un moins unaire.
 *	Récupère le nom de la variable var obtenue par la visite de l'expression suivant le -.
-*	Stock et retourne le nom du résultat dans une nouvelle variable temporaire
+*	Stocke et retourne le nom du résultat dans une nouvelle variable temporaire
 */
 antlrcpp::Any IRVisitor::visitOppose(ifccParser::OpposeContext *context){
 
@@ -216,6 +216,30 @@ antlrcpp::Any IRVisitor::visitOppose(ifccParser::OpposeContext *context){
 	return vartmp;
 }
 
+/*
+*	
+*	
+*	
+*/
+antlrcpp::Any IRVisitor::visitIsequal(ifccParser::IsequalContext *context){
+	//récuparation du nom de la première variable
+	std::string var= visit(context->expression(0));
+
+	//récuparation du nom de la deuxieme variable
+	std:: string var2=visit(context->expression(1));
+
+	//Creation d'une nouvelle variable résultat
+	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+
+    vector<string> params = {var2,var};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
+
+	
+
+	return vartmp;
+
+}
 
 /*
 *	Visite d'une constante. 

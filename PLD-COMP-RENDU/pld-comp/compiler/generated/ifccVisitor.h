@@ -1,5 +1,5 @@
 
-// Generated from ifcc.g4 by ANTLR 4.9.2
+// Generated from ifcc.g4 by ANTLR 4.7.2
 
 #pragma once
 
@@ -48,6 +48,8 @@ public:
     virtual antlrcpp::Any visitMultdiv(ifccParser::MultdivContext *context) = 0;
 
     virtual antlrcpp::Any visitOppose(ifccParser::OpposeContext *context) = 0;
+
+    virtual antlrcpp::Any visitIsequal(ifccParser::IsequalContext *context) = 0;
 
     virtual antlrcpp::Any visitIf_then_else(ifccParser::If_then_elseContext *context) = 0;
 

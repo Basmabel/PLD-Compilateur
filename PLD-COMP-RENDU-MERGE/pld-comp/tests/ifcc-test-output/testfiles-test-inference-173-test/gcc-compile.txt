@@ -1,0 +1,6 @@
+input.c: In function ‘main’:
+input.c:3:9: warning: overflow in conversion from ‘int’ to ‘char’ changes value from ‘-900’ to ‘124’ [-Woverflow]
+    3 |     x = -900;
+      |         ^
+
+return code: 0

@@ -3,7 +3,7 @@
     #prologue
     pushq %rbp
     movq %rsp, %rbp
-    movq    $6, -40(%rbp)
+    movq    $5, -40(%rbp)
     movq    $-48, -56(%rbp)
     movq    %rbp, %rax
     addq    -56(%rbp), %rax

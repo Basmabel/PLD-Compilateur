@@ -47,3 +47,7 @@ void symbol::setUsed(bool used){
 void symbol::setNull(bool null){
     this->null=null;
 }
+
+void symbol::setType(string type) {
+    this->type=type;
+}

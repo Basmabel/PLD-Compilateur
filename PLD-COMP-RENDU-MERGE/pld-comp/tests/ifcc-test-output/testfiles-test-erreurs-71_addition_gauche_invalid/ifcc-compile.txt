@@ -1,0 +1,5 @@
+line 7:18 token recognition error at: ':'
+line 4:5 mismatched input '+' expecting '='
+error: syntax error during parsing
+
+return code: 1

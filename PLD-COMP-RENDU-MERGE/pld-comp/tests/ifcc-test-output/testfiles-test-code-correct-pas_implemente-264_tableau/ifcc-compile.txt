@@ -1,0 +1,7 @@
+line 2:11 no viable alternative at input 'a []'
+line 2:11 mismatched input ']' expecting {'(', '-', '!', CONST, VAR, CHARACTER}
+line 2:15 extraneous input '{' expecting {'(', '-', '!', CONST, VAR, CHARACTER}
+line 2:17 mismatched input ',' expecting ';'
+error: syntax error during parsing
+
+return code: 1

@@ -1,0 +1,3 @@
+line 8:18 token recognition error at: ':'
+
+return code: 0

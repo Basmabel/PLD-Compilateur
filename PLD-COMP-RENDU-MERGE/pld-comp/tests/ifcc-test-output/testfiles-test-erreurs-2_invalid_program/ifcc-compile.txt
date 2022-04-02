@@ -1,0 +1,7 @@
+line 1:3 token recognition error at: 'ç'
+line 1:7 token recognition error at: ''es'
+line 1:43 token recognition error at: '.'
+line 1:0 mismatched input 'Si' expecting 'int'
+error: syntax error during parsing
+
+return code: 1

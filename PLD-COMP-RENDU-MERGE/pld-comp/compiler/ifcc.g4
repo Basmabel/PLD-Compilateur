@@ -4,9 +4,11 @@ axiom : prog ;
 
 prog : INT 'main' OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET ;
 
+
 instr : declaration #declarationInstr | affectation SEMICOLON #affectationInstr | return_stmt #return_stmtInstr ; 
 
-declaration: INT variables* enddeclaration SEMICOLON; 
+declaration: type variables* enddeclaration SEMICOLON; 
+type: INT #int | CHAR #char;
 
 variables: lvalue COMMA #varsimpledecl
 | affectation COMMA #varaffectdecl;
@@ -31,6 +33,7 @@ expression: OPENPAR expression CLOSEPAR #par
 | expression OR expression #orlogiq
 | VAR OPENSQBRACKETS expression CLOSESQBRACKETS #valTableau
 | VAR #var
+| CHARACTER #character
 | CONST #const;
 
 return_stmt : RETURN expression SEMICOLON;
@@ -61,6 +64,7 @@ XOR: '^';
 RETURN : 'return' ;
 CONST : [0-9]+ ;
 VAR : [_a-zA-Z][_a-zA-Z0-9]*;
+CHARACTER : '\''.?'\'';
 COMMA : ',';
 COMMENT : '/*' .*? '*/' -> skip ;
 DIRECTIVE : '#' .*? '\n' -> skip ;

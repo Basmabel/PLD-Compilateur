@@ -1,5 +1,7 @@
 #include <iostream>
 #include "IRVisitor.h"
+#include <string>
+#include <iostream>
 using namespace std;
 
 
@@ -62,6 +64,8 @@ antlrcpp::Any IRVisitor::visitReturn_stmtInstr(ifccParser::Return_stmtInstrConte
 */
 antlrcpp::Any IRVisitor::visitDeclaration(ifccParser::DeclarationContext *context)
 {
+	typeVardecl = visit(context->type());
+	
 	
 	declaration = true;
 
@@ -75,6 +79,17 @@ antlrcpp::Any IRVisitor::visitDeclaration(ifccParser::DeclarationContext *contex
 	return 0;
 }
 
+/*
+*	Visite d'une type, retourne son type
+*/
+
+antlrcpp::Any IRVisitor::visitInt(ifccParser::IntContext *context){
+	return Type::INT;
+}
+
+antlrcpp::Any IRVisitor::visitChar(ifccParser::CharContext *context){
+	return Type::CHAR;
+}
 
 /*
 *	Visite d'une variable, retourne son nom 
@@ -130,8 +145,8 @@ antlrcpp::Any IRVisitor::visitAffectation(ifccParser::AffectationContext *contex
 	//Recuperation nouvelle variable gauche
 	std::string var =visit(context->lvalue());
 
+
 	//verifie que l'on a pas b[5] = 6 dans une declaration
-	
 	if(declaration && v.contains(var+"_tab_size")){
 		//generer erreur
 		cfg->erreurInvalidInitializer(linectr);
@@ -139,9 +154,9 @@ antlrcpp::Any IRVisitor::visitAffectation(ifccParser::AffectationContext *contex
 
 	string varOff = cfg->IR_reg_to_asm(cfg->get_var_index(var));
 	string localOff = cfg->IR_reg_to_asm(cfg->get_var_index(local));
-    vector<string> params = {varOff,localOff};
+  vector<string> params = {varOff,localOff};
 
-    cfg->current_bb->add_IRInstr(IRInstr::Operation::wmem, Type::WMEM, params);
+  cfg->current_bb->add_IRInstr(IRInstr::Operation::wmem, Type::WMEM, params);
 
 	return var;
 }
@@ -155,7 +170,7 @@ antlrcpp::Any IRVisitor::visitLvalVar(ifccParser::LvalVarContext *context){
 	string var = context->VAR()->getText();
 
 	if(declaration){
-		addSymbolToTable(var);
+		addSymbolToTable(var,typeVardecl);
 	}
 
 	//Check si la var a été déclaree
@@ -195,7 +210,7 @@ antlrcpp::Any IRVisitor::visitLvaltableau(ifccParser::LvaltableauContext *contex
 		if(size<0){
 			cfg->erreurNegativeTabSize(name,linectr);
 		}
-		addSymbolToTable(var,size);
+		addSymbolToTable(var,typeVardecl,size);
 
 		return var;
 	}
@@ -242,6 +257,26 @@ antlrcpp::Any IRVisitor::visitPlusminus(ifccParser::PlusminusContext *context)
 
 	return vartmp;
 }
+
+antlrcpp::Any IRVisitor::visitCharacter(ifccParser::CharacterContext *context) 
+{
+	string character =context->CHARACTER()->getText();
+
+	int64_t temp = (int64_t) character[1];
+	string val = to_string(temp);
+
+
+	//Creation d'une nouvelle variable résultat
+	std:: string var = cfg->create_new_tempvar(Type::CHAR, cfg->current_bb->label,linectr);
+
+    vector<string> params = {var,val};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::ldconst, Type::CONST, params); 
+
+	return var;
+
+};
+
 
 /*
 *	Visite de l'expression multiply ou de l'expression divide. 
@@ -470,9 +505,9 @@ antlrcpp::Any IRVisitor::visitReturn_stmt(ifccParser::Return_stmtContext *contex
 }
 
 
-void IRVisitor::addSymbolToTable(string var, int nbAlloc){
+void IRVisitor::addSymbolToTable(string var, Type type, int nbAlloc){
 	cfg->redeclarationError(linectr,var);
-	cfg->add_to_symbol_table(var,Type::INT,linectr,nbAlloc);
+	cfg->add_to_symbol_table(var,type,linectr,nbAlloc);
 }
 
 

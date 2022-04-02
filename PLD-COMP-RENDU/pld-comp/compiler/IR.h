@@ -49,6 +49,7 @@ class IRInstr {
 		sub,
 		mul,
 		mov,
+		movb,
 		ret,
 		div,
 		andq,

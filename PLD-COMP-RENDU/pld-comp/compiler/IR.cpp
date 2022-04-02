@@ -1,5 +1,8 @@
 #include "IR.h"
+#include <string>
+#include <iostream>
 
+using std::hex;
 
 
 IRInstr::IRInstr(BasicBlock* bb, Operation op, Type t, vector<string> params){
@@ -14,23 +17,28 @@ void IRInstr::gen_asm(ostream &o){
     int varDest;
     int var1;
     int var2;
+    long long int temp;
     switch(op){
         case Operation::ldconst:
             varDest = bb->cfg->get_var_index(params[0]);
+            try{
+                temp = stoll(params[1]);
+            }
+            catch(std::out_of_range& e){
+                std::cerr<<"warning : variable too big"<<endl;   
+            }
             o<<"    movq    $"<<params[1]<<", -"<<varDest<<"(%rbp)"<<endl;
-            //o<<";"<<params[1]<<endl;;
+            //o<<";"<<params[0]<<endl;;
             break;
         case Operation::add:
             varDest = bb->cfg->get_var_index(params[0]);
             var2 = bb->cfg->get_var_index(params[2]);
-
             if(params[1]=="%rbp"){
                  o<<"    movq    "<<params[1]<<", %rax"<<endl;
             }else{
                 var1 = bb->cfg->get_var_index(params[1]);
                 o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
-            }        
-
+            }  
             o<<"    addq    -"<<var2<<"(%rbp), %rax"<<endl;
             o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
            // o<<";"<<params[0]<<endl;;
@@ -104,9 +112,6 @@ void IRInstr::gen_asm(ostream &o){
             o<<"    sete    %al"<<endl;
             o<<"    movzbq  %al, %rax"<<endl;
             o<<" 	 movq   %rax, -"<<varDest<<"(%rbp)"<<endl;
-           /* o<<" 	 movq   -"<<var1<<"(%rbp), %rax"<<endl;
-            o<<" 	 not   %rax"<<endl;
-            o<<" 	 movq   %rax, -"<<varDest<<"(%rbp);"<<endl;*/
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::mov:
@@ -239,6 +244,9 @@ void CFG::add_to_symbol_table(string name, Type t, int line, int nbAlloc){
         case Type::INT:
             type="int";
             break;
+        case Type::CHAR:
+            type="char";
+            break;
         default:
             type="int";
             break;
@@ -295,6 +303,9 @@ int CFG::get_var_index(string name){
 Type CFG::get_var_type(string name){
     if(symboleTable->getType(name)=="int"){
         return Type::INT;
+    }
+    if(symboleTable->getType(name)=="char"){
+        return Type::CHAR;
     }
     return Type::DEFAULT;
 }

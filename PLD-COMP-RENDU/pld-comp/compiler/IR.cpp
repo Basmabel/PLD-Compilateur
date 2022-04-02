@@ -17,14 +17,14 @@ void IRInstr::gen_asm(ostream &o){
     int varDest;
     int var1;
     int var2;
-    int temp;
+    long long int temp;
     switch(op){
         case Operation::ldconst:
             varDest = bb->cfg->get_var_index(params[0]);
             //cout<<stoi(params[1])<<endl;
             //cout<<hex<<strtol(params[1])<<endl;
             try{
-                temp = stol(params[1]);
+                temp = stoll(params[1]);
             }
             catch(std::out_of_range& e){
                 std::cerr<<"warning : variable too big"<<endl;   

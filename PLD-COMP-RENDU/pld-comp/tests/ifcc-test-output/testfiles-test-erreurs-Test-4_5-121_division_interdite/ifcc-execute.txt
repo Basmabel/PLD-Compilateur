@@ -1,3 +1,0 @@
-Floating point exception
-
-return code: 136

@@ -1,6 +1,0 @@
-input.c: In function ‘main’:
-input.c:4:8: error: lvalue required as left operand of assignment
-    4 |     a+b=b;
-      |        ^
-
-return code: 1

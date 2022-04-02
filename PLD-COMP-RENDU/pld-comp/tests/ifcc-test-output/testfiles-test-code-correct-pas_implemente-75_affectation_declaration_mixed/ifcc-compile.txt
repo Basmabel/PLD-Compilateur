@@ -1,5 +1,0 @@
-line 7:18 token recognition error at: ':'
-line 3:9 no viable alternative at input 'b='
-error: syntax error during parsing
-
-return code: 1

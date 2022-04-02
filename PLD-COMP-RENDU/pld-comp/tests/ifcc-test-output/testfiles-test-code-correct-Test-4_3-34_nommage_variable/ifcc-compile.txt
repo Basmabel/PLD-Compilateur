@@ -1,4 +1,0 @@
-warning : variable 'c1' was declared but never referenced
-warning : variable 'c2' was declared but never referenced
-
-return code: 0

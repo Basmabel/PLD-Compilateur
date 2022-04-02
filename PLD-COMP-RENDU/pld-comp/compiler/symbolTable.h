@@ -18,6 +18,7 @@
 #include <string>
 #include <cstdio>
 #include "symbol.h"
+//#include "IR.h"
 
 using namespace std;
 
@@ -32,6 +33,7 @@ class  symbolTable {
 		void add(string name, string type, int line, int length);
 		void setUsed(string name,bool used);
 		void setNull(string name, bool null);
+		void setType(string name, string type);
 		void remove(string name);
 		bool isUsed(string name);
 		bool isNull(string name);
@@ -41,11 +43,11 @@ class  symbolTable {
 		bool contains(string name);
 		map<string,int> checkIfSymbolsUsed();
 
-		map<string,symbol*> symbols;
+		
 	private:
 
 	//------------------------------------------------------------------ Attributes
-	
+	map<string,symbol*> symbols;
 
 };
 

@@ -1,0 +1,5 @@
+line 8:18 token recognition error at: ':'
+line 5:8 mismatched input '+' expecting {'(', '-', '!', CONST, VAR, CHARACTER}
+error: syntax error during parsing
+
+return code: 1

@@ -1,0 +1,4 @@
+line 5:11 extraneous input '&' expecting {'(', '-', '!', CONST, VAR, CHARACTER}
+error: syntax error during parsing
+
+return code: 1

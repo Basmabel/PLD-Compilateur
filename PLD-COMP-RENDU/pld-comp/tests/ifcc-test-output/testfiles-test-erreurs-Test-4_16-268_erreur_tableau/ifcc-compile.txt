@@ -1,0 +1,3 @@
+<source>:2: error: size of array 'a_tab_size' is negative
+
+return code: 1

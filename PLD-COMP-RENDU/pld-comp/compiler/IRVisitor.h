@@ -88,7 +88,7 @@ class  IRVisitor : public ifccBaseVisitor {
 
 	private:
 
-		void addSymbolToTable(string var, int nbAlloc=1);
+		void addSymbolToTable(string var,Type type, int nbAlloc=1);
 		void addValToTab(string var, int size);
 		string gestionTableau(string var, string index);
 
@@ -98,6 +98,7 @@ class  IRVisitor : public ifccBaseVisitor {
         CFG* cfg;
 
 		ValeurVisitor v;
+		Type typeVardecl;
 };
 
 #endif //IRVISITOR_H

@@ -64,7 +64,8 @@ antlrcpp::Any IRVisitor::visitReturn_stmtInstr(ifccParser::Return_stmtInstrConte
 */
 antlrcpp::Any IRVisitor::visitDeclaration(ifccParser::DeclarationContext *context)
 {
-	Type type = visit(context->type());
+	typeVardecl = visit(context->type());
+	
 	
 	declaration = true;
 
@@ -169,7 +170,7 @@ antlrcpp::Any IRVisitor::visitLvalVar(ifccParser::LvalVarContext *context){
 	string var = context->VAR()->getText();
 
 	if(declaration){
-		addSymbolToTable(var);
+		addSymbolToTable(var,typeVardecl);
 	}
 
 	//Check si la var a été déclaree
@@ -209,7 +210,7 @@ antlrcpp::Any IRVisitor::visitLvaltableau(ifccParser::LvaltableauContext *contex
 		if(size<0){
 			cfg->erreurNegativeTabSize(name,linectr);
 		}
-		addSymbolToTable(var,size);
+		addSymbolToTable(var,typeVardecl,size);
 
 		return var;
 	}
@@ -504,9 +505,9 @@ antlrcpp::Any IRVisitor::visitReturn_stmt(ifccParser::Return_stmtContext *contex
 }
 
 
-void IRVisitor::addSymbolToTable(string var, int nbAlloc){
+void IRVisitor::addSymbolToTable(string var, Type type, int nbAlloc){
 	cfg->redeclarationError(linectr,var);
-	cfg->add_to_symbol_table(var,Type::INT,linectr,nbAlloc);
+	cfg->add_to_symbol_table(var,type,linectr,nbAlloc);
 }
 
 

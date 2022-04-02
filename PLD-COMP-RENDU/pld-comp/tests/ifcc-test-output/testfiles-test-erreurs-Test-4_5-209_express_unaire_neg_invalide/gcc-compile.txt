@@ -1,0 +1,7 @@
+input.c: In function ‘main’:
+input.c:4:13: error: expected ‘;’ before ‘!’ token
+    4 |     return x!;
+      |             ^
+      |             ;
+
+return code: 1

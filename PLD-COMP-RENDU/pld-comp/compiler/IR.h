@@ -164,16 +164,17 @@ class CFG {
 	int get_var_index(string name);
 	Type get_var_type(string name);
 	void set_var_used(string name, bool used);
+	void set_var_type(string name, Type type);
 
 	// basic block management
 	string new_BB_name(int line);
 	BasicBlock* current_bb;
 	BasicBlock* return_bb;
 
+	
+ protected:
 	int nextFreeSymbolIndex; /**< to allocate new symbols in the symbol table */
 	symbolTable* symboleTable;
- protected:
-	
 	
 	int nextBBnumber; /**< just for naming */
 

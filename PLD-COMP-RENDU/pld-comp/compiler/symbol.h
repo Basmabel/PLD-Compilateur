@@ -12,6 +12,7 @@
 
 //--------------------------------------------------- Interfaces utilisées
 #include <string>
+//#include "IR.h"
 using namespace std;
 
 /* Rôle de la classe <symbol>
@@ -35,6 +36,7 @@ class  symbol{
 
                 void setUsed(bool used);
                 void setNull(bool null);
+                void setType(string type);
 
 	private:
 

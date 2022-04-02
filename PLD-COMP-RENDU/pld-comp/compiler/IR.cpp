@@ -111,7 +111,7 @@ void IRInstr::gen_asm(ostream &o){
             o<<"    cmpq   $0, -"<<var1<<"(%rbp)"<<endl;
             o<<"    sete    %al"<<endl;
             o<<"    movzbq  %al, %rax"<<endl;
-            o<<" 	 movq   %rax, -"<<varDest<<"(%rbp)"<<endl;
+            o<<"    movq   %rax, -"<<varDest<<"(%rbp)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::mov:
@@ -308,6 +308,17 @@ Type CFG::get_var_type(string name){
         return Type::CHAR;
     }
     return Type::DEFAULT;
+}
+
+void CFG::set_var_type(string name, Type type){
+
+    if(type==Type::INT){
+        symboleTable->setType(name,"int");
+    }
+    if(type==Type::CHAR){
+        symboleTable->setType(name, "char");
+    }
+    
 }
 
 void CFG::set_var_used(string name, bool used){

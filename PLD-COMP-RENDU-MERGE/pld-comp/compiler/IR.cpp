@@ -111,7 +111,7 @@ void IRInstr::gen_asm(ostream &o){
             o<<"    cmpq   $0, -"<<var1<<"(%rbp)"<<endl;
             o<<"    sete    %al"<<endl;
             o<<"    movzbq  %al, %rax"<<endl;
-            o<<" 	 movq   %rax, -"<<varDest<<"(%rbp)"<<endl;
+            o<<"    movq   %rax, -"<<varDest<<"(%rbp)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::mov:

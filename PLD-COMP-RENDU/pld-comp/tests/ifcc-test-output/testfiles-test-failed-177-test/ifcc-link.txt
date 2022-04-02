@@ -1,4 +1,0 @@
-asm-ifcc.s: Assembler messages:
-asm-ifcc.s:6: Error: missing or invalid immediate expression `999999999999999999999999999999'
-
-return code: 1

@@ -1,0 +1,4 @@
+line 1:9 extraneous input 'args' expecting ')'
+error: syntax error during parsing
+
+return code: 1

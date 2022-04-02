@@ -1,0 +1,5 @@
+line 6:20 mismatched input ')' expecting ';'
+line 6:26 mismatched input '*' expecting '='
+error: syntax error during parsing
+
+return code: 1

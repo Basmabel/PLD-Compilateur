@@ -15,7 +15,7 @@ main:
 	movq	%fs:40, %rax
 	movq	%rax, -8(%rbp)
 	xorl	%eax, %eax
-	movl	$6, -40(%rbp)
+	movl	$5, -40(%rbp)
 	movl	$5, -36(%rbp)
 	movl	-36(%rbp), %eax
 	cltq

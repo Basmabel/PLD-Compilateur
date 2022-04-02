@@ -204,6 +204,15 @@ antlrcpp::Any ValeurVisitor::visitPlusminus(ifccParser::PlusminusContext *contex
 	return val;
 }
 
+antlrcpp::Any ValeurVisitor::visitCharacter(ifccParser::CharacterContext *context){
+	string character =context->CHARACTER()->getText();
+
+	int64_t temp = (int64_t) character[1];
+	int tmp = (int) temp;
+
+	return tmp;
+}
+
 /*
 *	Visite de l'expression multiply ou de l'expression divide. 
 * 	Récupère le nom des deux variables var et var2 obtenues par la 

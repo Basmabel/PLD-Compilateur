@@ -1,0 +1,6 @@
+input.c:6:1: warning: data definition has no type or storage class
+    6 | b = 2;
+      | ^
+input.c:6:1: warning: type defaults to ‘int’ in declaration of ‘b’ [-Wimplicit-int]
+
+return code: 0

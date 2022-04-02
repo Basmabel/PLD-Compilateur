@@ -65,7 +65,6 @@ antlrcpp::Any CodeGenVisitor::visitReturn_stmtInstr(ifccParser::Return_stmtInstr
 }
 
 
-
 /*
 *	Visite la déclaration de variables, les ajoute à la table des symboles mais ne génère pas de code assembleur
 */
@@ -73,11 +72,11 @@ antlrcpp::Any CodeGenVisitor::visitDeclaration(ifccParser::DeclarationContext *c
 {
 	
 	for(int i=0 ; i<context->variables().size(); i++){
-		string var =visit(context->variables().at(i));
+		string var =visitVariables(context->variables().at(i));
 		addSymbol(var);	
 	}
 
-	string var =visit(context->enddeclaration());
+	string var =context->VAR()->getText();
 	addSymbol(var);	
 	
 	return 0;
@@ -87,40 +86,9 @@ antlrcpp::Any CodeGenVisitor::visitDeclaration(ifccParser::DeclarationContext *c
 /*
 *	Visite d'une variable, retourne son nom 
 */
-/*antlrcpp::Any CodeGenVisitor::visitVariables(ifccParser::VariablesContext *context){
+antlrcpp::Any CodeGenVisitor::visitVariables(ifccParser::VariablesContext *context){
 	return context->VAR()->getText();
-}*/
-
-
-/*
-*	Visite d'une variable en fin de déclaration et retourne son nom
-*/
-antlrcpp::Any CodeGenVisitor::visitEnddeclvar(ifccParser::EnddeclvarContext *context){
-	return 0;
 }
-
-/*
-*	Visite une variable déclarée et affectée en fin de déclaration et retourne son nom
-*/
-antlrcpp::Any CodeGenVisitor::visitEnddeclaffect(ifccParser::EnddeclaffectContext *context){
-	return 0;
-}
-
-
-/*
-*	Visite une variable  et retourne son nom
-*/
-antlrcpp::Any CodeGenVisitor::visitVarsimpledecl(ifccParser::VarsimpledeclContext *context){
-	return 0;
-}
-
-/*
-*	Visite une variable déclarée et affectée et retourne son nom
-*/
-antlrcpp::Any CodeGenVisitor::visitVaraffectdecl(ifccParser::VaraffectdeclContext *context){
-	return 0;
-}
-
 
 
 /*
@@ -131,7 +99,7 @@ antlrcpp::Any CodeGenVisitor::visitVaraffectdecl(ifccParser::VaraffectdeclContex
 antlrcpp::Any CodeGenVisitor::visitAffectation(ifccParser::AffectationContext *context)
 {
 
-	std::string var =visit(context->lvalue());
+	std::string var =context->VAR()->getText();
 
 	erreurVariableNonDeclare(var);
 
@@ -141,20 +109,6 @@ antlrcpp::Any CodeGenVisitor::visitAffectation(ifccParser::AffectationContext *c
 	
 	symboltable->setUsed(var,true);
 
-	return 0;
-}
-
-
-
-antlrcpp::Any CodeGenVisitor::visitLvalVar(ifccParser::LvalVarContext *context){
-	return 0;
-}
-
-
-/*
-*	Visiteur de lvalue pour un tableau
-*/
-antlrcpp::Any CodeGenVisitor::visitLvaltableau(ifccParser::LvaltableauContext *context){
 	return 0;
 }
 
@@ -293,38 +247,6 @@ antlrcpp::Any CodeGenVisitor::visitOppose(ifccParser::OpposeContext *context){
 	return vartmp;
 }
 
-antlrcpp::Any CodeGenVisitor::visitNegation(ifccParser::NegationContext *context){
-	return 0;
-}
-
-/*
-*	Visite d'un et logique.
-*	Récupère le nom des variables var obtenues par la visite des expressions précédant et suivant le &.
-*	Stock et retourne le nom du résultat dans une nouvelle variable temporaire
-*/
-antlrcpp::Any CodeGenVisitor::visitAndlogiq(ifccParser::AndlogiqContext *context){
-	return 0;
-}
-
-
-/*
-*	Visite d'un xor logique.
-*	Récupère le nom des variables var obtenues par la visite des expressions précédant et suivant le ^.
-*	Stock et retourne le nom du résultat dans une nouvelle variable temporaire
-*/
-antlrcpp::Any CodeGenVisitor::visitXorlogiq(ifccParser::XorlogiqContext *context){
-	return 0;
-}
-
-/*
-*	Visite d'un ou logique.
-*	Récupère le nom des variables var obtenues par la visite des expressions précédant et suivant le |.
-*	Stock et retourne le nom du résultat dans une nouvelle variable temporaire
-*/
-antlrcpp::Any CodeGenVisitor::visitOrlogiq(ifccParser::OrlogiqContext *context){
-	return 0;
-}
-
 
 /*
 *	Visite d'une constante. 
@@ -378,7 +300,7 @@ void CodeGenVisitor::addSymbol(string var){
 		exit(1);
 	}
 
-	symboltable->add(var,"int",linectr,1);
+	symboltable->add(var,"int",linectr);
 }
 
 /*

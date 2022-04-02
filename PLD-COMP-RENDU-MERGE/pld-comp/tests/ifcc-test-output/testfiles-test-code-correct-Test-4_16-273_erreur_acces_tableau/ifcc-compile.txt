@@ -1,7 +1,0 @@
-line 3:18 token recognition error at: '>'
-line 3:51 token recognition error at: '.'
-line 3:61 token recognition error at: '>'
-line 3:4 mismatched input '/' expecting {'int', '}', 'return', VAR}
-error: syntax error during parsing
-
-return code: 1

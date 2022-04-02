@@ -9,13 +9,13 @@
 	*	Permet d'ajouter un symbol dans la table avec son nom, sont type et sa ligne de déclaration
 	*   La position dans la pile est calculé à partir de la type en octet du type.
 	*/
-	void symbolTable::add(string name, string typeStr, int lineSz, int length)
+	void symbolTable::add(string name, string typeStr, size_t lineSz)
 	{
-		int index =0;
+		size_t index =0;
 		if(typeStr=="int"){
-			index = (sizeof(int64_t))*(length+1);
+			index = sizeof(int64_t)*(symbols.size()+1);
 		}else if(typeStr=="char"){
-			index = sizeof(char)*(length+1);
+			index = sizeof(char)*(symbols.size()+1);
 		}
 
 		symbols.insert(make_pair(name, new symbol(name,index,typeStr,lineSz)));
@@ -46,9 +46,9 @@
 	/*
 	*	Renvoie tous les symbols qui n'ont pas été déclarés mais pas utilisés
 	*/
-	map<string,int> symbolTable::checkIfSymbolsUsed(){
+	map<string,size_t> symbolTable::checkIfSymbolsUsed(){
 		
-		map<string, int> ret;
+		map<string, size_t> ret;
 
 		for(auto i : symbols){
 			if(!i.second->isUsed()){
@@ -67,11 +67,7 @@
 		return symbols.at(name)->isUsed();
 	}
 
-	bool symbolTable::isNull(string name){
-		return symbols.at(name)->isNull();
-	}
-
-	int symbolTable::getOffset(string name){
+	size_t symbolTable::getOffset(string name){
 		return symbols.at(name)->getOffset();
 	}
 
@@ -79,7 +75,7 @@
 		return symbols.at(name)->getType();
 	}
 
-	int symbolTable::getLine(string name){
+	size_t symbolTable::getLine(string name){
 		return symbols.at(name)->getLine();
 	}
 
@@ -88,10 +84,6 @@
 
 	void symbolTable::setUsed(string name, bool used){
 		symbols.at(name)->setUsed(used);
-	}
-
-	void symbolTable::setNull(string name, bool null){
-		symbols.at(name)->setUsed(null);
 	}
 
 

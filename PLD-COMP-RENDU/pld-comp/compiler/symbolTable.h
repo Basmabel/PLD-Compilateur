@@ -29,23 +29,21 @@ using namespace std;
 class  symbolTable {
 	public:
 		symbolTable();
-		void add(string name, string type, int line, int length);
+		void add(string name, string type, size_t line);
 		void setUsed(string name,bool used);
-		void setNull(string name, bool null);
 		void remove(string name);
 		bool isUsed(string name);
-		bool isNull(string name);
-		int getOffset(string name);
+		size_t getOffset(string name);
 		string getType(string name);
-		int getLine(string name);
+		size_t getLine(string name);
 		bool contains(string name);
-		map<string,int> checkIfSymbolsUsed();
+		map<string,size_t> checkIfSymbolsUsed();
 
-		map<string,symbol*> symbols;
+
 	private:
 
 	//------------------------------------------------------------------ Attributes
-	
+	map<string,symbol*> symbols;
 
 };
 

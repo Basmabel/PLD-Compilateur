@@ -19,11 +19,11 @@ void IRInstr::gen_asm(ostream &o){
             varDest = bb->cfg->get_var_index(params[0]);
             o<<"    movq    $"<<params[1]<<", -"<<varDest<<"(%rbp)"<<endl;
             //o<<";"<<params[1]<<endl;;
+
             break;
         case Operation::add:
             varDest = bb->cfg->get_var_index(params[0]);
             var2 = bb->cfg->get_var_index(params[2]);
-
             if(params[1]=="%rbp"){
                  o<<"    movq    "<<params[1]<<", %rax"<<endl;
             }else{
@@ -136,6 +136,31 @@ void IRInstr::gen_asm(ostream &o){
             o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
+        case Operation::call:
+        {
+            string function = params[1];
+            //varDest = bb->cfg->get_var_index(params[0]);
+            var2 = bb->cfg->get_var_index(params[2]);
+            //o << "    movq    " << var2 << "(%rbp), %edi" << endl;
+            //o << "    call    " << function << endl;
+
+            for (int i = 2; i < params.size(); i++) {
+                switch(i) {
+                    case 2: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %r8" << endl; break;
+                    case 3: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdi" << endl; break;
+                    case 4: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rcx" << endl; break;
+                    case 5: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdx" << endl; break;
+                    case 6: o << "    movq    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %rsi" << endl; break;
+                    case 7: o << "    movq    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %rax" << endl; break;
+                }
+            }
+
+            o << "    movq    %r8, %r9" <<endl;
+            o << "    movq    %rdi, %r8" <<endl;
+            o << "    movq    %rax, %rdi" <<endl;
+            o << "    call    " << function << endl;
+            break;
+        }
         default:
             break;
     }
@@ -167,6 +192,7 @@ CFG::CFG(){
 
     //Aucun symbol pour l'instant
     nextFreeSymbolIndex=0;
+
     nextBBnumber=0;
 
     //Création des premiers blocs
@@ -198,8 +224,8 @@ void CFG::add_bb(BasicBlock* bb){
     bbs.insert(bbs.begin()+nextBBnumber,bb);
 }
 
-void CFG::gen_asm(ostream& o){
-    gen_asm_prologue(o);
+void CFG::gen_asm(ostream& o,string functionName){
+    gen_asm_prologue(o,functionName);
     for(unsigned int i = 0; i < bbs.size(); i++)
     {
         bbs[i]->gen_asm(o);
@@ -212,13 +238,13 @@ string CFG::IR_reg_to_asm(int index){
     return string_var;
 }
 
-void CFG::gen_asm_prologue(ostream& o){
+void CFG::gen_asm_prologue(ostream& o,string functionName){
     #ifdef __APPLE__
-	    o<<".globl    _main\n"
-        " _main: \n"
+	    o<<".globl    _"<<functionName<<"\n"
+        " _"<<functionName<<": \n"
 	#else
-	    o<<".globl    main\n"
-        " main: \n"
+	    o<<".globl    "<<functionName<<"\n"
+        " "<<functionName<<": \n"
 	#endif
         "    #prologue\n"
         "    pushq %rbp\n"
@@ -232,9 +258,9 @@ void CFG::gen_asm_epilogue(ostream& o){
 }
 
 
+//SymbolTable
 void CFG::add_to_symbol_table(string name, Type t, int line, int nbAlloc){
     string type;
-
     switch(t){
         case Type::INT:
             type="int";
@@ -242,8 +268,7 @@ void CFG::add_to_symbol_table(string name, Type t, int line, int nbAlloc){
         default:
             type="int";
             break;
-    }
-    
+    }    
     symboleTable->add(name,type,line, nextFreeSymbolIndex);
     nextFreeSymbolIndex+=nbAlloc;
 }
@@ -287,6 +312,12 @@ string CFG::create_new_tempvar(Type t, string blockName, int line, int nbAlloc){
     return name;
 }
 
+string CFG::create_new_tempvar_function(Type t, string var, size_t line){
+    add_to_symbol_table(var,t,line);
+    symboleTable->setUsed(var,true);
+    return var;
+}
+
 
 int CFG::get_var_index(string name){
     return symboleTable->getOffset(name);
@@ -306,4 +337,6 @@ void CFG::set_var_used(string name, bool used){
 string CFG::new_BB_name(int line){
     return "block_"+to_string(line);
 }
+
+
 

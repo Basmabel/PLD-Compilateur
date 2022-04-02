@@ -1,5 +1,5 @@
 
-// Generated from ifcc.g4 by ANTLR 4.9.2
+// Generated from ifcc.g4 by ANTLR 4.7.2
 
 #pragma once
 
@@ -25,11 +25,15 @@ public:
 
     virtual antlrcpp::Any visitDeclarationInstr(ifccParser::DeclarationInstrContext *context) = 0;
 
+    virtual antlrcpp::Any visitFunctionCallInstr(ifccParser::FunctionCallInstrContext *context) = 0;
+
     virtual antlrcpp::Any visitAffectationInstr(ifccParser::AffectationInstrContext *context) = 0;
 
     virtual antlrcpp::Any visitReturn_stmtInstr(ifccParser::Return_stmtInstrContext *context) = 0;
 
     virtual antlrcpp::Any visitDeclaration(ifccParser::DeclarationContext *context) = 0;
+
+    virtual antlrcpp::Any visitFunctionCall(ifccParser::FunctionCallContext *context) = 0;
 
     virtual antlrcpp::Any visitVariables(ifccParser::VariablesContext *context) = 0;
 
@@ -46,6 +50,8 @@ public:
     virtual antlrcpp::Any visitMultdiv(ifccParser::MultdivContext *context) = 0;
 
     virtual antlrcpp::Any visitOppose(ifccParser::OpposeContext *context) = 0;
+
+    virtual antlrcpp::Any visitFuncCall(ifccParser::FuncCallContext *context) = 0;
 
     virtual antlrcpp::Any visitReturn_stmt(ifccParser::Return_stmtContext *context) = 0;
 

@@ -16,6 +16,7 @@
 #include "antlr4-runtime.h"
 #include "generated/ifccBaseVisitor.h"
 #include "IR.h"
+#include "functionTable.h"
 #include "ValeurVisitor.h"
 #include <map> 
 
@@ -36,6 +37,8 @@ class  IRVisitor : public ifccBaseVisitor {
 
 		virtual antlrcpp::Any visitDeclarationInstr(ifccParser::DeclarationInstrContext *context) override;
 
+		virtual antlrcpp::Any visitFunctionCallInstr(ifccParser::FunctionCallInstrContext *context) override;
+
 		virtual antlrcpp::Any visitAffectationInstr(ifccParser::AffectationInstrContext *context) override;
 
 		virtual antlrcpp::Any visitReturn_stmtInstr(ifccParser::Return_stmtInstrContext *context) override;
@@ -46,19 +49,23 @@ class  IRVisitor : public ifccBaseVisitor {
 
 		virtual antlrcpp::Any visitDeclaration(ifccParser::DeclarationContext *context) override;
 
+		virtual antlrcpp::Any visitFunctionCall(ifccParser::FunctionCallContext *context) override;
+  
 		virtual antlrcpp::Any visitEnddeclvar(ifccParser::EnddeclvarContext *context) override;
 
-    	virtual antlrcpp::Any visitEnddeclaffect(ifccParser::EnddeclaffectContext *context) override;
+    virtual antlrcpp::Any visitEnddeclaffect(ifccParser::EnddeclaffectContext *context) override;
 
-    	virtual antlrcpp::Any visitVarsimpledecl(ifccParser::VarsimpledeclContext *context) override;
+    virtual antlrcpp::Any visitVarsimpledecl(ifccParser::VarsimpledeclContext *context) override;
 
-    	virtual antlrcpp::Any visitVaraffectdecl(ifccParser::VaraffectdeclContext *context) override;
+    virtual antlrcpp::Any visitVaraffectdecl(ifccParser::VaraffectdeclContext *context) override;
 
 		virtual antlrcpp::Any visitAffectation(ifccParser::AffectationContext *context) override;
 
 		virtual antlrcpp::Any visitPlusminus(ifccParser::PlusminusContext *context) override;
 
 		virtual antlrcpp::Any visitMultdiv(ifccParser::MultdivContext *context) override;
+
+		virtual antlrcpp::Any visitFuncCall(ifccParser::FuncCallContext *context) override;
 
 		virtual antlrcpp::Any visitPar(ifccParser::ParContext *context) override;
 
@@ -80,6 +87,13 @@ class  IRVisitor : public ifccBaseVisitor {
 
 		virtual antlrcpp::Any visitReturn_stmt(ifccParser::Return_stmtContext *context) override ;
 
+		// function table methods
+		void add_to_function_table(string name, string returnType, vector<pair<string,string>> args, size_t line);
+		void redeclarationFunctionError(size_t linectr, string name, string returnType, vector<pair<string,string>> args);
+		void erreurFunctionNonDeclaree(string name, size_t linectr);
+		Type get_func_returnType(string name);
+		fonction* get_func(string name);
+
 	private:
 
 		void addSymbolToTable(string var, int nbAlloc=1);
@@ -87,6 +101,8 @@ class  IRVisitor : public ifccBaseVisitor {
 		string gestionTableau(string var, string index);
 
 		int linectr =0; //Ligne de l'instruction courante
+		int nextFreeFunctionIndex=0; /**< to allocate new functions in the function table */
+		functionTable* fonctionTable= new functionTable();
 		bool declaration = false;
 
         CFG* cfg;

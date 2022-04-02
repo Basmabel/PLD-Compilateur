@@ -1,5 +1,5 @@
 
-// Generated from ifcc.g4 by ANTLR 4.9.2
+// Generated from ifcc.g4 by ANTLR 4.7.2
 
 #pragma once
 
@@ -27,6 +27,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitFunctionCallInstr(ifccParser::FunctionCallInstrContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitAffectationInstr(ifccParser::AffectationInstrContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -36,6 +40,10 @@ public:
   }
 
   virtual antlrcpp::Any visitDeclaration(ifccParser::DeclarationContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitFunctionCall(ifccParser::FunctionCallContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -68,6 +76,10 @@ public:
   }
 
   virtual antlrcpp::Any visitOppose(ifccParser::OpposeContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitFuncCall(ifccParser::FuncCallContext *ctx) override {
     return visitChildren(ctx);
   }
 

@@ -18,6 +18,7 @@ class DefFonction;
 typedef enum {
 		INT,
 		CHAR,
+		VOID,
 		ADD,
 		SUB,
 		MUL,
@@ -29,6 +30,7 @@ typedef enum {
 		XOR,
 		CONST,
 		MOV,
+		CALL,
 		WMEM,
 		RET,
 		DEFAULT
@@ -147,9 +149,9 @@ class CFG {
 	void add_bb(BasicBlock* bb); 
 
 	// x86 code generation: could be encapsulated in a processor class in a retargetable compiler
-	void gen_asm(ostream& o);
-	string IR_reg_to_asm(int index); /**< helper method: inputs a IR reg or input variable, returns e.g. "-24(%rbp)" for the proper value of 24 */
-	void gen_asm_prologue(ostream& o);
+	void gen_asm(ostream& o,string functionName);
+	string IR_reg_to_asm(string reg); /**< helper method: inputs a IR reg or input variable, returns e.g. "-24(%rbp)" for the proper value of 24 */
+	void gen_asm_prologue(ostream& o,string functionName);
 	void gen_asm_epilogue(ostream& o);
 
 	// symbol table methods

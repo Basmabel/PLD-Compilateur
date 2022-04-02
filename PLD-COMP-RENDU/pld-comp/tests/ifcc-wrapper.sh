@@ -17,10 +17,8 @@
 
 DESTNAME=$1
 SOURCENAME=$2
-ERRNAME=$3
 
 $(dirname $0)/../compiler/ifcc $SOURCENAME >$DESTNAME
-#$(dirname $0)/../compiler/ifcc $SOURCENAME 2>$ERRNAME
 retcode=$?
 
 # forward exit status of the compiler

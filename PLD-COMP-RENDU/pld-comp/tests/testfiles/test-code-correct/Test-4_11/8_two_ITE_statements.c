@@ -7,5 +7,12 @@ int main (){
     }else {
         b=b+3;
     }
-    return b+a;
+    b=b+1;
+    if(a=0){
+        b=10;
+    }else{
+        b=0;
+    }
+    b=10;
+    return a+b;
 }

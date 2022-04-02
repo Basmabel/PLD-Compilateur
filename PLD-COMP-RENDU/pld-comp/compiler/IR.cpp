@@ -112,9 +112,8 @@ void BasicBlock::gen_asm(ostream &o){
         if(exit_false != nullptr) {
             o<<"    je     "<<exit_false->label<<endl;
         }
-                  
+        o << "jmp " << exit_true->label <<endl;     
     }
-    o << "jmp " + exit_true->label <<endl;
     
 
      //exit_true->label=="endifblock3" 
@@ -164,8 +163,9 @@ void CFG::gen_asm(ostream& o){
     gen_asm_prologue(o);
     for(unsigned int i = 0; i < bbs.size(); i++)
     {
-        if(bbs[i]->label != "entry_block" && bbs[i]->label != "exit_block") {
+        if(bbs[i]->label != "entry_block" ) { //&& bbs[i]->label != "exit_block"
             o<<bbs[i]->label<<":"<<endl;
+            
         }
         bbs[i]->gen_asm(o);
     }

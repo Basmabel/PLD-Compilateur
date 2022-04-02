@@ -87,6 +87,18 @@ public class ifccBaseListener implements ifccListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterWhileInstr(ifccParser.WhileInstrContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWhileInstr(ifccParser.WhileInstrContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterDeclaration(ifccParser.DeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -202,6 +214,18 @@ public class ifccBaseListener implements ifccListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitIf_then_else(ifccParser.If_then_elseContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterWhileloop(ifccParser.WhileloopContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWhileloop(ifccParser.WhileloopContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

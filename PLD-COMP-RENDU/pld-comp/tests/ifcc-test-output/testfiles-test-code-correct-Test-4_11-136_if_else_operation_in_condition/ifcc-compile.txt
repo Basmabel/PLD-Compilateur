@@ -1,3 +1,0 @@
-/Users/hanaa/Desktop/INSA/4IF/S2/PLD-Compilateur/PLD-COMP-RENDU/pld-comp/tests/ifcc-wrapper.sh: line 22:  2380 Segmentation fault: 11  $(dirname $0)/../compiler/ifcc $SOURCENAME > $DESTNAME
-
-return code: 139

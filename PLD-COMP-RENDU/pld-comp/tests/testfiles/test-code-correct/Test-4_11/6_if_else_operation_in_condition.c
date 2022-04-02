@@ -7,5 +7,8 @@ int main (){
     }else {
         b=b+3;
     }
-    return b+a;
+    b=b+1;
+
+    
+    return a+b;
 }

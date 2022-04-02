@@ -245,9 +245,8 @@ antlrcpp::Any IRVisitor :: visitIf_then_else(ifccParser::If_then_elseContext *co
 	//visite de la condition
 	string var = visit(context->condition());
 	
-	//sauvegarde de la sortie 
+	//sauvegarde de output avant de traiter la if 
 	BasicBlock* blockTmp = cfg->current_bb->exit_true;
-	cout<<"tmp = "<<blockTmp->label<<endl;
 	
 	//créer les blocks then, else et endif
 	string nameBlock1= cfg->new_BB_name("then");
@@ -276,14 +275,13 @@ antlrcpp::Any IRVisitor :: visitIf_then_else(ifccParser::If_then_elseContext *co
 	visit(context->blockthen); 
 	
 	cfg->current_bb=block2;
-	block2->exit_true= block3; //enlever le jump dans l'assembleur
+	block2->exit_true= block3; //enlever le jump (si unécessaire) dans l'assembleur pour optimiser
 	block2->exit_false= nullptr;
 
 	visit(context->blockelse); 
 
 	cfg->current_bb=block3;
 	block3->exit_true = blockTmp;
-	cout<<"tmp2 = "<<block3->exit_true->label<<endl;
 
 	//block3->exit_true=cfg->return_bb; 
 	block3->exit_false=nullptr;
@@ -292,8 +290,12 @@ antlrcpp::Any IRVisitor :: visitIf_then_else(ifccParser::If_then_elseContext *co
 	return 0;
 }
 
+antlrcpp::Any IRVisitor:: visitWhileloop(ifccParser::WhileloopContext *context) {
+	
+	return 0;
+}
 /*
-*	.. 
+*	Visite du block d'instructions d'une boucle
 */
 antlrcpp::Any IRVisitor::visitBlock(ifccParser::BlockContext *context){
 

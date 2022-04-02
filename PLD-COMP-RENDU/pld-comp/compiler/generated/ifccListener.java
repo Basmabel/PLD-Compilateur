@@ -75,6 +75,18 @@ public interface ifccListener extends ParseTreeListener {
 	 */
 	void exitIf_then_elseInstr(ifccParser.If_then_elseInstrContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code whileInstr}
+	 * labeled alternative in {@link ifccParser#instr}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhileInstr(ifccParser.WhileInstrContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code whileInstr}
+	 * labeled alternative in {@link ifccParser#instr}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhileInstr(ifccParser.WhileInstrContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ifccParser#declaration}.
 	 * @param ctx the parse tree
 	 */
@@ -186,6 +198,16 @@ public interface ifccListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitIf_then_else(ifccParser.If_then_elseContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ifccParser#whileloop}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhileloop(ifccParser.WhileloopContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ifccParser#whileloop}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhileloop(ifccParser.WhileloopContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ifccParser#block}.
 	 * @param ctx the parse tree

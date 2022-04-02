@@ -16,14 +16,14 @@ public:
     OPENBRACKET = 7, CLOSEBRACKET = 8, ISEQUAL = 9, ISDIFFERENT = 10, GREATEREQUAL = 11, 
     SMALLEREQUAL = 12, EQUAL = 13, DIFFERENT = 14, GREATER = 15, SMALLER = 16, 
     PLUS = 17, MINUS = 18, MULTIPLY = 19, DIVIDE = 20, AND = 21, OR = 22, 
-    IF = 23, ELSE = 24, OPM = 25, OPA = 26, RETURN = 27, CONST = 28, VAR = 29, 
-    COMMA = 30, COMMENT = 31, DIRECTIVE = 32, WS = 33
+    IF = 23, ELSE = 24, WHILE = 25, OPM = 26, OPA = 27, RETURN = 28, CONST = 29, 
+    VAR = 30, COMMA = 31, COMMENT = 32, DIRECTIVE = 33, WS = 34
   };
 
   enum {
     RuleAxiom = 0, RuleProg = 1, RuleInstr = 2, RuleDeclaration = 3, RuleVariables = 4, 
-    RuleAffectation = 5, RuleExpression = 6, RuleIf_then_else = 7, RuleBlock = 8, 
-    RuleCondition = 9, RuleComparison = 10, RuleReturn_stmt = 11
+    RuleAffectation = 5, RuleExpression = 6, RuleIf_then_else = 7, RuleWhileloop = 8, 
+    RuleBlock = 9, RuleCondition = 10, RuleComparison = 11, RuleReturn_stmt = 12
   };
 
   explicit ifccParser(antlr4::TokenStream *input);
@@ -44,6 +44,7 @@ public:
   class AffectationContext;
   class ExpressionContext;
   class If_then_elseContext;
+  class WhileloopContext;
   class BlockContext;
   class ConditionContext;
   class ComparisonContext;
@@ -118,6 +119,15 @@ public:
     Return_stmtInstrContext(InstrContext *ctx);
 
     Return_stmtContext *return_stmt();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  WhileInstrContext : public InstrContext {
+  public:
+    WhileInstrContext(InstrContext *ctx);
+
+    WhileloopContext *whileloop();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
@@ -281,6 +291,26 @@ public:
   };
 
   If_then_elseContext* if_then_else();
+
+  class  WhileloopContext : public antlr4::ParserRuleContext {
+  public:
+    ifccParser::BlockContext *blockwhile = nullptr;
+    WhileloopContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *WHILE();
+    antlr4::tree::TerminalNode *OPENPAR();
+    ConditionContext *condition();
+    antlr4::tree::TerminalNode *CLOSEPAR();
+    antlr4::tree::TerminalNode *OPENBRACKET();
+    antlr4::tree::TerminalNode *CLOSEBRACKET();
+    BlockContext *block();
+
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  WhileloopContext* whileloop();
 
   class  BlockContext : public antlr4::ParserRuleContext {
   public:

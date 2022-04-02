@@ -6,7 +6,8 @@ prog : INT 'main' OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET ;
 instr :     declaration                 #declarationInstr 
         |   affectation  SEMICOLON      #affectationInstr 
         |   return_stmt                 #return_stmtInstr 
-        |   if_then_else                #if_then_elseInstr ; 
+        |   if_then_else                #if_then_elseInstr 
+        |   whileloop                       #whileInstr         ; 
 declaration: INT variables* VAR SEMICOLON; 
 variables: VAR COMMA;
 affectation: VAR EQUAL expression;
@@ -18,6 +19,9 @@ expression: OPENPAR expression CLOSEPAR #par
 | CONST #const;
 
 if_then_else : IF OPENPAR condition CLOSEPAR OPENBRACKET blockthen=block CLOSEBRACKET ELSE OPENBRACKET blockelse=block CLOSEBRACKET ;
+
+whileloop : WHILE OPENPAR condition CLOSEPAR OPENBRACKET blockwhile=block CLOSEBRACKET ;
+
 block: instr*;
 
 condition :     affectation                     #condition_affectation
@@ -53,7 +57,7 @@ AND : '&' ;
 OR : '|' ;
 IF : 'if' ;
 ELSE : 'else' ;
-
+WHILE : 'while';
 OPM: MULTIPLY | DIVIDE;
 OPA: PLUS | MINUS;
 

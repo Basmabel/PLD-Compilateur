@@ -58,6 +58,8 @@ class  IRVisitor : public ifccBaseVisitor {
 
 		virtual antlrcpp::Any visitIf_then_else(ifccParser::If_then_elseContext *context) override;
 
+		virtual antlrcpp::Any visitWhileloop(ifccParser::WhileloopContext *context) override;
+
 		virtual antlrcpp::Any visitBlock(ifccParser::BlockContext *context) override;
 
 		virtual antlrcpp::Any visitCondition_affectation(ifccParser::Condition_affectationContext *context) override;

@@ -76,8 +76,8 @@ antlrcpp::Any CodeGenVisitor::visitAffectation(ifccParser::AffectationContext *c
 	erreurVariableNonDeclare(var);
 
 	string local = visit(context->expression());
-	std::cout<<"	 movl   -"<<symboltable->getOffset(local)<<"(%rbp), %eax\n";
-	std::cout<<"	 movl   %eax, -"<<symboltable->getOffset(var)<<"(%rbp)\n";
+	std::cout<<"	 movq   -"<<symboltable->getOffset(local)<<"(%rbp), %rax\n";
+	std::cout<<"	 movq   %rax, -"<<symboltable->getOffset(var)<<"(%rbp)\n";
 	
 	symboltable->setUsed(var,true);
 
@@ -109,12 +109,12 @@ antlrcpp::Any CodeGenVisitor::visitPlusminus(ifccParser::PlusminusContext *conte
 		}
 	}
 
-	std::cout<<" 	 movl  -"<<symboltable->getOffset(var)<<"(%rbp), %eax\n";
+	std::cout<<" 	 movq  -"<<symboltable->getOffset(var)<<"(%rbp), %rax\n";
 
 	if(op){
-		std::cout<<" 	 addl	-"<<symboltable->getOffset(var2)<<"(%rbp), %eax\n";
+		std::cout<<" 	 addl	-"<<symboltable->getOffset(var2)<<"(%rbp), %rax\n";
 	}else {
-		std::cout<<" 	 subl	-"<<symboltable->getOffset(var2)<<"(%rbp), %eax\n";
+		std::cout<<" 	 subl	-"<<symboltable->getOffset(var2)<<"(%rbp), %rax\n";
 	}
 
 	//Creation d'une nouvelle variable résultat
@@ -148,11 +148,11 @@ antlrcpp::Any CodeGenVisitor::visitMultdiv(ifccParser::MultdivContext *context)
 	
 
 	if(op){
-		std::cout<<" 	 movl  -"<<symboltable->getOffset(var2)<<"(%rbp), %eax\n";
+		std::cout<<" 	 movq  -"<<symboltable->getOffset(var2)<<"(%rbp), %rax\n";
 
-		std::cout<<" 	 imul	-"<<symboltable->getOffset(var)<<"(%rbp), %eax\n";
+		std::cout<<" 	 imul	-"<<symboltable->getOffset(var)<<"(%rbp), %rax\n";
 	}else{
-		std::cout<<" 	 movl  -"<<symboltable->getOffset(var)<<"(%rbp), %eax\n";
+		std::cout<<" 	 movq  -"<<symboltable->getOffset(var)<<"(%rbp), %rax\n";
 
 		std::cout<<" 	 cltd\n 	 idivl	-"<<symboltable->getOffset(var2)<<"(%rbp)\n";
 	}
@@ -188,9 +188,9 @@ antlrcpp::Any CodeGenVisitor::visitVar(ifccParser::VarContext *context)
 
 antlrcpp::Any CodeGenVisitor::visitOppose(ifccParser::OpposeContext *context){
 	std::string var =visit(context->expression());
-	std::cout<<" 	 movl	-"<<symboltable->getOffset(var)<<"(%rbp),		%eax\n";
+	std::cout<<" 	 movq	-"<<symboltable->getOffset(var)<<"(%rbp),		%rax\n";
 
-	std::cout<<" 	 negl	%eax\n";
+	std::cout<<" 	 negl	%rax\n";
 
 	//Creation d'une nouvelle variable résultat
 	std:: string vartmp = creationSymboleTemp();
@@ -208,7 +208,7 @@ antlrcpp::Any CodeGenVisitor::visitConst(ifccParser::ConstContext *context)
 	addSymbol(var);
 	symboltable->setUsed(var,true);
 	
-	std::cout<<" 	 movl	$"<<val<<", -"<<symboltable->getOffset(var)<<"(%rbp)\n";
+	std::cout<<" 	 movq	$"<<val<<", -"<<symboltable->getOffset(var)<<"(%rbp)\n";
 	return var;
 }
 
@@ -218,7 +218,7 @@ antlrcpp::Any CodeGenVisitor::visitReturn_stmt(ifccParser::Return_stmtContext *c
 
 	
 	std:string ret = visit(context->expression());
-	std::cout<<" 	 movl	-"<<symboltable->getOffset(ret)<<"(%rbp), %eax\n";
+	std::cout<<" 	 movq	-"<<symboltable->getOffset(ret)<<"(%rbp), %rax\n";
 	
 	
 
@@ -231,7 +231,7 @@ antlrcpp::Any CodeGenVisitor::visitValue(ifccParser::ValueContext *context)
 	
 	if(context->expression()){
 		std::string var=visit(context->expression());
-		//std::cout<<" 	 movl	-"<<symboltable->getOffset(var)<<"(%rbp), %eax\n";
+		//std::cout<<" 	 movq	-"<<symboltable->getOffset(var)<<"(%rbp), %rax\n";
 		return var;
 	}else if(context->CONST()){
 		int val = stoi(context->CONST()->getText());
@@ -276,7 +276,7 @@ std::string CodeGenVisitor::creationSymboleTemp(){
 	addSymbol(vartmp);
 	symboltable->setUsed(vartmp,true);
 	
-	std::cout<<" 	 movl	%eax, -"<<symboltable->getOffset(vartmp)<<"(%rbp)\n";
+	std::cout<<" 	 movq	%rax, -"<<symboltable->getOffset(vartmp)<<"(%rbp)\n";
 
 	return vartmp;
 }

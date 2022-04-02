@@ -79,6 +79,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitIsequal(ifccParser::IsequalContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitIf_then_else(ifccParser::If_then_elseContext *ctx) override {
     return visitChildren(ctx);
   }

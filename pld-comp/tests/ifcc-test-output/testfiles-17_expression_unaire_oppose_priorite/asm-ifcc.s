@@ -5,19 +5,19 @@
     movq %rsp, %rbp
 
     #body
- 	 movl	$5, -12(%rbp)
-	 movl   -12(%rbp), %eax
-	 movl   %eax, -4(%rbp)
- 	 movl	$5, -16(%rbp)
- 	 movl	-4(%rbp),		%eax
- 	 negl	%eax
- 	 movl	%eax, -20(%rbp)
- 	 movl  -20(%rbp), %eax
- 	 subl	-16(%rbp), %eax
- 	 movl	%eax, -24(%rbp)
-	 movl   -24(%rbp), %eax
-	 movl   %eax, -8(%rbp)
- 	 movl	-8(%rbp), %eax
+ 	 movq	$5, -12(%rbp)
+	 movq   -12(%rbp), %rax
+	 movq   %rax, -4(%rbp)
+ 	 movq	$5, -16(%rbp)
+ 	 movq	-4(%rbp),		%rax
+ 	 negl	%rax
+ 	 movq	%rax, -20(%rbp)
+ 	 movq  -20(%rbp), %rax
+ 	 subl	-16(%rbp), %rax
+ 	 movq	%rax, -24(%rbp)
+	 movq   -24(%rbp), %rax
+	 movq   %rax, -8(%rbp)
+ 	 movq	-8(%rbp), %rax
     #epilogue
     popq %rbp
     ret

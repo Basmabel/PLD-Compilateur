@@ -12,7 +12,7 @@ main:
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register 6
 	addl	$1, -4(%rbp)
-	movl	-4(%rbp), %eax
+	movq	-4(%rbp), %rax
 	popq	%rbp
 	.cfi_def_cfa 7, 8
 	ret

@@ -218,6 +218,27 @@ antlrcpp::Any IRVisitor::visitOppose(ifccParser::OpposeContext *context){
 
 
 /*
+* Visite d'une égalité 	(==)
+* Retourne le résultat de comparaison entre deux expression
+*/
+antlrcpp::Any IRVisitor::visitIsequal(ifccParser::IsequalContext *context){
+	//récuparation du nom de la première variable
+	std::string var= visit(context->expression(0));
+
+	//récuparation du nom de la deuxieme variable
+	std:: string var2=visit(context->expression(1));
+
+	//Creation d'une nouvelle variable résultat
+	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+
+	vector<string> params = {vartmp,var,var2};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
+
+	return vartmp;
+}
+
+/*
 *	Visite d'une constante. 
 *	Récupère sa valeur et stock la constante dans une nouvelle variable temporaire.
 *	Retourne le nom de la nouvelle variable.

@@ -265,6 +265,17 @@ public:
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
+  class  IsequalContext : public ExpressionContext {
+  public:
+    IsequalContext(ExpressionContext *ctx);
+
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    antlr4::tree::TerminalNode *ISEQUAL();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
   ExpressionContext* expression();
   ExpressionContext* expression(int precedence);
   class  If_then_elseContext : public antlr4::ParserRuleContext {

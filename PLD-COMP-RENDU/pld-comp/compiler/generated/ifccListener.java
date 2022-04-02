@@ -189,6 +189,18 @@ public interface ifccListener extends ParseTreeListener {
 	 */
 	void exitOppose(ifccParser.OpposeContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code isequal}
+	 * labeled alternative in {@link ifccParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterIsequal(ifccParser.IsequalContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code isequal}
+	 * labeled alternative in {@link ifccParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitIsequal(ifccParser.IsequalContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ifccParser#if_then_else}.
 	 * @param ctx the parse tree
 	 */

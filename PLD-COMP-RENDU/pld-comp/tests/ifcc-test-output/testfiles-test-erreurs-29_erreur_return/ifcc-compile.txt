@@ -1,0 +1,3 @@
+line 4:4 missing ';' at 'var'
+
+return code: 0

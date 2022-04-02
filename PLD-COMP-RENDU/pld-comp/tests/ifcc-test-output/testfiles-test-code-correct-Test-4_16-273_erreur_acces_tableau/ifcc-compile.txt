@@ -2,6 +2,8 @@ line 3:18 token recognition error at: '>'
 line 3:51 token recognition error at: '.'
 line 3:61 token recognition error at: '>'
 line 3:4 mismatched input '/' expecting {'int', '}', 'return', VAR}
-error: syntax error during parsing
+terminate called after throwing an instance of 'std::out_of_range'
+  what():  vector::_M_range_check: __n (which is 0) >= this->size() (which is 0)
+Aborted
 
-return code: 1
+return code: 134

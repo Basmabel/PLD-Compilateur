@@ -47,7 +47,19 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitVariables(ifccParser::VariablesContext *ctx) override {
+  virtual antlrcpp::Any visitVarsimpledecl(ifccParser::VarsimpledeclContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitVaraffectdecl(ifccParser::VaraffectdeclContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitEnddeclvar(ifccParser::EnddeclvarContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitEnddeclaffect(ifccParser::EnddeclaffectContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -55,11 +67,27 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitLvalVar(ifccParser::LvalVarContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitLvaltableau(ifccParser::LvaltableauContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitPar(ifccParser::ParContext *ctx) override {
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitValTableau(ifccParser::ValTableauContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitPlusminus(ifccParser::PlusminusContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitNegation(ifccParser::NegationContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -80,6 +108,18 @@ public:
   }
 
   virtual antlrcpp::Any visitFuncCall(ifccParser::FuncCallContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitOrlogiq(ifccParser::OrlogiqContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitXorlogiq(ifccParser::XorlogiqContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitAndlogiq(ifccParser::AndlogiqContext *ctx) override {
     return visitChildren(ctx);
   }
 

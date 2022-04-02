@@ -53,11 +53,11 @@ class  IRVisitor : public ifccBaseVisitor {
   
 		virtual antlrcpp::Any visitEnddeclvar(ifccParser::EnddeclvarContext *context) override;
 
-    virtual antlrcpp::Any visitEnddeclaffect(ifccParser::EnddeclaffectContext *context) override;
+    	virtual antlrcpp::Any visitEnddeclaffect(ifccParser::EnddeclaffectContext *context) override;
 
-    virtual antlrcpp::Any visitVarsimpledecl(ifccParser::VarsimpledeclContext *context) override;
+    	virtual antlrcpp::Any visitVarsimpledecl(ifccParser::VarsimpledeclContext *context) override;
 
-    virtual antlrcpp::Any visitVaraffectdecl(ifccParser::VaraffectdeclContext *context) override;
+    	virtual antlrcpp::Any visitVaraffectdecl(ifccParser::VaraffectdeclContext *context) override;
 
 		virtual antlrcpp::Any visitAffectation(ifccParser::AffectationContext *context) override;
 

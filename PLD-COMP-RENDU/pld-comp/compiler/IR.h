@@ -150,7 +150,7 @@ class CFG {
 
 	// x86 code generation: could be encapsulated in a processor class in a retargetable compiler
 	void gen_asm(ostream& o,string functionName);
-	string IR_reg_to_asm(string reg); /**< helper method: inputs a IR reg or input variable, returns e.g. "-24(%rbp)" for the proper value of 24 */
+	string IR_reg_to_asm(int index); /**< helper method: inputs a IR reg or input variable, returns e.g. "-24(%rbp)" for the proper value of 24 */
 	void gen_asm_prologue(ostream& o,string functionName);
 	void gen_asm_epilogue(ostream& o);
 
@@ -162,6 +162,7 @@ class CFG {
 	void erreurScalarObject(string name, int linectr);
 	void erreurInvalidInitializer(int linectr);
 	string create_new_tempvar(Type t, string blockName, int line,int nbAlloc=1);
+	string create_new_tempvar_function(Type t, string var, size_t line);
 	int get_var_index(string name);
 	Type get_var_type(string name);
 	void set_var_used(string name, bool used);

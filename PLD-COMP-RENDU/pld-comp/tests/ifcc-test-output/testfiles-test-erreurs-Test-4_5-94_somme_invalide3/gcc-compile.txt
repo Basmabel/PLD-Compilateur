@@ -1,0 +1,6 @@
+input.c: In function ‘main’:
+input.c:3:13: error: expected expression before ‘;’ token
+    3 |     return +;
+      |             ^
+
+return code: 1

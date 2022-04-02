@@ -35,13 +35,27 @@ public:
 
     virtual antlrcpp::Any visitFunctionCall(ifccParser::FunctionCallContext *context) = 0;
 
-    virtual antlrcpp::Any visitVariables(ifccParser::VariablesContext *context) = 0;
+    virtual antlrcpp::Any visitVarsimpledecl(ifccParser::VarsimpledeclContext *context) = 0;
+
+    virtual antlrcpp::Any visitVaraffectdecl(ifccParser::VaraffectdeclContext *context) = 0;
+
+    virtual antlrcpp::Any visitEnddeclvar(ifccParser::EnddeclvarContext *context) = 0;
+
+    virtual antlrcpp::Any visitEnddeclaffect(ifccParser::EnddeclaffectContext *context) = 0;
 
     virtual antlrcpp::Any visitAffectation(ifccParser::AffectationContext *context) = 0;
 
+    virtual antlrcpp::Any visitLvalVar(ifccParser::LvalVarContext *context) = 0;
+
+    virtual antlrcpp::Any visitLvaltableau(ifccParser::LvaltableauContext *context) = 0;
+
     virtual antlrcpp::Any visitPar(ifccParser::ParContext *context) = 0;
 
+    virtual antlrcpp::Any visitValTableau(ifccParser::ValTableauContext *context) = 0;
+
     virtual antlrcpp::Any visitPlusminus(ifccParser::PlusminusContext *context) = 0;
+
+    virtual antlrcpp::Any visitNegation(ifccParser::NegationContext *context) = 0;
 
     virtual antlrcpp::Any visitConst(ifccParser::ConstContext *context) = 0;
 
@@ -52,6 +66,12 @@ public:
     virtual antlrcpp::Any visitOppose(ifccParser::OpposeContext *context) = 0;
 
     virtual antlrcpp::Any visitFuncCall(ifccParser::FuncCallContext *context) = 0;
+
+    virtual antlrcpp::Any visitOrlogiq(ifccParser::OrlogiqContext *context) = 0;
+
+    virtual antlrcpp::Any visitXorlogiq(ifccParser::XorlogiqContext *context) = 0;
+
+    virtual antlrcpp::Any visitAndlogiq(ifccParser::AndlogiqContext *context) = 0;
 
     virtual antlrcpp::Any visitReturn_stmt(ifccParser::Return_stmtContext *context) = 0;
 

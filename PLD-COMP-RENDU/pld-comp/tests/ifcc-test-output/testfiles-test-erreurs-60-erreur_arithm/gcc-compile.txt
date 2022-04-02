@@ -1,0 +1,6 @@
+input.c: In function ‘main’:
+input.c:6:16: error: lvalue required as left operand of assignment
+    6 |     res = (10*a=b)/(3*c*20+5);
+      |                ^
+
+return code: 1

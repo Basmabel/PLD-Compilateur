@@ -193,7 +193,7 @@ antlrcpp::Any IRVisitor::visitAffectation(ifccParser::AffectationContext *contex
 	string local = visit(context->expression());
 
 	//Recuperation nouvelle variable gauche
-	std::string var =visit(context->lvalue());
+	string var =visit(context->lvalue());
 
 	//verifie que l'on a pas b[5] = 6 dans une declaration
 	

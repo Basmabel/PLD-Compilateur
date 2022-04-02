@@ -157,4 +157,4 @@ build/IRVisitor.o: IRVisitor.cpp IRVisitor.h \
  /usr/include/antlr4-runtime/tree/xpath/XPathWildcardElement.h \
  generated/ifccBaseVisitor.h generated/ifccVisitor.h \
  generated/ifccParser.h IR.h symbolTable.h symbol.h functionTable.h \
- fonction.h
+ fonction.h ValeurVisitor.h

@@ -1,0 +1,12 @@
+input.c: In function ‘main’:
+input.c:3:21: error: lvalue required as left operand of assignment
+    3 |     var = 2*var + 2 = 4
+      |                     ^
+input.c:3:24: error: expected ‘;’ before ‘return’
+    3 |     var = 2*var + 2 = 4
+      |                        ^
+      |                        ;
+    4 |     return var
+      |     ~~~~~~              
+
+return code: 1

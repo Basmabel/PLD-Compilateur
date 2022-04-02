@@ -1,0 +1,6 @@
+line 2:16 no viable alternative at input 'a [3] = {'
+line 2:16 extraneous input '{' expecting {'(', '-', '!', CONST, VAR}
+line 2:18 mismatched input ',' expecting ';'
+Segmentation fault
+
+return code: 139

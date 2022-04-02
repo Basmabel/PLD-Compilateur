@@ -1,0 +1,3 @@
+line 4:12 extraneous input '!' expecting ';'
+
+return code: 0

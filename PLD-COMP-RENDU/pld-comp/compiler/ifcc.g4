@@ -6,7 +6,7 @@ axiom : prog* ;
 prog : INT VAR OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET
     |  INT VAR OPENPAR INT VAR (COMMA INT VAR)* CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET;
     
-instr : declaration #declarationInstr | functionCall #functionCallInstr | affectation #affectationInstr | return_stmt #return_stmtInstr ; 
+instr : declaration #declarationInstr | functionCall #functionCallInstr | affectation SEMICOLON #affectationInstr | return_stmt #return_stmtInstr ; 
 
 declaration: INT variables* enddeclaration SEMICOLON; 
 

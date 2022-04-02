@@ -22,10 +22,14 @@ typedef enum {
 		SUB,
 		MUL,
 		NEG,
+		SETZ,
 		DIV,
+		AND,
+		OR,
+		XOR,
 		CONST,
 		MOV,
-		MOVB,
+		WMEM,
 		RET,
 		DEFAULT
 } Type;
@@ -39,6 +43,7 @@ class IRInstr {
 	typedef enum {
 		ldconst,
 		neg,
+		setz,
 		copy,
 		add,
 		sub,
@@ -47,6 +52,9 @@ class IRInstr {
 		movb,
 		ret,
 		div,
+		andq,
+		orq,
+		xorq,
 		rmem,
 		wmem,
 		call, 
@@ -141,28 +149,34 @@ class CFG {
 
 	// x86 code generation: could be encapsulated in a processor class in a retargetable compiler
 	void gen_asm(ostream& o);
-	string IR_reg_to_asm(string reg); /**< helper method: inputs a IR reg or input variable, returns e.g. "-24(%rbp)" for the proper value of 24 */
+	string IR_reg_to_asm(int index); /**< helper method: inputs a IR reg or input variable, returns e.g. "-24(%rbp)" for the proper value of 24 */
 	void gen_asm_prologue(ostream& o);
 	void gen_asm_epilogue(ostream& o);
 
 	// symbol table methods
-	void add_to_symbol_table(string name, Type t, size_t line);
-	void redeclarationError(size_t linectr, string name);
-	void erreurVariableNonDeclare(string name, size_t linectr);
-	string create_new_tempvar(Type t, string blockName, size_t line);
-	size_t get_var_index(string name);
+	void add_to_symbol_table(string name, Type t, int line,int nbAlloc=1);
+	void redeclarationError(int linectr, string name);
+	void erreurVariableNonDeclare(string name, int linectr);
+	void erreurNegativeTabSize(string name, int linectr);
+	void erreurScalarObject(string name, int linectr);
+	void erreurInvalidInitializer(int linectr);
+	string create_new_tempvar(Type t, string blockName, int line,int nbAlloc=1);
+	int get_var_index(string name);
 	Type get_var_type(string name);
 	void set_var_used(string name, bool used);
 
 	// basic block management
-	string new_BB_name(size_t line);
+	string new_BB_name(int line);
 	BasicBlock* current_bb;
 	BasicBlock* return_bb;
 
- protected:
-	symbolTable* symboleTable;
 	int nextFreeSymbolIndex; /**< to allocate new symbols in the symbol table */
+	symbolTable* symboleTable;
+ protected:
+	
+	
 	int nextBBnumber; /**< just for naming */
+
 	
 	vector <BasicBlock*> bbs; /**< all the basic blocks of this CFG*/
 	

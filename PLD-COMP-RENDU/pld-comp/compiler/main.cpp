@@ -10,6 +10,7 @@
 
 #include "CodeGenVisitor.h"
 #include "IRVisitor.h"
+#include "ValeurVisitor.h"
 
 using namespace antlr4;
 using namespace std;
@@ -44,11 +45,14 @@ int main(int argn, const char **argv)
       exit(1);
   }
 
-  
- /* CodeGenVisitor v;
+
+  /*CodeGenVisitor v;
   v.visit(tree);*/
 
-  IRVisitor ir;
+  ValeurVisitor v;
+  v.visit(tree);
+
+  IRVisitor ir(v);
   ir.visit(tree);
 
   return 0;

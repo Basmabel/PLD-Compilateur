@@ -21,8 +21,6 @@ void IRInstr::gen_asm(ostream &o){
     switch(op){
         case Operation::ldconst:
             varDest = bb->cfg->get_var_index(params[0]);
-            //cout<<stoi(params[1])<<endl;
-            //cout<<hex<<strtol(params[1])<<endl;
             try{
                 temp = stoll(params[1]);
             }
@@ -34,9 +32,13 @@ void IRInstr::gen_asm(ostream &o){
             break;
         case Operation::add:
             varDest = bb->cfg->get_var_index(params[0]);
-            var1 = bb->cfg->get_var_index(params[1]);
             var2 = bb->cfg->get_var_index(params[2]);
-            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+            if(params[1]=="%rbp"){
+                 o<<"    movq    "<<params[1]<<", %rax"<<endl;
+            }else{
+                var1 = bb->cfg->get_var_index(params[1]);
+                o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+            }  
             o<<"    addq    -"<<var2<<"(%rbp), %rax"<<endl;
             o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
            // o<<";"<<params[0]<<endl;;
@@ -68,19 +70,70 @@ void IRInstr::gen_asm(ostream &o){
             o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
+        case Operation::andq:
+            varDest = bb->cfg->get_var_index(params[0]);
+            var1 = bb->cfg->get_var_index(params[1]);
+            var2 = bb->cfg->get_var_index(params[2]);
+            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+            o<<"    andq    -"<<var2<<"(%rbp), %rax"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+            //o<<";"<<params[0]<<endl;;
+            break;
+        case Operation::xorq:
+            varDest = bb->cfg->get_var_index(params[0]);
+            var1 = bb->cfg->get_var_index(params[1]);
+            var2 = bb->cfg->get_var_index(params[2]);
+            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+            o<<"    xorq    -"<<var2<<"(%rbp), %rax"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+            //o<<";"<<params[0]<<endl;;
+            break;
+        case Operation::orq:
+            varDest = bb->cfg->get_var_index(params[0]);
+            var1 = bb->cfg->get_var_index(params[1]);
+            var2 = bb->cfg->get_var_index(params[2]);
+            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+            o<<"    orq    -"<<var2<<"(%rbp), %rax"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+            //o<<";"<<params[0]<<endl;;
+            break;
         case Operation::neg:
             varDest = bb->cfg->get_var_index(params[0]);
             var1 = bb->cfg->get_var_index(params[1]);
             o<<" 	 movq   -"<<var1<<"(%rbp), %rax"<<endl;
             o<<" 	 negq   %rax"<<endl;
-            o<<" 	 movq   %rax, -"<<varDest<<"(%rbp);"<<endl;
+            o<<" 	 movq   %rax, -"<<varDest<<"(%rbp)"<<endl;
+            //o<<";"<<params[0]<<endl;;
+            break;
+        case Operation::setz:
+            varDest = bb->cfg->get_var_index(params[0]);
+            var1 = bb->cfg->get_var_index(params[1]);
+            o<<"    cmpq   $0, -"<<var1<<"(%rbp)"<<endl;
+            o<<"    sete    %al"<<endl;
+            o<<"    movzbq  %al, %rax"<<endl;
+            o<<" 	 movq   %rax, -"<<varDest<<"(%rbp)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::mov:
-            varDest = bb->cfg->get_var_index(params[0]);
-            var1 = bb->cfg->get_var_index (params[1]);
-            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
-            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+            /*o<<"    movq    "<<params[1]<<", %rax"<<endl;
+            o<<"    movq    %rax, "<<params[0]<<endl;*/
+            o<<"    movq    "<<params[1]<<", %rax"<<endl;
+            o<<"    movq     (%rax), %rdx"<<endl;
+            o<<"    movq      %rdx, %rax"<<endl;
+            o<<"    movq     %rax,"<<params[0]<<endl;
+            break;
+        case Operation::wmem:
+           //var1 = bb->cfg->get_var_index(params[1]);
+            /*if(params[0].find("rbp")!=string::npos){
+                o<<"    movq    "<<params[0]<<", %rax"<<endl;
+            }else{
+                varDest = bb->cfg->get_var_index(params[0]);
+                o<<"    movq    -"<<varDest<<"(%rbp), %rax"<<endl;
+            }*/
+            o<<"    movq    "<<params[0]<<", %rax"<<endl;
+            o<<"    movq    "<<params[1]<<", %r10"<<endl;
+            //o<<"    movq    -"<<var1<<"(%rbp), %r10"<<endl;
+            o<<"    movq    %r10, (%rax)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::ret:
@@ -159,8 +212,7 @@ void CFG::gen_asm(ostream& o){
     gen_asm_epilogue(o);
 }
 
-string CFG::IR_reg_to_asm(string reg){
-    size_t index = get_var_index(reg);
+string CFG::IR_reg_to_asm(int index){
     string string_var = "-" + to_string(index) + "(%rbp)";
     return string_var;
 }
@@ -185,7 +237,7 @@ void CFG::gen_asm_epilogue(ostream& o){
 }
 
 
-void CFG::add_to_symbol_table(string name, Type t, size_t line){
+void CFG::add_to_symbol_table(string name, Type t, int line, int nbAlloc){
     string type;
 
     switch(t){
@@ -199,12 +251,12 @@ void CFG::add_to_symbol_table(string name, Type t, size_t line){
             type="int";
             break;
     }
-        
-    symboleTable->add(name,type,line);
-    nextFreeSymbolIndex++;
+    
+    symboleTable->add(name,type,line, nextFreeSymbolIndex);
+    nextFreeSymbolIndex+=nbAlloc;
 }
 
-void CFG::redeclarationError(size_t linectr, string name){
+void CFG::redeclarationError(int linectr, string name){
     if(symboleTable->contains(name)){  
 		cerr << "<source>:"<<linectr<<": error: redeclaration of '"<<symboleTable->getType(name)<<" "<<name<<"'" << endl;
 		cerr << "<source>:"<<symboleTable->getLine(name)<<": error: '"<<symboleTable->getType(name)<<" "<<name<<"' previously declared here" << endl;
@@ -212,23 +264,39 @@ void CFG::redeclarationError(size_t linectr, string name){
 	}
 }
 
-void CFG::erreurVariableNonDeclare(string name, size_t linectr){
+void CFG::erreurVariableNonDeclare(string name, int linectr){
 	if(!symboleTable->contains(name)){
 		cerr << "<source>:"<<linectr<<": error: '"<<name<<"' was not declared in this scope" << endl;
 		exit(1);
 	}
 }
 
+void CFG::erreurNegativeTabSize(string name, int linectr){
+    cerr<<"<source>:"<<linectr<<": error: size of array '"<<name<<"' is negative"<<endl;
+    exit(1);
+}
 
-string CFG::create_new_tempvar(Type t, string blockName, size_t line){
+void CFG::erreurScalarObject(string name, int linectr){
+    cerr<<"<source>:"<<linectr<<": error: scalar object '"<<name<<"' requires one element in initializer"<<endl;
+    exit(1);
+}
+
+void CFG::erreurInvalidInitializer(int linectr){
+    cerr<<"<source>:"<<linectr<<": error: invalid initializer"<<endl;
+    exit(1);
+}
+
+
+string CFG::create_new_tempvar(Type t, string blockName, int line, int nbAlloc){
+   // string name = blockName+"_tmp"+to_string(nextFreeSymbolIndex);
     string name = blockName+"_tmp"+to_string(nextFreeSymbolIndex);
-    add_to_symbol_table(name,t,line);
+    add_to_symbol_table(name,t,line,nbAlloc);
     symboleTable->setUsed(name,true);
     return name;
 }
 
 
-size_t CFG::get_var_index(string name){
+int CFG::get_var_index(string name){
     return symboleTable->getOffset(name);
 }
 
@@ -246,7 +314,7 @@ void CFG::set_var_used(string name, bool used){
     symboleTable->setUsed(name,used);
 }
 
-string CFG::new_BB_name(size_t line){
+string CFG::new_BB_name(int line){
     return "block_"+to_string(line);
 }
 

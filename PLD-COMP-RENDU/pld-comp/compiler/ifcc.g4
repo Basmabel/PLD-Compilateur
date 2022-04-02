@@ -3,18 +3,39 @@ grammar ifcc;
 axiom : prog ;
 
 prog : INT 'main' OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET ;
-instr : declaration #declarationInstr | affectation #affectationInstr | return_stmt #return_stmtInstr ; 
-declaration: type variables* VAR SEMICOLON; 
+
+
+instr : declaration #declarationInstr | affectation SEMICOLON #affectationInstr | return_stmt #return_stmtInstr ; 
+
+declaration: type variables* enddeclaration SEMICOLON; 
 type: INT #int | CHAR #char;
-variables: VAR COMMA;
-affectation: VAR EQUAL expression SEMICOLON;
+
+variables: lvalue COMMA #varsimpledecl
+| affectation COMMA #varaffectdecl;
+
+
+enddeclaration: lvalue #enddeclvar
+| affectation #enddeclaffect;
+
+affectation: lvalue EQUAL expression;
+
+lvalue: VAR #lvalVar
+| VAR OPENSQBRACKETS expression CLOSESQBRACKETS #lvaltableau;
+
+
 expression: OPENPAR expression CLOSEPAR #par
-| (MINUS) expression #oppose
+| MINUS expression #oppose
+| EXCLA expression #negation
 | expression (MULTIPLY | DIVIDE) expression #multdiv
 | expression (PLUS | MINUS) expression #plusminus
+| expression AND expression #andlogiq
+| expression XOR expression #xorlogiq
+| expression OR expression #orlogiq
+| VAR OPENSQBRACKETS expression CLOSESQBRACKETS #valTableau
 | VAR #var
 | CHARACTER #character
 | CONST #const;
+
 return_stmt : RETURN expression SEMICOLON;
 
 INT : 'int' ;
@@ -24,6 +45,8 @@ CLOSEPAR : ')' ;
 SEMICOLON : ';' ;
 OPENBRACKET : '{' ;
 CLOSEBRACKET : '}' ;
+OPENSQBRACKETS: '[';
+CLOSESQBRACKETS: ']';
 EQUAL : '=';
 PLUS : '+' ;
 MINUS : '-' ;
@@ -31,6 +54,11 @@ MULTIPLY : '*' ;
 DIVIDE : '/' ;
 OPM: MULTIPLY | DIVIDE;
 OPA: PLUS | MINUS;
+EXCLA: '!';
+AND: '&';
+OR: '|';
+XOR: '^';
+
 
 
 RETURN : 'return' ;

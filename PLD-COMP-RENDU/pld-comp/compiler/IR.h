@@ -27,6 +27,7 @@ typedef enum {
 		MOV,
 		RET,
 		CMP_EQ,
+		CMP_INEQ,
 		DEFAULT
 } Type;
 
@@ -50,6 +51,7 @@ class IRInstr {
 		wmem,
 		call, 
 		cmp_eq,
+		cmp_ineq,
 		cmp_lt,
 		cmp_le
 	} Operation;

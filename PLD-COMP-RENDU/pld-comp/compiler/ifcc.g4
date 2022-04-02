@@ -16,6 +16,7 @@ expression: OPENPAR expression CLOSEPAR #par
 | expression (MULTIPLY | DIVIDE) expression #multdiv
 | expression (PLUS | MINUS) expression #plusminus
 | expression (ISEQUAL) expression #isequal
+| expression (ISDIFFERENT) expression #isdifferent
 | VAR #var 
 | CONST #const;
 

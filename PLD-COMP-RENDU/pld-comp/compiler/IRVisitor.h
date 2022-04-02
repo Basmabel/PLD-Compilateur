@@ -54,9 +54,11 @@ class  IRVisitor : public ifccBaseVisitor {
 
 		virtual antlrcpp::Any visitOppose(ifccParser::OpposeContext *context) override;
 
+		virtual antlrcpp::Any visitConst(ifccParser::ConstContext *context) override;
+
 		virtual antlrcpp::Any visitIsequal(ifccParser::IsequalContext *context) override;
 
-		virtual antlrcpp::Any visitConst(ifccParser::ConstContext *context) override;
+    	virtual antlrcpp::Any visitIsdifferent(ifccParser::IsdifferentContext *context) override;
 
 		virtual antlrcpp::Any visitIf_then_else(ifccParser::If_then_elseContext *context) override;
 

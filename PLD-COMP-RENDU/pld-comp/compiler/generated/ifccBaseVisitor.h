@@ -83,6 +83,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitIsdifferent(ifccParser::IsdifferentContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitIf_then_else(ifccParser::If_then_elseContext *ctx) override {
     return visitChildren(ctx);
   }

@@ -86,6 +86,20 @@ void IRInstr::gen_asm(ostream &o){
                 o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
             }
             break;
+        case Operation::cmp_ineq:
+            var1= bb->cfg->get_var_index(params[1]);
+            var2= bb->cfg->get_var_index(params[2]);
+            if(params[0]=="$0"){
+                o<<"    cmpq    "<<params[0]<<", -"<<var1<<"(%rbp)"<<endl;
+            }else{
+                varDest= bb->cfg->get_var_index(params[0]);
+                o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+                o<<"    cmpq    -"<<var2<<"(%rbp), %rax"<<endl;
+                o<<"    setne    %al"<<endl;
+                o<<"    movzbq  %al, %rax"<<endl;
+                o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+            }
+            break;
         case Operation::ret:
             var1 = bb->cfg->get_var_index(params[0]);
             o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
@@ -116,7 +130,7 @@ void BasicBlock::gen_asm(ostream &o){
         if(exit_false != nullptr) {
             o<<"    je     "<<exit_false->label<<endl;
         }
-        o << "jmp " << exit_true->label <<endl;     
+        o << "    jmp    " << exit_true->label <<endl;     
     }
     
 

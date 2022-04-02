@@ -53,6 +53,8 @@ public:
 
     virtual antlrcpp::Any visitIsequal(ifccParser::IsequalContext *context) = 0;
 
+    virtual antlrcpp::Any visitIsdifferent(ifccParser::IsdifferentContext *context) = 0;
+
     virtual antlrcpp::Any visitIf_then_else(ifccParser::If_then_elseContext *context) = 0;
 
     virtual antlrcpp::Any visitWhileloop(ifccParser::WhileloopContext *context) = 0;

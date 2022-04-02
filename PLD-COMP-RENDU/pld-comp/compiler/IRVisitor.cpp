@@ -216,6 +216,26 @@ antlrcpp::Any IRVisitor::visitOppose(ifccParser::OpposeContext *context){
 	return vartmp;
 }
 
+/*
+*	Visite d'une constante. 
+*	Récupère sa valeur et stock la constante dans une nouvelle variable temporaire.
+*	Retourne le nom de la nouvelle variable.
+*/
+antlrcpp::Any IRVisitor::visitConst(ifccParser::ConstContext *context)
+{
+	
+	string val = context->CONST()->getText();
+
+    //Creation d'une nouvelle variable résultat
+	std:: string var = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+
+    vector<string> params = {var,val};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::ldconst, Type::CONST, params); 
+
+	return var;
+}
+
 
 /*
 * Visite d'une égalité 	(==)
@@ -239,27 +259,29 @@ antlrcpp::Any IRVisitor::visitIsequal(ifccParser::IsequalContext *context){
 }
 
 /*
-*	Visite d'une constante. 
-*	Récupère sa valeur et stock la constante dans une nouvelle variable temporaire.
-*	Retourne le nom de la nouvelle variable.
+* Visite d'une inégalité (!=)
+* Retourne le résultat de comparaison entre deux expression
 */
-antlrcpp::Any IRVisitor::visitConst(ifccParser::ConstContext *context)
-{
-	
-	string val = context->CONST()->getText();
+antlrcpp::Any IRVisitor :: visitIsdifferent(ifccParser::IsdifferentContext *context) {
+	//récuparation du nom de la première variable
+	std::string var= visit(context->expression(0));
 
-    //Creation d'une nouvelle variable résultat
-	std:: string var = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	//récuparation du nom de la deuxieme variable
+	std:: string var2=visit(context->expression(1));
 
-    vector<string> params = {var,val};
+	//Creation d'une nouvelle variable résultat
+	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
 
-	cfg->current_bb->add_IRInstr(IRInstr::Operation::ldconst, Type::CONST, params); 
+	vector<string> params = {vartmp,var,var2};
 
-	return var;
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_ineq, Type::CMP_INEQ, params);
+
+	return vartmp;
 }
 
+
 /*
-*	Visite du if else statement. 
+*	Visite du ITE statement (If Then Else). 
 */
 antlrcpp::Any IRVisitor :: visitIf_then_else(ifccParser::If_then_elseContext *context) {
 
@@ -296,7 +318,7 @@ antlrcpp::Any IRVisitor :: visitIf_then_else(ifccParser::If_then_elseContext *co
 	visit(context->blockthen); 
 	
 	cfg->current_bb=block2;
-	block2->exit_true= block3; //enlever le jump (si unécessaire) dans l'assembleur pour optimiser
+	block2->exit_true= block3; 
 	block2->exit_false= nullptr;
 
 	visit(context->blockelse); 

@@ -38,6 +38,10 @@ class  CodeGenVisitor : public ifccBaseVisitor {
 		virtual antlrcpp::Any visitLvaltableau(ifccParser::LvaltableauContext *context) override;
 
 		virtual antlrcpp::Any visitDeclaration(ifccParser::DeclarationContext *context) override;
+  
+		virtual antlrcpp::Any visitInt(ifccParser::IntContext *context) override;
+
+		virtual antlrcpp::Any visitChar(ifccParser::CharContext *context) override;
 
 		virtual antlrcpp::Any visitEnddeclvar(ifccParser::EnddeclvarContext *context) override;
 
@@ -47,9 +51,12 @@ class  CodeGenVisitor : public ifccBaseVisitor {
 
     	virtual antlrcpp::Any visitVaraffectdecl(ifccParser::VaraffectdeclContext *context) override;
 
+
 		virtual antlrcpp::Any visitAffectation(ifccParser::AffectationContext *context) override;
 
 		virtual antlrcpp::Any visitPlusminus(ifccParser::PlusminusContext *context) override;
+
+		virtual antlrcpp::Any visitCharacter(ifccParser::CharacterContext *context) override;
 
 		virtual antlrcpp::Any visitMultdiv(ifccParser::MultdivContext *context) override;
 

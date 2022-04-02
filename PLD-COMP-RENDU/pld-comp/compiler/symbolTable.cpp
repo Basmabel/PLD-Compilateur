@@ -13,9 +13,9 @@
 	{
 		int index =0;
 		if(typeStr=="int"){
-			index = (sizeof(int64_t))*(length+1);
+			index = sizeof(int64_t)*(symbols.size()+1);
 		}else if(typeStr=="char"){
-			index = sizeof(char)*(length+1);
+			index = sizeof(int64_t)*(symbols.size()+1);
 		}
 
 		symbols.insert(make_pair(name, new symbol(name,index,typeStr,lineSz)));
@@ -93,6 +93,10 @@
 	void symbolTable::setNull(string name, bool null){
 		symbols.at(name)->setUsed(null);
 	}
+
+  void symbolTable::setType(string name, Type type){
+    symbols.at(name)->setType(type);
+  }
 
 
 	

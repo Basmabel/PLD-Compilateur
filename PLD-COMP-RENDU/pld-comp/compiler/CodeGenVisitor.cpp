@@ -83,6 +83,17 @@ antlrcpp::Any CodeGenVisitor::visitDeclaration(ifccParser::DeclarationContext *c
 	return 0;
 }
 
+/*
+*	Visite du type de la variable
+*/
+
+antlrcpp::Any CodeGenVisitor::visitInt(ifccParser::IntContext *context){
+	return 0;
+};
+
+antlrcpp::Any CodeGenVisitor::visitChar(ifccParser::CharContext *context){
+	return 0;
+};
 
 /*
 *	Visite d'une variable, retourne son nom 
@@ -204,6 +215,11 @@ antlrcpp::Any CodeGenVisitor::visitPlusminus(ifccParser::PlusminusContext *conte
 
 	return vartmp;
 }
+
+antlrcpp::Any CodeGenVisitor::visitCharacter(ifccParser::CharacterContext *context) {
+	return 0;
+};
+
 
 /*
 *	Visite de l'expression multiply ou de l'expression divide. 

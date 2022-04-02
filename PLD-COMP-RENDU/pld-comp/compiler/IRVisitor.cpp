@@ -1,7 +1,11 @@
-
+#include <iostream>
 #include "IRVisitor.h"
 using namespace std;
 
+
+IRVisitor::IRVisitor(ValeurVisitor v){
+	this->v=v;
+}
 
 /*
 *	Visite les instructions du programme et génère le CFG correspondant
@@ -13,8 +17,13 @@ antlrcpp::Any IRVisitor::visitProg(ifccParser::ProgContext *ctx)
     for(int i=0 ; i<ctx->instr().size(); i++){
 		linectr=ctx->instr().at(i)->getStart()->getLine();
 		visit(ctx->instr().at(i));
+	
 	}
-    
+
+	/*for(auto i : cfg->symboleTable->symbols){
+		cout<<i.first<<" : "<<i.second->getOffset()<<endl;
+	}*/
+	    
     cfg->gen_asm(cout);
 	return 0;
 }
@@ -54,17 +63,15 @@ antlrcpp::Any IRVisitor::visitReturn_stmtInstr(ifccParser::Return_stmtInstrConte
 antlrcpp::Any IRVisitor::visitDeclaration(ifccParser::DeclarationContext *context)
 {
 	
+	declaration = true;
 
 	for(int i=0 ; i<context->variables().size(); i++){
-		string var =visitVariables(context->variables().at(i));
-        cfg->redeclarationError(linectr,var);
-		cfg->add_to_symbol_table(var,Type::INT,linectr);
+		string var =visit(context->variables().at(i));
 	}
 
-	string var =context->VAR()->getText();
-	cfg->redeclarationError(linectr,var);
-	cfg->add_to_symbol_table(var,Type::INT,linectr);
+	string var =visit(context->enddeclaration());
 	
+	declaration = false;
 	return 0;
 }
 
@@ -72,11 +79,40 @@ antlrcpp::Any IRVisitor::visitDeclaration(ifccParser::DeclarationContext *contex
 /*
 *	Visite d'une variable, retourne son nom 
 */
-antlrcpp::Any IRVisitor::visitVariables(ifccParser::VariablesContext *context){
+/*antlrcpp::Any IRVisitor::visitVariables(ifccParser::VariablesContext *context){
 	return context->VAR()->getText();
+}*/
+
+
+/*
+*	Visite d'une variable en fin de déclaration et retourne son nom
+*/
+antlrcpp::Any IRVisitor::visitEnddeclvar(ifccParser::EnddeclvarContext *context){
+	return visit(context->lvalue());
+}
+
+/*
+*	Visite une variable déclarée et affectée en fin de déclaration et retourne son nom
+*/
+antlrcpp::Any IRVisitor::visitEnddeclaffect(ifccParser::EnddeclaffectContext *context){
+	return visit(context->affectation());
 }
 
 
+
+/*
+*	Visite une variable  et retourne son nom
+*/
+antlrcpp::Any IRVisitor::visitVarsimpledecl(ifccParser::VarsimpledeclContext *context){
+	return visit(context->lvalue());
+}
+
+/*
+*	Visite une variable déclarée et affectée et retourne son nom
+*/
+antlrcpp::Any IRVisitor::visitVaraffectdecl(ifccParser::VaraffectdeclContext *context){
+	return visit(context->affectation());
+}
 
 
 /*
@@ -94,20 +130,33 @@ antlrcpp::Any IRVisitor::visitAffectation(ifccParser::AffectationContext *contex
 	//Recuperation nouvelle variable gauche
 	std::string var =visit(context->lvalue());
 
-    vector<string> params = {var,local};
+	//verifie que l'on a pas b[5] = 6 dans une declaration
+	
+	if(declaration && v.contains(var+"_tab_size")){
+		//generer erreur
+		cfg->erreurInvalidInitializer(linectr);
+	}
+
+	string varOff = cfg->IR_reg_to_asm(cfg->get_var_index(var));
+	string localOff = cfg->IR_reg_to_asm(cfg->get_var_index(local));
+    vector<string> params = {varOff,localOff};
 
     cfg->current_bb->add_IRInstr(IRInstr::Operation::wmem, Type::WMEM, params);
 
-	return 0;
+	return var;
 }
 
 
 /*
-*	Visiteur de lvalue
+*	Visiteur de lvalue pour une variable simple
 */
 antlrcpp::Any IRVisitor::visitLvalVar(ifccParser::LvalVarContext *context){
 
 	string var = context->VAR()->getText();
+
+	if(declaration){
+		addSymbolToTable(var);
+	}
 
 	//Check si la var a été déclaree
 	cfg->erreurVariableNonDeclare(var,linectr);
@@ -128,7 +177,35 @@ antlrcpp::Any IRVisitor::visitLvalVar(ifccParser::LvalVarContext *context){
 
 	cfg->set_var_used(var,true);
 
+
 	return newVar;
+}
+
+/*
+*	Visiteur de lvalue pour un tableau
+*/
+antlrcpp::Any IRVisitor::visitLvaltableau(ifccParser::LvaltableauContext *context){
+	
+	string var = context->VAR()->getText();
+
+	//Lors d'une declaration, on récupère la taille du tableau pour allouer la mémoire necessaire
+	if(declaration){
+		string name = var+"_tab_size";
+		int size = v.values.at(name);
+		if(size<0){
+			cfg->erreurNegativeTabSize(name,linectr);
+		}
+		addSymbolToTable(var,size);
+
+		return var;
+	}
+
+	//Récupération de l'index du tableau
+	string index = visit(context->expression());
+
+	string offsetValeurTableau = gestionTableau(var,index);
+	
+	return offsetValeurTableau;
 }
 
 /*
@@ -221,6 +298,27 @@ antlrcpp::Any IRVisitor::visitVar(ifccParser::VarContext *context)
 	
 }
 
+
+/*
+*	Visite d'une valeur dans le tableau
+*/
+antlrcpp::Any IRVisitor::visitValTableau(ifccParser::ValTableauContext *context){
+	
+	string var = context->VAR()->getText();
+
+	//Récupération de l'index
+	string var2 = visit(context->expression());
+
+	string newVar = gestionTableau(var,var2);
+	string newVarOffSet = cfg->IR_reg_to_asm(cfg->get_var_index(newVar));
+
+	//load content of the address contained in newVar in newVar
+	vector<string> params = {newVarOffSet,newVarOffSet};
+    cfg->current_bb->add_IRInstr(IRInstr::Operation::mov, Type::MOV, params);
+
+	return newVar;
+}
+
 /*
 *	Visite d'un moins unaire.
 *	Récupère le nom de la variable var obtenue par la visite de l'expression suivant le -.
@@ -250,7 +348,7 @@ antlrcpp::Any IRVisitor::visitNegation(ifccParser::NegationContext *context){
 	string var = visit(context->expression());
 
 	//Creation d'une nouvelle variable résultat
-	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
 
     vector<string> params = {vartmp,var};
 
@@ -346,7 +444,7 @@ antlrcpp::Any IRVisitor::visitConst(ifccParser::ConstContext *context)
 
     //Creation d'une nouvelle variable résultat
 	std:: string var = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
-
+	
     vector<string> params = {var,val};
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::ldconst, Type::CONST, params); 
@@ -372,9 +470,64 @@ antlrcpp::Any IRVisitor::visitReturn_stmt(ifccParser::Return_stmtContext *contex
 }
 
 
+void IRVisitor::addSymbolToTable(string var, int nbAlloc){
+	cfg->redeclarationError(linectr,var);
+	cfg->add_to_symbol_table(var,Type::INT,linectr,nbAlloc);
+}
 
 
 
+
+string IRVisitor::gestionTableau(string var, string index){
+	//Check si la var a été déclaree
+	cfg->erreurVariableNonDeclare(var,linectr);
+
+	//Recupere son offset dans la table des symboles
+	string offset = "-"+to_string(cfg->get_var_index(var));
+
+	//variable utilisée
+	cfg->set_var_used(var,true);
+
+	//Stock l'offset de la première variable du tableau
+	std:: string offsetValeurTableau = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+
+	vector<string> params = {offsetValeurTableau,offset};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::ldconst, Type::CONST, params);
+
+
+
+	//Multiplication de sa valeur par la taille de la variable pour obtenir un bon offset
+	string taille_var = "-"+to_string(sizeof(int64_t));
+
+	//Stock du resultat
+	string offsetIndex= cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+
+	vector<string> params_taille = {offsetIndex,taille_var};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::ldconst, Type::CONST, params_taille);
+
+	//Multiplication de l'index par la taille
+
+	vector<string> params_mul = {offsetIndex,offsetIndex,index};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::mul, Type::MUL, params_mul);
+
+
+	//Addition de l'offset de l'index à l'offset de la première variable du tableau
+
+	vector<string> params2 = {offsetValeurTableau,offsetIndex,offsetValeurTableau};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::add, Type::ADD, params2);
+
+	//Ajout de l'ofset de la variable du tableau à l'index i à rbp
+
+	vector<string> params3 = {offsetValeurTableau,"%rbp",offsetValeurTableau};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::add, Type::ADD, params3);
+
+	return offsetValeurTableau;
+}
 
 
 

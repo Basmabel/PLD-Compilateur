@@ -1,6 +1,0 @@
-line 1:9 extraneous input 'args' expecting ')'
-line 3:10 no viable alternative at input 'b ='
-line 4:10 no viable alternative at input 'a ='
-error: syntax error during parsing
-
-return code: 1

@@ -12,7 +12,7 @@ all: ifcc
 
 ##########################################
 # link together all pieces of our compiler 
-OBJECTS= build/IRVisitor.o build/IR.o build/symbol.o build/main.o build/symbolTable.o build/CodeGenVisitor.o build/ifccBaseVisitor.o build/ifccLexer.o build/ifccVisitor.o build/ifccParser.o
+OBJECTS= build/ValeurVisitor.o build/IRVisitor.o build/IR.o build/symbol.o build/main.o build/symbolTable.o build/CodeGenVisitor.o build/ifccBaseVisitor.o build/ifccLexer.o build/ifccVisitor.o build/ifccParser.o
 
 ifcc: $(OBJECTS)
 	@mkdir -p build

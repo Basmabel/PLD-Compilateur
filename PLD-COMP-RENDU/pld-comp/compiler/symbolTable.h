@@ -29,7 +29,7 @@ using namespace std;
 class  symbolTable {
 	public:
 		symbolTable();
-		void add(string name, string type, int line);
+		void add(string name, string type, int line, int length);
 		void setUsed(string name,bool used);
 		void setNull(string name, bool null);
 		void remove(string name);
@@ -41,11 +41,11 @@ class  symbolTable {
 		bool contains(string name);
 		map<string,int> checkIfSymbolsUsed();
 
-
+		map<string,symbol*> symbols;
 	private:
 
 	//------------------------------------------------------------------ Attributes
-	map<string,symbol*> symbols;
+	
 
 };
 

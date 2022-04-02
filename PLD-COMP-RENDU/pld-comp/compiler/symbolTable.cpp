@@ -9,13 +9,13 @@
 	*	Permet d'ajouter un symbol dans la table avec son nom, sont type et sa ligne de déclaration
 	*   La position dans la pile est calculé à partir de la type en octet du type.
 	*/
-	void symbolTable::add(string name, string typeStr, int lineSz)
+	void symbolTable::add(string name, string typeStr, int lineSz, int length)
 	{
 		int index =0;
 		if(typeStr=="int"){
-			index = (sizeof(int64_t))*(symbols.size()+1);
+			index = (sizeof(int64_t))*(length+1);
 		}else if(typeStr=="char"){
-			index = sizeof(char)*(symbols.size()+1);
+			index = sizeof(char)*(length+1);
 		}
 
 		symbols.insert(make_pair(name, new symbol(name,index,typeStr,lineSz)));

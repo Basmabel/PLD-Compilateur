@@ -1,6 +1,4 @@
-int main() {
-    int x,y;
-    x=5;
-    y=x;
-return y;
+int main(){
+    int a [3] = {2, 5, 6};
+    return 42;
 }

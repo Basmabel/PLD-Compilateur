@@ -1,4 +1,0 @@
-line 4:12 extraneous input '!' expecting ';'
-error: syntax error during parsing
-
-return code: 1

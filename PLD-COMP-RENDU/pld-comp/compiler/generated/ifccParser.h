@@ -21,7 +21,7 @@ public:
   };
 
   enum {
-    RuleAxiom = 0, RuleProg = 1, RuleInstr = 2, RuleDeclaration = 3, RuleVariables = 4, 
+    Rulraxiom = 0, RuleProg = 1, RuleInstr = 2, RuleDeclaration = 3, RuleVariables = 4, 
     RuleAffectation = 5, RuleExpression = 6, RuleIf_then_else = 7, RuleBlock = 8, 
     RuleCondition = 9, RuleComparison = 10, RuleReturn_stmt = 11
   };

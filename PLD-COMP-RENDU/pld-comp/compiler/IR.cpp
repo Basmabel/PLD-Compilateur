@@ -18,77 +18,77 @@ void IRInstr::gen_asm(ostream &o){
         case Operation::ldconst:
         
             varDest = bb->cfg->get_var_index(params[0]);
-            o<<"    movl    $"<<params[1]<<", -"<<varDest<<"(%rbp)"<<endl;
+            o<<"    movq    $"<<params[1]<<", -"<<varDest<<"(%rbp)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::add:
             varDest = bb->cfg->get_var_index(params[0]);
             var1 = bb->cfg->get_var_index(params[1]);
             var2 = bb->cfg->get_var_index(params[2]);
-            o<<"    movl    -"<<var1<<"(%rbp), %eax"<<endl;
-            o<<"    addl    -"<<var2<<"(%rbp), %eax"<<endl;
-            o<<"    movl    %eax, -"<<varDest<<"(%rbp)"<<endl;
+            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+            o<<"    addq    -"<<var2<<"(%rbp), %rax"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
            // o<<";"<<params[0]<<endl;;
             break;
         case Operation::sub:
             varDest = bb->cfg->get_var_index(params[0]);
             var1 = bb->cfg->get_var_index(params[1]);
             var2 = bb->cfg->get_var_index(params[2]);
-            o<<"    movl    -"<<var1<<"(%rbp), %eax"<<endl;
-            o<<"    subl    -"<<var2<<"(%rbp), %eax"<<endl;
-            o<<"    movl    %eax, -"<<varDest<<"(%rbp)"<<endl;
+            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+            o<<"    subq    -"<<var2<<"(%rbp), %rax"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::mul:
             varDest = bb->cfg->get_var_index(params[0]);
             var1 = bb->cfg->get_var_index(params[1]);
             var2 = bb->cfg->get_var_index(params[2]);
-            o<<"    movl    -"<<var2<<"(%rbp), %eax"<<endl;
-            o<<"    imul    -"<<var1<<"(%rbp), %eax"<<endl;
-            o<<"    movl    %eax, -"<<varDest<<"(%rbp)"<<endl;
+            o<<"    movq    -"<<var2<<"(%rbp), %rax"<<endl;
+            o<<"    imulq    -"<<var1<<"(%rbp), %rax"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::div:
             varDest = bb->cfg->get_var_index(params[0]);
             var1 = bb->cfg->get_var_index(params[1]);
             var2 = bb->cfg->get_var_index(params[2]);
-            o<<"    movl    -"<<var1<<"(%rbp), %eax"<<endl;
+            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
             o<<"    cltd\n 	 idivl    -"<<var2<<"(%rbp)"<<endl;
-            o<<"    movl    %eax, -"<<varDest<<"(%rbp)"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::neg:
             varDest = bb->cfg->get_var_index(params[0]);
             var1 = bb->cfg->get_var_index(params[1]);
-            o<<"    movl   -"<<var1<<"(%rbp), %eax"<<endl;
-            o<<"    negl   %eax"<<endl;
-            o<<"    movl   %eax, -"<<varDest<<"(%rbp);"<<endl;
+            o<<"    movq   -"<<var1<<"(%rbp), %rax"<<endl;
+            o<<"    negq   %rax"<<endl;
+            o<<"    movq   %rax, -"<<varDest<<"(%rbp);"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::mov:
             varDest = bb->cfg->get_var_index(params[0]);
             var1 = bb->cfg->get_var_index(params[1]);
-            o<<"    movl    -"<<var1<<"(%rbp), %eax"<<endl;
-            o<<"    movl    %eax, -"<<varDest<<"(%rbp)"<<endl;
+            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::cmp_eq:
-            var2= bb->cfg->get_var_index(params[1]);
-            varDest= bb->cfg->get_var_index(params[2]);
+            var1= bb->cfg->get_var_index(params[1]);
+            var2= bb->cfg->get_var_index(params[2]);
             if(params[0]=="$0"){
-                o<<"    cmpq    "<<params[0]<<", -"<<var2<<"(%rbp)"<<endl;
+                o<<"    cmpq    "<<params[0]<<", -"<<var1<<"(%rbp)"<<endl;
             }else{
-                var1= bb->cfg->get_var_index(params[0]);
+                varDest= bb->cfg->get_var_index(params[0]);
                 o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
                 o<<"    cmpq    -"<<var2<<"(%rbp), %rax"<<endl;
                 o<<"    sete    %al"<<endl;
-                o<<"    movq    %al, -"<<varDest<<"(%rbp)"<<endl;
+                o<<"    movzbq  %al, %rax"<<endl;
+                o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
             }
-            //o<<";"<<params[0]<<endl;;
             break;
         case Operation::ret:
             var1 = bb->cfg->get_var_index(params[0]);
-            o<<"    movl    -"<<var1<<"(%rbp), %eax"<<endl;
+            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         default:
@@ -107,14 +107,14 @@ void BasicBlock::add_IRInstr(IRInstr::Operation op, Type t, vector<string> param
 }
 
 void BasicBlock::gen_asm(ostream &o){
-    o<<label<<endl;
+    o<<label<<":"<<endl;
     for (auto instr : instrs) {
         instr->gen_asm(o);
     }
 
-    if (exit_true!=nullptr) {
-        o << "jmp " << exit_true->label << endl;
-    }
+    // if (exit_true!=nullptr) {
+    //     o << "jmp " << exit_true->label << endl;
+    // }
 }
 
 

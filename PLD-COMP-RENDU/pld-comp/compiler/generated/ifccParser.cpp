@@ -43,7 +43,7 @@ ifccParser::ProgContext* ifccParser::AxiomContext::prog() {
 
 
 size_t ifccParser::AxiomContext::getRuleIndex() const {
-  return ifccParser::RuleAxiom;
+  return ifccParser::Rulraxiom;
 }
 
 
@@ -56,7 +56,7 @@ antlrcpp::Any ifccParser::AxiomContext::accept(tree::ParseTreeVisitor *visitor) 
 
 ifccParser::AxiomContext* ifccParser::axiom() {
   AxiomContext *_localctx = _tracker.createInstance<AxiomContext>(_ctx, getState());
-  enterRule(_localctx, 0, ifccParser::RuleAxiom);
+  enterRule(_localctx, 0, ifccParser::Rulraxiom);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {

@@ -11,18 +11,13 @@ _main:                                  ## @main
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register %rbp
 	movl	$0, -4(%rbp)
-	movl	$1, -8(%rbp)
-	cmpl	$0, -8(%rbp)
-	je	LBB0_2
-## %bb.1:
-	movl	$2, -8(%rbp)
-	jmp	LBB0_3
-LBB0_2:
-	movl	$3, -12(%rbp)
-LBB0_3:
-	movl	$4, -12(%rbp)
+	movl	$5, -12(%rbp)
+	cmpl	$5, -12(%rbp)
+	sete	%al
+	andb	$1, %al
+	movzbl	%al, %eax
+	movl	%eax, -8(%rbp)
 	movl	-8(%rbp), %eax
-	addl	-12(%rbp), %eax
 	popq	%rbp
 	retq
 	.cfi_endproc

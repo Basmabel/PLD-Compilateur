@@ -217,9 +217,7 @@ antlrcpp::Any IRVisitor::visitOppose(ifccParser::OpposeContext *context){
 }
 
 /*
-*	
-*	
-*	
+* Visite d'une égalité 	(==)
 */
 antlrcpp::Any IRVisitor::visitIsequal(ifccParser::IsequalContext *context){
 	//récuparation du nom de la première variable
@@ -231,7 +229,9 @@ antlrcpp::Any IRVisitor::visitIsequal(ifccParser::IsequalContext *context){
 	//Creation d'une nouvelle variable résultat
 	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
 
-    vector<string> params = {var2,var,vartmp};
+	vector<string> params = {vartmp,var,var2};
+
+    // vector<string> params = {var2,var,vartmp};
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
 

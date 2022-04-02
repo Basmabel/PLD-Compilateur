@@ -3,8 +3,8 @@
     #prologue
     pushq %rbp
     movq %rsp, %rbp
-    movl    $2, -8(%rbp)
-    movl    -8(%rbp), %eax
+    movq    $2, -8(%rbp)
+    movq    -8(%rbp), %rax
     #epilogue
     popq %rbp
     ret
@@ -13,25 +13,25 @@
     #prologue
     pushq %rbp
     movq %rsp, %rbp
-    movl    $6, -12(%rbp)
-    movl    -12(%rbp), %eax
-    movl    %eax, -4(%rbp)
-    movl    $4, -16(%rbp)
-    movl    $5, -20(%rbp)
-    movl    -16(%rbp), %eax
-    addl    -20(%rbp), %eax
-    movl    %eax, -24(%rbp)
-    movl    -24(%rbp), %eax
-    movl    %eax, -8(%rbp)
-    movl    $2, -32(%rbp)
-    movl    28(%rbp), %r8d
-    movl    32(%rbp), %edi
-    movl    %r8d, %r9d
-    movl    %edi, %r8d
-    movl    %eax, %edi
+    movq    $6, -12(%rbp)
+    movq    -12(%rbp), %rax
+    movq    %rax, -4(%rbp)
+    movq    $4, -16(%rbp)
+    movq    $5, -20(%rbp)
+    movq    -16(%rbp), %rax
+    addq    -20(%rbp), %rax
+    movq    %rax, -24(%rbp)
+    movq    -24(%rbp), %rax
+    movq    %rax, -8(%rbp)
+    movq    $2, -32(%rbp)
+    movq    28(%rbp), %r8
+    movq    32(%rbp), %rdi
+    movq    %r8, %r9
+    movq    %rdi, %r8
+    movq    %rax, %rdi
     call    test
-    movl    $2, -36(%rbp)
-    movl    -36(%rbp), %eax
+    movq    $2, -36(%rbp)
+    movq    -36(%rbp), %rax
     #epilogue
     popq %rbp
     ret

@@ -18,63 +18,63 @@ void IRInstr::gen_asm(ostream &o){
         case Operation::ldconst:
         
             varDest = bb->cfg->get_var_index(params[0]);
-            o<<"    movl    $"<<params[1]<<", -"<<varDest<<"(%rbp)"<<endl;
+            o<<"    movq    $"<<params[1]<<", -"<<varDest<<"(%rbp)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::add:
             varDest = bb->cfg->get_var_index(params[0]);
             var1 = bb->cfg->get_var_index(params[1]);
             var2 = bb->cfg->get_var_index(params[2]);
-            o<<"    movl    -"<<var1<<"(%rbp), %eax"<<endl;
-            o<<"    addl    -"<<var2<<"(%rbp), %eax"<<endl;
-            o<<"    movl    %eax, -"<<varDest<<"(%rbp)"<<endl;
+            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+            o<<"    addq    -"<<var2<<"(%rbp), %rax"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
            // o<<";"<<params[0]<<endl;;
             break;
         case Operation::sub:
             varDest = bb->cfg->get_var_index(params[0]);
             var1 = bb->cfg->get_var_index(params[1]);
             var2 = bb->cfg->get_var_index(params[2]);
-            o<<"    movl    -"<<var1<<"(%rbp), %eax"<<endl;
-            o<<"    subl    -"<<var2<<"(%rbp), %eax"<<endl;
-            o<<"    movl    %eax, -"<<varDest<<"(%rbp)"<<endl;
+            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+            o<<"    subq    -"<<var2<<"(%rbp), %rax"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::mul:
             varDest = bb->cfg->get_var_index(params[0]);
             var1 = bb->cfg->get_var_index(params[1]);
             var2 = bb->cfg->get_var_index(params[2]);
-            o<<"    movl    -"<<var2<<"(%rbp), %eax"<<endl;
-            o<<"    imul    -"<<var1<<"(%rbp), %eax"<<endl;
-            o<<"    movl    %eax, -"<<varDest<<"(%rbp)"<<endl;
+            o<<"    movq    -"<<var2<<"(%rbp), %rax"<<endl;
+            o<<"    imulq    -"<<var1<<"(%rbp), %rax"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::div:
             varDest = bb->cfg->get_var_index(params[0]);
             var1 = bb->cfg->get_var_index(params[1]);
             var2 = bb->cfg->get_var_index(params[2]);
-            o<<"    movl    -"<<var1<<"(%rbp), %eax"<<endl;
-            o<<"    cltd\n 	 idivl    -"<<var2<<"(%rbp)"<<endl;
-            o<<"    movl    %eax, -"<<varDest<<"(%rbp)"<<endl;
+            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+            o<<"    cltd\n 	 idivq    -"<<var2<<"(%rbp)"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::neg:
             varDest = bb->cfg->get_var_index(params[0]);
             var1 = bb->cfg->get_var_index(params[1]);
-            o<<" 	 movl   -"<<var1<<"(%rbp), %eax"<<endl;
-            o<<" 	 negl   %eax"<<endl;
-            o<<" 	 movl   %eax, -"<<varDest<<"(%rbp);"<<endl;
+            o<<" 	 movq   -"<<var1<<"(%rbp), %rax"<<endl;
+            o<<" 	 negq   %rax"<<endl;
+            o<<" 	 movq   %rax, -"<<varDest<<"(%rbp);"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::mov:
             varDest = bb->cfg->get_var_index(params[0]);
             var1 = bb->cfg->get_var_index(params[1]);
-            o<<"    movl    -"<<var1<<"(%rbp), %eax"<<endl;
-            o<<"    movl    %eax, -"<<varDest<<"(%rbp)"<<endl;
+            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::ret:
             var1 = bb->cfg->get_var_index(params[0]);
-            o<<"    movl    -"<<var1<<"(%rbp), %eax"<<endl;
+            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::call:
@@ -82,23 +82,23 @@ void IRInstr::gen_asm(ostream &o){
             string function = params[1];
             //varDest = bb->cfg->get_var_index(params[0]);
             var2 = bb->cfg->get_var_index(params[2]);
-            //o << "    movl    " << var2 << "(%rbp), %edi" << endl;
+            //o << "    movq    " << var2 << "(%rbp), %edi" << endl;
             //o << "    call    " << function << endl;
 
             for (int i = 2; i < params.size(); i++) {
                 switch(i) {
-                    case 2: o << "    movl    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %r8d" << endl; break;
-                    case 3: o << "    movl    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %edi" << endl; break;
-                    case 4: o << "    movl    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %ecx" << endl; break;
-                    case 5: o << "    movl    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %edx" << endl; break;
-                    case 6: o << "    movl    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %esi" << endl; break;
-                    case 7: o << "    movl    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %eax" << endl; break;
+                    case 2: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %r8" << endl; break;
+                    case 3: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdi" << endl; break;
+                    case 4: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rcx" << endl; break;
+                    case 5: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdx" << endl; break;
+                    case 6: o << "    movq    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %rsi" << endl; break;
+                    case 7: o << "    movq    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %rax" << endl; break;
                 }
             }
 
-            o << "    movl    %r8d, %r9d" <<endl;
-            o << "    movl    %edi, %r8d" <<endl;
-            o << "    movl    %eax, %edi" <<endl;
+            o << "    movq    %r8, %r9" <<endl;
+            o << "    movq    %rdi, %r8" <<endl;
+            o << "    movq    %rax, %rdi" <<endl;
             o << "    call    " << function << endl;
             break;
         }

@@ -1,4 +1,0 @@
-line 3:10 no viable alternative at input 'a ='
-Segmentation fault
-
-return code: 139

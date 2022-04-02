@@ -1,4 +1,4 @@
-/usr/bin/ld: /tmp/ccsw05er.o: in function `main':
+/usr/bin/ld: /tmp/ccXTQHj3.o: in function `main':
 input.c:(.text+0x25): undefined reference to `test'
 collect2: error: ld returned 1 exit status
 

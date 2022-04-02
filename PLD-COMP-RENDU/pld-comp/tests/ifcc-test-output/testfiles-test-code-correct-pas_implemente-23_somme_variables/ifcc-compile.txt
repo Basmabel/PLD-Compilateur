@@ -1,6 +1,0 @@
-line 3:10 no viable alternative at input 'a ='
-line 4:10 no viable alternative at input 'b ='
-line 5:10 no viable alternative at input 'c ='
-Segmentation fault
-
-return code: 139

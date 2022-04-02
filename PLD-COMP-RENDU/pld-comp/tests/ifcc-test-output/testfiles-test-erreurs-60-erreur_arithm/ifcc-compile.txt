@@ -1,3 +1,0 @@
-line 6:15 mismatched input '=' expecting ')'
-
-return code: 0

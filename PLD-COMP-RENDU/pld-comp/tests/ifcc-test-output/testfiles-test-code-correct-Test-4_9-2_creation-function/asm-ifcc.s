@@ -3,8 +3,8 @@
     #prologue
     pushq %rbp
     movq %rsp, %rbp
-    movl    $2, -8(%rbp)
-    movl    -8(%rbp), %eax
+    movq    $2, -8(%rbp)
+    movq    -8(%rbp), %rax
     #epilogue
     popq %rbp
     ret
@@ -13,17 +13,17 @@
     #prologue
     pushq %rbp
     movq %rsp, %rbp
-    movl    $6, -12(%rbp)
-    movl    -12(%rbp), %eax
-    movl    %eax, -4(%rbp)
-    movl    $4, -16(%rbp)
-    movl    $5, -20(%rbp)
-    movl    -16(%rbp), %eax
-    addl    -20(%rbp), %eax
-    movl    %eax, -24(%rbp)
-    movl    -24(%rbp), %eax
-    movl    %eax, -8(%rbp)
-    movl    -4(%rbp), %eax
+    movq    $6, -12(%rbp)
+    movq    -12(%rbp), %rax
+    movq    %rax, -4(%rbp)
+    movq    $4, -16(%rbp)
+    movq    $5, -20(%rbp)
+    movq    -16(%rbp), %rax
+    addq    -20(%rbp), %rax
+    movq    %rax, -24(%rbp)
+    movq    -24(%rbp), %rax
+    movq    %rax, -8(%rbp)
+    movq    -4(%rbp), %rax
     #epilogue
     popq %rbp
     ret

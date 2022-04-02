@@ -12,7 +12,7 @@
     #prologue
     pushq %rbp
     movq %rsp, %rbp
-    movq    $6, -16(%rbp)
+    movq    $8, -16(%rbp)
     movq    -16(%rbp), %rax
     movq    %rax, -4(%rbp)
     movq    $4, -20(%rbp)
@@ -31,8 +31,7 @@
     call    test
     movq    -32(%rbp), %rax
     movq    %rax, -12(%rbp)
-    movq    $2, -40(%rbp)
-    movq    -40(%rbp), %rax
+    movq    -4(%rbp), %rax
     #epilogue
     popq %rbp
     ret

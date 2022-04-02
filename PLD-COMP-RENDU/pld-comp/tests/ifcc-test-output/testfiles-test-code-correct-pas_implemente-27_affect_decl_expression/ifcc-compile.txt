@@ -1,4 +1,0 @@
-line 1:9 no viable alternative at input 'int main(args'
-Segmentation fault
-
-return code: 139

@@ -1,3 +1,0 @@
-line 6:20 mismatched input ')' expecting ';'
-
-return code: 0

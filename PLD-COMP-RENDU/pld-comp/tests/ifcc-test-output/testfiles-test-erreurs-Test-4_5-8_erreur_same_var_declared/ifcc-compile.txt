@@ -1,4 +1,0 @@
-<source>:2: error: redeclaration of 'int x'
-<source>:2: error: 'int x' previously declared here
-
-return code: 1

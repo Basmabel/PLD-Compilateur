@@ -1,7 +1,0 @@
-input.c: In function ‘main’:
-input.c:3:8: warning: integer constant is so large that it is unsigned
-    3 |     a =9999999999999999999 ;
-      |        ^~~~~~~~~~~~~~~~~~~
-input.c:3:8: warning: overflow in conversion from ‘__int128’ to ‘char’ changes value from ‘9999999999999999999’ to ‘-1’ [-Woverflow]
-
-return code: 0

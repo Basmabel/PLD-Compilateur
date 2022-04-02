@@ -63,6 +63,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitCharacter(ifccParser::CharacterContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitConst(ifccParser::ConstContext *ctx) override {
     return visitChildren(ctx);
   }

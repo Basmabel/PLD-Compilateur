@@ -1,6 +1,0 @@
-input.c: In function ‘main’:
-input.c:3:6: error: assignment of read-only variable ‘a’
-    3 |     a=1;
-      |      ^
-
-return code: 1

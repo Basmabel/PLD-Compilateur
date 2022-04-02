@@ -1,4 +1,0 @@
-asm-ifcc.s: Assembler messages:
-asm-ifcc.s:6: Error: operand size mismatch for `movq'
-
-return code: 1

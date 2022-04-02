@@ -1,9 +1,0 @@
-input.c: In function ‘main’:
-input.c:3:13: error: expected ‘;’ before ‘}’ token
-    3 |     return 2//1;
-      |             ^
-      |             ;
-    4 | }
-      | ~            
-
-return code: 1

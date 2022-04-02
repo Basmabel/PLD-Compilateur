@@ -1,6 +1,0 @@
-input.c: In function ‘main’:
-input.c:3:14: error: expected expression before ‘;’ token
-    3 |     return 2/;
-      |              ^
-
-return code: 1

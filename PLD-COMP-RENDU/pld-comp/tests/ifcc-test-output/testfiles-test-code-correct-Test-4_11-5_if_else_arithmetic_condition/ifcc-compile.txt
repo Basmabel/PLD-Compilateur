@@ -1,4 +1,0 @@
-libc++abi: terminating with uncaught exception of type std::bad_cast: std::bad_cast
-/Users/hanaa/Desktop/INSA/4IF/S2/PLD-Compilateur/PLD-COMP-RENDU/pld-comp/tests/ifcc-wrapper.sh: line 21: 25374 Abort trap: 6           $(dirname $0)/../compiler/ifcc $SOURCENAME > $DESTNAME
-
-return code: 134

@@ -13,6 +13,7 @@ antlrcpp::Any IRVisitor::visitProg(ifccParser::ProgContext *ctx)
     for(int i=0 ; i<ctx->instr().size(); i++){
 		linectr=ctx->instr().at(i)->getStart()->getLine();
 		visit(ctx->instr().at(i));
+		//cout<<"aaaa"<<endl;	
 	}
     
     cfg->gen_asm(cout);
@@ -183,6 +184,10 @@ antlrcpp::Any IRVisitor::visitPar(ifccParser::ParContext *context)
 	return var;	
 }
 
+antlrcpp::Any IRVisitor::visitExprAffecttion(ifccParser::ExprAffecttionContext *context){
+	string var = visit(context->affectation());
+	return var;
+}
 
 /*
 *	Visite d'une variable. Si elle a été déclarée, retourne son nom
@@ -286,7 +291,14 @@ antlrcpp::Any IRVisitor :: visitIsdifferent(ifccParser::IsdifferentContext *cont
 antlrcpp::Any IRVisitor :: visitIf_then_else(ifccParser::If_then_elseContext *context) {
 
 	//visite de la condition
-	string var = visit(context->condition());
+	string var = visit(context->expression());
+
+	//Creation d'une nouvelle variable résultat
+	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+
+	vector<string> params = {vartmp,var,"$0"};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
 	
 	//sauvegarde de output avant de traiter la if 
 	BasicBlock* blockTmp = cfg->current_bb->exit_true;
@@ -356,11 +368,14 @@ antlrcpp::Any IRVisitor::visitBlock(ifccParser::BlockContext *context){
 antlrcpp::Any IRVisitor :: visitCondition_affectation(ifccParser::Condition_affectationContext *context) {
 	string var = visit(context->affectation());
 
-    vector<string> params = {"$0",var};
+	//Creation d'une nouvelle variable résultat
+	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
 
-	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params); 
+	vector<string> params = {vartmp,var,"$0"};
 
-	return var;
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
+
+	return vartmp;
 }
 
 /*
@@ -368,7 +383,15 @@ antlrcpp::Any IRVisitor :: visitCondition_affectation(ifccParser::Condition_affe
 */
 antlrcpp::Any IRVisitor :: visitCondition_expression(ifccParser::Condition_expressionContext *context) {
 	string var = visit(context->expression());
-	return 0;
+
+	//Creation d'une nouvelle variable résultat
+	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+
+	vector<string> params = {vartmp,var,"$0"};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
+
+	return vartmp;
 }
 
 /*
@@ -376,7 +399,7 @@ antlrcpp::Any IRVisitor :: visitCondition_expression(ifccParser::Condition_expre
 */
 antlrcpp::Any IRVisitor :: visitCondition_comparison(ifccParser::Condition_comparisonContext *context) {
 	string var = visit(context->comparison());
-	return 0;
+	return var;
 }
 
 /*
@@ -389,7 +412,7 @@ antlrcpp::Any IRVisitor :: visitComparison_equal(ifccParser::Comparison_equalCon
 	
 	//récuparation du nom de la deuxieme variable
 	std:: string var2=visit(context->expression(1));	
-	return 0;
+	return var;
 }
 
 /*
@@ -403,7 +426,7 @@ antlrcpp::Any IRVisitor :: visitComparison_different(ifccParser::Comparison_diff
 	//récuparation du nom de la deuxieme variable
 	std:: string var2=visit(context->expression(1));
 
-	return 0;
+	return var;
 }
 
 /*

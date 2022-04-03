@@ -13,6 +13,7 @@ variables: VAR COMMA;
 affectation: VAR EQUAL expression;
 expression: OPENPAR expression CLOSEPAR #par
 | (MINUS) expression #oppose
+| affectation #exprAffecttion
 | expression (MULTIPLY | DIVIDE) expression #multdiv
 | expression (PLUS | MINUS) expression #plusminus
 | expression (ISEQUAL) expression #isequal
@@ -20,7 +21,7 @@ expression: OPENPAR expression CLOSEPAR #par
 | VAR #var 
 | CONST #const;
 
-if_then_else : IF OPENPAR condition CLOSEPAR OPENBRACKET blockthen=block CLOSEBRACKET ELSE OPENBRACKET blockelse=block CLOSEBRACKET ;
+if_then_else : IF OPENPAR expression CLOSEPAR OPENBRACKET blockthen=block CLOSEBRACKET ELSE OPENBRACKET blockelse=block CLOSEBRACKET ;
 
 whileloop : WHILE OPENPAR condition CLOSEPAR OPENBRACKET blockwhile=block CLOSEBRACKET ;
 

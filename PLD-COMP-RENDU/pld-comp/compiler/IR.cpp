@@ -73,18 +73,19 @@ void IRInstr::gen_asm(ostream &o){
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::cmp_eq:
+            varDest= bb->cfg->get_var_index(params[0]);
             var1= bb->cfg->get_var_index(params[1]);
-            var2= bb->cfg->get_var_index(params[2]);
-            if(params[0]=="$0"){
-                o<<"    cmpq    "<<params[0]<<", -"<<var1<<"(%rbp)"<<endl;
+            
+            if(params[2]=="$0"){
+                o<<"    cmpq    "<<params[2]<<", -"<<var1<<"(%rbp)"<<endl;
             }else{
-                varDest= bb->cfg->get_var_index(params[0]);
+                var2= bb->cfg->get_var_index(params[2]);
                 o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
                 o<<"    cmpq    -"<<var2<<"(%rbp), %rax"<<endl;
-                o<<"    sete    %al"<<endl;
-                o<<"    movzbq  %al, %rax"<<endl;
-                o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
             }
+            o<<"    sete    %al"<<endl;
+            o<<"    movzbq  %al, %rax"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
             break;
         case Operation::cmp_ineq:
             var1= bb->cfg->get_var_index(params[1]);

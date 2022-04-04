@@ -12,7 +12,7 @@ IRVisitor::IRVisitor(ValeurVisitor v){
 */
 antlrcpp::Any IRVisitor::visitProg(ifccParser::ProgContext *context) 
 {
-	cfg = new CFG();
+	cfg = new CFG(0);
 	
 	string functionName = context->VAR(0)->getText();
 	vector<string> name;
@@ -48,7 +48,10 @@ antlrcpp::Any IRVisitor::visitProg(ifccParser::ProgContext *context)
 		visit(context->instr().at(i));
 	}
     
-    cfg->gen_asm(cout,functionName);
+    cfg->gen_asm(cout,functionName, fonctionTable->getSize(), fonctionTable);
+	
+
+	nextFreeSymbolIndex=cfg->nextFreeSymbolIndex;
 
 	return 0;
 }
@@ -187,7 +190,7 @@ antlrcpp::Any IRVisitor::visitVaraffectdecl(ifccParser::VaraffectdeclContext *co
 */
 antlrcpp::Any IRVisitor::visitAffectation(ifccParser::AffectationContext *context)
 {
-	
+	affectation = true;
 
 	//Recuperation nouvelle variable droite
 	string local = visit(context->expression());
@@ -208,6 +211,8 @@ antlrcpp::Any IRVisitor::visitAffectation(ifccParser::AffectationContext *contex
 
     cfg->current_bb->add_IRInstr(IRInstr::Operation::wmem, Type::WMEM, params);
 
+	affectation = false;
+
 	return var;
 }
 
@@ -221,6 +226,10 @@ antlrcpp::Any IRVisitor::visitLvalVar(ifccParser::LvalVarContext *context){
 
 	if(declaration){
 		addSymbolToTable(var);
+		if(!affectation){
+			return var;
+		}
+		
 	}
 
 	//Check si la var a été déclaree

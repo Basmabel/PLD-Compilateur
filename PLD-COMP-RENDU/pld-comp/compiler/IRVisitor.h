@@ -103,9 +103,12 @@ class  IRVisitor : public ifccBaseVisitor {
 		int linectr =0; //Ligne de l'instruction courante
 		int nextFreeFunctionIndex=0; /**< to allocate new functions in the function table */
 		functionTable* fonctionTable= new functionTable();
+
 		bool declaration = false;
+		bool affectation = false;
 
         CFG* cfg;
+		int nextFreeSymbolIndex = 0;
 
 		ValeurVisitor v;
 };

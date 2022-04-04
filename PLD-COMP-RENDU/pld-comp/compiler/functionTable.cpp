@@ -61,6 +61,11 @@
 		return fonctions.at(name)->getArgsSize();
     }
 
+	int functionTable::getSize(){
+		return fonctions.size();
+    }
+
+
     bool functionTable :: argsContains(string variable){
         if(count(args.begin(), args.end(),variable)>0){
 			return true;

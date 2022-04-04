@@ -36,6 +36,7 @@ class  functionTable {
         bool argsContains (string variable);
 		bool contains(string name);
         size_t getLine(string name);
+		int getSize();
         fonction* getFonction(string name);
 
 	private:

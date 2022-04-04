@@ -1,5 +1,5 @@
-/usr/bin/ld: /tmp/ccHJv0qN.o: in function `main':
-input.c:(.text+0x25): undefined reference to `test'
+/usr/bin/ld : /tmp/cc1178DQ.o : dans la fonction « main » :
+input.c:(.text+0x25) : référence indéfinie vers « test »
 collect2: error: ld returned 1 exit status
 
 return code: 1

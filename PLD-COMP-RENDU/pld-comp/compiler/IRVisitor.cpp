@@ -328,7 +328,7 @@ antlrcpp::Any IRVisitor::visitPar(ifccParser::ParContext *context)
 	return var;	
 }
 
-antlrcpp::Any IRVisitor::visitExprAffecttion(ifccParser::ExprAffecttionContext *context){
+antlrcpp::Any IRVisitor::visitExprAffectation(ifccParser::ExprAffectationContext *context){
 	string var = visit(context->affectation());
 	return var;
 }
@@ -646,72 +646,6 @@ antlrcpp::Any IRVisitor::visitBlock(ifccParser::BlockContext *context){
 	return 0;
 }
 
-/*
-*	.. 
-*/
-antlrcpp::Any IRVisitor :: visitCondition_affectation(ifccParser::Condition_affectationContext *context) {
-	string var = visit(context->affectation());
-
-	//Creation d'une nouvelle variable résultat
-	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
-
-	vector<string> params = {vartmp,var,"$0"};
-
-	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
-
-	return vartmp;
-}
-
-/*
-*	.. 
-*/
-antlrcpp::Any IRVisitor :: visitCondition_expression(ifccParser::Condition_expressionContext *context) {
-	string var = visit(context->expression());
-
-	//Creation d'une nouvelle variable résultat
-	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
-
-	vector<string> params = {vartmp,var,"$0"};
-
-	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
-
-	return vartmp;
-}
-
-/*
-*	.. 
-*/
-antlrcpp::Any IRVisitor :: visitCondition_comparison(ifccParser::Condition_comparisonContext *context) {
-	string var = visit(context->comparison());
-	return var;
-}
-
-/*
-*	.. 
-*/
-antlrcpp::Any IRVisitor :: visitComparison_equal(ifccParser::Comparison_equalContext *context) {
-	
-	//récuparation du nom de la première variable
-	std::string var= visit(context->expression(0));
-	
-	//récuparation du nom de la deuxieme variable
-	std:: string var2=visit(context->expression(1));	
-	return var;
-}
-
-/*
-*	.. 
-*/
-antlrcpp::Any IRVisitor :: visitComparison_different(ifccParser::Comparison_differentContext *context) {
-
-	//récuparation du nom de la première variable
-	std::string var= visit(context->expression(0));
-	
-	//récuparation du nom de la deuxieme variable
-	std:: string var2=visit(context->expression(1));
-
-	return var;
-}
 
 /*
 *	Visite du return. Génère le code assembleur associé en utilisant le 

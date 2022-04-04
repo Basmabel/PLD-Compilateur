@@ -128,10 +128,15 @@ antlrcpp::Any ValeurVisitor::visitAffectation(ifccParser::AffectationContext *co
 		var+=to_string(linectr);
 	}
 
-	addValue(var,local);
 	
-
-	return var;
+	
+	if(declaration){
+		addValue(var,local);
+		return var;
+	}else{
+		return local;
+	}
+	
 }
 
 
@@ -369,6 +374,13 @@ antlrcpp::Any ValeurVisitor::visitOrlogiq(ifccParser::OrlogiqContext *context){
 
 	create_new_tempvar(val);
 
+	return val;
+}
+
+
+antlrcpp::Any ValeurVisitor::visitExprAffectation(ifccParser::ExprAffectationContext *context) {
+	int val = visit(context->affectation());
+	create_new_tempvar(val);
 	return val;
 }
 

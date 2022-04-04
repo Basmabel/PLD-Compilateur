@@ -31,6 +31,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitIf_then_elseInstr(ifccParser::If_then_elseInstrContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitReturn_stmtInstr(ifccParser::Return_stmtInstrContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -39,11 +43,39 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitVariables(ifccParser::VariablesContext *ctx) override {
+  virtual antlrcpp::Any visitInt(ifccParser::IntContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitChar(ifccParser::CharContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitVarsimpledecl(ifccParser::VarsimpledeclContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitVaraffectdecl(ifccParser::VaraffectdeclContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitEnddeclvar(ifccParser::EnddeclvarContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitEnddeclaffect(ifccParser::EnddeclaffectContext *ctx) override {
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitAffectation(ifccParser::AffectationContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitLvalVar(ifccParser::LvalVarContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitLvaltableau(ifccParser::LvaltableauContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -55,11 +87,35 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitNegation(ifccParser::NegationContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitConst(ifccParser::ConstContext *ctx) override {
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitExprAffectation(ifccParser::ExprAffectationContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitVar(ifccParser::VarContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitOrlogiq(ifccParser::OrlogiqContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitValTableau(ifccParser::ValTableauContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitInequality(ifccParser::InequalityContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitCharacter(ifccParser::CharacterContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -68,6 +124,30 @@ public:
   }
 
   virtual antlrcpp::Any visitOppose(ifccParser::OpposeContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitEquality(ifccParser::EqualityContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitXorlogiq(ifccParser::XorlogiqContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitAndlogiq(ifccParser::AndlogiqContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitIf_then_else(ifccParser::If_then_elseContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitWhileloop(ifccParser::WhileloopContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitBlock(ifccParser::BlockContext *ctx) override {
     return visitChildren(ctx);
   }
 

@@ -5,7 +5,7 @@ axiom : prog ;
 prog : INT 'main' OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET ;
 
 
-instr : declaration #declarationInstr | affectation SEMICOLON #affectationInstr | return_stmt #return_stmtInstr ; 
+instr : declaration #declarationInstr | affectation SEMICOLON #affectationInstr | if_then_else #if_then_elseInstr | return_stmt #return_stmtInstr   ; 
 
 declaration: type variables* enddeclaration SEMICOLON; 
 type: INT #int | CHAR #char;
@@ -34,6 +34,7 @@ expression: OPENPAR expression CLOSEPAR #par
 | expression (GREATER | SMALLER) expression #inequality
 | expression (ISEQUAL | ISDIFFERENT) expression #equality
 | VAR OPENSQBRACKETS expression CLOSESQBRACKETS #valTableau
+| affectation #exprAffectation
 | VAR #var
 | CHARACTER #character
 | CONST #const;
@@ -59,15 +60,12 @@ CLOSESQBRACKETS: ']';
 ISEQUAL : '==' ;
 ISDIFFERENT : '!=' ; 
 EQUAL : '=';
-DIFFERENT : '!' ;
 GREATER : '>' ;
 SMALLER : '<' ;
 PLUS : '+' ;
 MINUS : '-' ;
 MULTIPLY : '*' ;
 DIVIDE : '/' ;
-AND : '&' ;
-OR : '|' ;
 IF : 'if' ;
 ELSE : 'else' ;
 WHILE : 'while';

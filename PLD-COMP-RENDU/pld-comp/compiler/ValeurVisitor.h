@@ -69,6 +69,8 @@ class  ValeurVisitor : public ifccBaseVisitor {
 
 		virtual antlrcpp::Any visitOrlogiq(ifccParser::OrlogiqContext *context) override;
 
+		virtual antlrcpp::Any visitExprAffectation(ifccParser::ExprAffectationContext *context) override;
+
 		virtual antlrcpp::Any visitConst(ifccParser::ConstContext *context) override;
 
 		virtual antlrcpp::Any visitReturn_stmt(ifccParser::Return_stmtContext *context) override ;

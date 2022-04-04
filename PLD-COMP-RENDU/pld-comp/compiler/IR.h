@@ -182,7 +182,6 @@ class CFG {
 	int nextFreeSymbolIndex; /**< to allocate new symbols in the symbol table */
 	symbolTable* symboleTable;
 	
-	int nextBBnumber; /**< just for naming */
 
 	
 	vector <BasicBlock*> bbs; /**< all the basic blocks of this CFG*/

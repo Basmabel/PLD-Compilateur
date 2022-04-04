@@ -1,0 +1,14 @@
+input.c:13:18: warning: using the result of an assignment as a condition without parentheses [-Wparentheses]
+            if (c=a+2*5-2+b/1)
+                ~^~~~~~~~~~~~
+input.c:13:18: note: place parentheses around the assignment to silence this warning
+            if (c=a+2*5-2+b/1)
+                 ^
+                (            )
+input.c:13:18: note: use '==' to turn this assignment into an equality comparison
+            if (c=a+2*5-2+b/1)
+                 ^
+                 ==
+1 warning generated.
+
+return code: 0

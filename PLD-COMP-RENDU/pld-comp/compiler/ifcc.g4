@@ -18,12 +18,14 @@ expression: OPENPAR expression CLOSEPAR #par
 | expression (PLUS | MINUS) expression #plusminus
 | expression (ISEQUAL) expression #isequal
 | expression (ISDIFFERENT) expression #isdifferent
+| expression (GREATER) expression #isgreater
+| expression (SMALLER) expression #issmaller
 | VAR #var 
 | CONST #const;
 
 if_then_else : IF OPENPAR expression CLOSEPAR OPENBRACKET blockthen=block CLOSEBRACKET ELSE OPENBRACKET blockelse=block CLOSEBRACKET ;
 
-whileloop : WHILE OPENPAR condition CLOSEPAR OPENBRACKET blockwhile=block CLOSEBRACKET ;
+whileloop : WHILE OPENPAR expression CLOSEPAR OPENBRACKET blockwhile=block CLOSEBRACKET ;
 
 block: instr*;
 
@@ -46,8 +48,6 @@ OPENBRACKET : '{' ;
 CLOSEBRACKET : '}' ;
 ISEQUAL : '==' ;
 ISDIFFERENT : '!=' ; 
-GREATEREQUAL : '>=' ;
-SMALLEREQUAL : '<=' ;
 EQUAL : '=';
 DIFFERENT : '!' ;
 GREATER : '>' ;

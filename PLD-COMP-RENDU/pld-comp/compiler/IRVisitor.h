@@ -62,6 +62,10 @@ class  IRVisitor : public ifccBaseVisitor {
 
     	virtual antlrcpp::Any visitIsdifferent(ifccParser::IsdifferentContext *context) override;
 
+		virtual antlrcpp::Any visitIssmaller(ifccParser::IssmallerContext *context) override;
+
+		virtual antlrcpp::Any visitIsgreater(ifccParser::IsgreaterContext *context) override;
+
 		virtual antlrcpp::Any visitIf_then_else(ifccParser::If_then_elseContext *context) override;
 
 		virtual antlrcpp::Any visitWhileloop(ifccParser::WhileloopContext *context) override;

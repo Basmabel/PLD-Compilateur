@@ -41,9 +41,15 @@ public:
 
     virtual antlrcpp::Any visitPar(ifccParser::ParContext *context) = 0;
 
+    virtual antlrcpp::Any visitIsgreater(ifccParser::IsgreaterContext *context) = 0;
+
     virtual antlrcpp::Any visitPlusminus(ifccParser::PlusminusContext *context) = 0;
 
     virtual antlrcpp::Any visitConst(ifccParser::ConstContext *context) = 0;
+
+    virtual antlrcpp::Any visitExprAffecttion(ifccParser::ExprAffecttionContext *context) = 0;
+
+    virtual antlrcpp::Any visitIssmaller(ifccParser::IssmallerContext *context) = 0;
 
     virtual antlrcpp::Any visitVar(ifccParser::VarContext *context) = 0;
 

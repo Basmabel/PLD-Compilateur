@@ -1,7 +1,0 @@
-line 4:10 missing '{' at 'a'
-line 5:4 missing '}' at 'else'
-line 6:4 missing '{' at 'b'
-line 13:0 extraneous input '<EOF>' expecting {'int', '}', 'if', 'while', 'return', VAR}
-error: syntax error during parsing
-
-return code: 1

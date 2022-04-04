@@ -9,6 +9,6 @@ int main (){
         
     }
     i=8;
+    /*expected result : invalid*/
     return i;
 }
-//expected result : invalid

@@ -59,11 +59,23 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitIsgreater(ifccParser::IsgreaterContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitPlusminus(ifccParser::PlusminusContext *ctx) override {
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitConst(ifccParser::ConstContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitExprAffecttion(ifccParser::ExprAffecttionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitIssmaller(ifccParser::IssmallerContext *ctx) override {
     return visitChildren(ctx);
   }
 

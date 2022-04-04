@@ -285,6 +285,26 @@ antlrcpp::Any IRVisitor :: visitIsdifferent(ifccParser::IsdifferentContext *cont
 }
 
 
+
+/*
+* Visite d'une comparaison 'is smaller' (<)
+* Retourne le résultat de comparaison entre deux expression
+*/
+antlrcpp::Any IRVisitor :: visitIssmaller(ifccParser::IssmallerContext *context) {
+	return 0;
+}
+
+
+
+/*
+* Visite d'une comparaison 'is greater' (>)
+* Retourne le résultat de comparaison entre deux expression
+*/
+antlrcpp::Any IRVisitor :: visitIsgreater(ifccParser::IsgreaterContext *context) {
+	return 0;
+}
+
+
 /*
 *	Visite du ITE statement (If Then Else). 
 */

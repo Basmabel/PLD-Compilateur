@@ -1,4 +1,0 @@
-line 3:4 extraneous input '&' expecting {'int', 'char', '}', 'return', VAR}
-error: syntax error during parsing
-
-return code: 1

@@ -1,7 +1,0 @@
-input.c: In function ‘main’:
-input.c:3:9: warning: integer constant is too large for its type
-    3 |     a = 999999999999999999999999999999;
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-input.c:3:9: warning: overflow in conversion from ‘long int’ to ‘int’ changes value from ‘5076944270305263615’ to ‘1073741823’ [-Woverflow]
-
-return code: 0

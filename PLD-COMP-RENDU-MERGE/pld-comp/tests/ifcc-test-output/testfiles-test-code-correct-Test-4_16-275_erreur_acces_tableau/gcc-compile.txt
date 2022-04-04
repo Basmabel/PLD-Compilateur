@@ -1,6 +1,0 @@
-input.c: In function ‘main’:
-input.c:2:19: error: invalid initializer
-    2 |     int a=8, b[4]=5;
-      |                   ^
-
-return code: 1

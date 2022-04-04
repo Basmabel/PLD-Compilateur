@@ -1,3 +1,0 @@
-<source>:2: error: invalid initializer
-
-return code: 1

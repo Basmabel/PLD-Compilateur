@@ -243,10 +243,14 @@ antlrcpp::Any IRVisitor::visitConst(ifccParser::ConstContext *context)
 
 
 /*
-* Visite d'une égalité 	(==)
-* Retourne le résultat de comparaison entre deux expression
+* Visite d'une comparaison d'égalité 	(== ou !=)
+* Retourne le résultat de comparaison entre deux expressions
 */
-antlrcpp::Any IRVisitor::visitIsequal(ifccParser::IsequalContext *context){
+antlrcpp::Any IRVisitor::visitEquality(ifccParser::EqualityContext *context){
+
+	//Indique si l'expression est une == ou une !=
+	bool op = (context->ISEQUAL())? true : false;
+
 	//récuparation du nom de la première variable
 	std::string var= visit(context->expression(0));
 
@@ -257,17 +261,26 @@ antlrcpp::Any IRVisitor::visitIsequal(ifccParser::IsequalContext *context){
 	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
 
 	vector<string> params = {vartmp,var,var2};
+	if(op) {
+		cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
 
-	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
+	}else {
+		cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_ineq, Type::CMP_INEQ, params);
+
+	}
 
 	return vartmp;
 }
 
+
 /*
-* Visite d'une inégalité (!=)
-* Retourne le résultat de comparaison entre deux expression
+* Visite d'une comparaison (< ou >)
+* Retourne le résultat de comparaison entre deux expressions
 */
-antlrcpp::Any IRVisitor :: visitIsdifferent(ifccParser::IsdifferentContext *context) {
+antlrcpp::Any IRVisitor :: visitInequality(ifccParser::InequalityContext *context) {
+	//Indique si l'expression est une == ou une !=
+	bool op = (context->GREATER())? true : false;
+
 	//récuparation du nom de la première variable
 	std::string var= visit(context->expression(0));
 
@@ -278,31 +291,26 @@ antlrcpp::Any IRVisitor :: visitIsdifferent(ifccParser::IsdifferentContext *cont
 	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
 
 	vector<string> params = {vartmp,var,var2};
+	if(op) {
+		cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_gt, Type::CMP_GT, params);
 
-	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_ineq, Type::CMP_INEQ, params);
+	}else {
+		cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_lt, Type::CMP_LT, params);
+
+	}
 
 	return vartmp;
-}
-
-
-
-/*
-* Visite d'une comparaison 'is smaller' (<)
-* Retourne le résultat de comparaison entre deux expression
-*/
-antlrcpp::Any IRVisitor :: visitIssmaller(ifccParser::IssmallerContext *context) {
-	return 0;
 }
 
 
 
 /*
 * Visite d'une comparaison 'is greater' (>)
-* Retourne le résultat de comparaison entre deux expression
+* Retourne le résultat de comparaison entre deux expressions
 */
-antlrcpp::Any IRVisitor :: visitIsgreater(ifccParser::IsgreaterContext *context) {
-	return 0;
-}
+// antlrcpp::Any IRVisitor :: visitIsgreater(ifccParser::IsgreaterContext *context) {
+// 	return 0;
+// }
 
 
 /*
@@ -357,8 +365,6 @@ antlrcpp::Any IRVisitor :: visitIf_then_else(ifccParser::If_then_elseContext *co
 
 	cfg->current_bb=block3;
 	block3->exit_true = blockTmp;
-
-	//block3->exit_true=cfg->return_bb; 
 	block3->exit_false=nullptr;
 
 

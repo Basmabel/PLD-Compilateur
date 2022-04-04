@@ -28,6 +28,8 @@ typedef enum {
 		RET,
 		CMP_EQ,
 		CMP_INEQ,
+		CMP_LT,
+		CMP_GT,
 		DEFAULT
 } Type;
 
@@ -53,7 +55,7 @@ class IRInstr {
 		cmp_eq,
 		cmp_ineq,
 		cmp_lt,
-		cmp_le
+		cmp_gt
 	} Operation;
 
 

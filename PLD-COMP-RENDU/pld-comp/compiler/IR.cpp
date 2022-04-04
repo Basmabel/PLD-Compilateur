@@ -101,6 +101,29 @@ void IRInstr::gen_asm(ostream &o){
                 o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
             }
             break;
+        case Operation::cmp_gt:
+            var1= bb->cfg->get_var_index(params[1]);
+            var2= bb->cfg->get_var_index(params[2]);
+            
+            varDest= bb->cfg->get_var_index(params[0]);
+            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+            o<<"    cmpq    -"<<var2<<"(%rbp), %rax"<<endl;
+            o<<"    setg    %al"<<endl;
+            o<<"    movzbq  %al, %rax"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+            
+            break;
+        case Operation::cmp_lt:
+            var1= bb->cfg->get_var_index(params[1]);
+            var2= bb->cfg->get_var_index(params[2]);
+            
+            varDest= bb->cfg->get_var_index(params[0]);
+            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+            o<<"    cmpq    -"<<var2<<"(%rbp), %rax"<<endl;
+            o<<"    setl    %al"<<endl;
+            o<<"    movzbq  %al, %rax"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+            break;
         case Operation::ret:
             var1 = bb->cfg->get_var_index(params[0]);
             o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;

@@ -41,15 +41,13 @@ public:
 
     virtual antlrcpp::Any visitPar(ifccParser::ParContext *context) = 0;
 
-    virtual antlrcpp::Any visitIsgreater(ifccParser::IsgreaterContext *context) = 0;
-
     virtual antlrcpp::Any visitPlusminus(ifccParser::PlusminusContext *context) = 0;
+
+    virtual antlrcpp::Any visitInequality(ifccParser::InequalityContext *context) = 0;
 
     virtual antlrcpp::Any visitConst(ifccParser::ConstContext *context) = 0;
 
     virtual antlrcpp::Any visitExprAffecttion(ifccParser::ExprAffecttionContext *context) = 0;
-
-    virtual antlrcpp::Any visitIssmaller(ifccParser::IssmallerContext *context) = 0;
 
     virtual antlrcpp::Any visitVar(ifccParser::VarContext *context) = 0;
 
@@ -57,9 +55,7 @@ public:
 
     virtual antlrcpp::Any visitOppose(ifccParser::OpposeContext *context) = 0;
 
-    virtual antlrcpp::Any visitIsequal(ifccParser::IsequalContext *context) = 0;
-
-    virtual antlrcpp::Any visitIsdifferent(ifccParser::IsdifferentContext *context) = 0;
+    virtual antlrcpp::Any visitEquality(ifccParser::EqualityContext *context) = 0;
 
     virtual antlrcpp::Any visitIf_then_else(ifccParser::If_then_elseContext *context) = 0;
 

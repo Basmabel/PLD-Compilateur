@@ -59,11 +59,11 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitIsgreater(ifccParser::IsgreaterContext *ctx) override {
+  virtual antlrcpp::Any visitPlusminus(ifccParser::PlusminusContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitPlusminus(ifccParser::PlusminusContext *ctx) override {
+  virtual antlrcpp::Any visitInequality(ifccParser::InequalityContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -72,10 +72,6 @@ public:
   }
 
   virtual antlrcpp::Any visitExprAffecttion(ifccParser::ExprAffecttionContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitIssmaller(ifccParser::IssmallerContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -91,11 +87,7 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitIsequal(ifccParser::IsequalContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitIsdifferent(ifccParser::IsdifferentContext *ctx) override {
+  virtual antlrcpp::Any visitEquality(ifccParser::EqualityContext *ctx) override {
     return visitChildren(ctx);
   }
 

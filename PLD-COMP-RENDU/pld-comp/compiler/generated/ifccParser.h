@@ -213,17 +213,6 @@ public:
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
-  class  IsgreaterContext : public ExpressionContext {
-  public:
-    IsgreaterContext(ExpressionContext *ctx);
-
-    std::vector<ExpressionContext *> expression();
-    ExpressionContext* expression(size_t i);
-    antlr4::tree::TerminalNode *GREATER();
-
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
   class  PlusminusContext : public ExpressionContext {
   public:
     PlusminusContext(ExpressionContext *ctx);
@@ -232,6 +221,18 @@ public:
     ExpressionContext* expression(size_t i);
     antlr4::tree::TerminalNode *PLUS();
     antlr4::tree::TerminalNode *MINUS();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  InequalityContext : public ExpressionContext {
+  public:
+    InequalityContext(ExpressionContext *ctx);
+
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    antlr4::tree::TerminalNode *GREATER();
+    antlr4::tree::TerminalNode *SMALLER();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
@@ -250,17 +251,6 @@ public:
     ExprAffecttionContext(ExpressionContext *ctx);
 
     AffectationContext *affectation();
-
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  class  IssmallerContext : public ExpressionContext {
-  public:
-    IssmallerContext(ExpressionContext *ctx);
-
-    std::vector<ExpressionContext *> expression();
-    ExpressionContext* expression(size_t i);
-    antlr4::tree::TerminalNode *SMALLER();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
@@ -296,23 +286,13 @@ public:
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
-  class  IsequalContext : public ExpressionContext {
+  class  EqualityContext : public ExpressionContext {
   public:
-    IsequalContext(ExpressionContext *ctx);
+    EqualityContext(ExpressionContext *ctx);
 
     std::vector<ExpressionContext *> expression();
     ExpressionContext* expression(size_t i);
     antlr4::tree::TerminalNode *ISEQUAL();
-
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  class  IsdifferentContext : public ExpressionContext {
-  public:
-    IsdifferentContext(ExpressionContext *ctx);
-
-    std::vector<ExpressionContext *> expression();
-    ExpressionContext* expression(size_t i);
     antlr4::tree::TerminalNode *ISDIFFERENT();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;

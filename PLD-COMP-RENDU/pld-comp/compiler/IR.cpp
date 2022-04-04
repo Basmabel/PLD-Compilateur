@@ -136,6 +136,58 @@ void IRInstr::gen_asm(ostream &o){
             o<<"    movq    %r10, (%rax)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
+        case Operation::cmp_eq:
+            varDest= bb->cfg->get_var_index(params[0]);
+            var1= bb->cfg->get_var_index(params[1]);
+            
+            if(params[2]=="$0"){
+                o<<"    cmpq    "<<params[2]<<", -"<<var1<<"(%rbp)"<<endl;
+            }else{
+                var2= bb->cfg->get_var_index(params[2]);
+                o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+                o<<"    cmpq    -"<<var2<<"(%rbp), %rax"<<endl;
+            }
+            o<<"    sete    %al"<<endl;
+            o<<"    movzbq  %al, %rax"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+            break;
+        case Operation::cmp_ineq:
+            var1= bb->cfg->get_var_index(params[1]);
+            var2= bb->cfg->get_var_index(params[2]);
+            if(params[0]=="$0"){
+                o<<"    cmpq    "<<params[0]<<", -"<<var1<<"(%rbp)"<<endl;
+            }else{
+                varDest= bb->cfg->get_var_index(params[0]);
+                o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+                o<<"    cmpq    -"<<var2<<"(%rbp), %rax"<<endl;
+                o<<"    setne    %al"<<endl;
+                o<<"    movzbq  %al, %rax"<<endl;
+                o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+            }
+            break;
+        case Operation::cmp_gt:
+            var1= bb->cfg->get_var_index(params[1]);
+            var2= bb->cfg->get_var_index(params[2]);
+            
+            varDest= bb->cfg->get_var_index(params[0]);
+            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+            o<<"    cmpq    -"<<var2<<"(%rbp), %rax"<<endl;
+            o<<"    setg    %al"<<endl;
+            o<<"    movzbq  %al, %rax"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+            
+            break;
+        case Operation::cmp_lt:
+            var1= bb->cfg->get_var_index(params[1]);
+            var2= bb->cfg->get_var_index(params[2]);
+            
+            varDest= bb->cfg->get_var_index(params[0]);
+            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+            o<<"    cmpq    -"<<var2<<"(%rbp), %rax"<<endl;
+            o<<"    setl    %al"<<endl;
+            o<<"    movzbq  %al, %rax"<<endl;
+            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+            break;
         case Operation::ret:
             var1 = bb->cfg->get_var_index(params[0]);
             o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
@@ -162,9 +214,19 @@ void BasicBlock::gen_asm(ostream &o){
         instr->gen_asm(o);
     }
 
-    /*if (exit_true!=nullptr) {
-        o << "jmp " << exit_true->label << endl;
-    }*/
+    if (exit_true!=nullptr) {
+        if(exit_false != nullptr) {
+            o<<"    je     "<<exit_false->label<<endl;
+        }
+        o << "    jmp    " << exit_true->label <<endl;     
+    }
+    
+
+     //exit_true->label=="endifblock3" 
+    // if (cfg->current_bb->label== "thenblock1") {
+    //     o << "jmp " << exit_true->label << endl;
+    // }
+
 }
 
 
@@ -207,6 +269,10 @@ void CFG::gen_asm(ostream& o){
     gen_asm_prologue(o);
     for(unsigned int i = 0; i < bbs.size(); i++)
     {
+        if(bbs[i]->label != "entry_block" ) { //&& bbs[i]->label != "exit_block"
+            o<<bbs[i]->label<<":"<<endl;
+            
+        }
         bbs[i]->gen_asm(o);
     }
     gen_asm_epilogue(o);
@@ -325,7 +391,8 @@ void CFG::set_var_used(string name, bool used){
     symboleTable->setUsed(name,used);
 }
 
-string CFG::new_BB_name(int line){
-    return "block_"+to_string(line);
+string CFG::new_BB_name(string name){
+    //return "block_"+to_string(line);
+    return name+"block"+to_string(nextBBnumber);
 }
 

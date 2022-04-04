@@ -31,6 +31,10 @@ typedef enum {
 		MOV,
 		WMEM,
 		RET,
+		CMP_EQ,
+		CMP_INEQ,
+		CMP_LT,
+		CMP_GT,
 		DEFAULT
 } Type;
 
@@ -59,8 +63,9 @@ class IRInstr {
 		wmem,
 		call, 
 		cmp_eq,
+		cmp_ineq,
 		cmp_lt,
-		cmp_le
+		cmp_gt
 	} Operation;
 
 
@@ -167,9 +172,10 @@ class CFG {
 	void set_var_type(string name, Type type);
 
 	// basic block management
-	string new_BB_name(int line);
+	string new_BB_name(string name);
 	BasicBlock* current_bb;
 	BasicBlock* return_bb;
+	int nextBBnumber; /**< just for naming */
 
 	
  protected:

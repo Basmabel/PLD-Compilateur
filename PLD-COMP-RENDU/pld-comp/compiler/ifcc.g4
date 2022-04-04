@@ -31,12 +31,21 @@ expression: OPENPAR expression CLOSEPAR #par
 | expression AND expression #andlogiq
 | expression XOR expression #xorlogiq
 | expression OR expression #orlogiq
+| expression (GREATER | SMALLER) expression #inequality
+| expression (ISEQUAL | ISDIFFERENT) expression #equality
 | VAR OPENSQBRACKETS expression CLOSESQBRACKETS #valTableau
 | VAR #var
 | CHARACTER #character
 | CONST #const;
 
+if_then_else : IF OPENPAR expression CLOSEPAR OPENBRACKET blockthen=block CLOSEBRACKET ELSE OPENBRACKET blockelse=block CLOSEBRACKET ;
+
+whileloop : WHILE OPENPAR expression CLOSEPAR OPENBRACKET blockwhile=block CLOSEBRACKET ;
+
+block: instr*;
+
 return_stmt : RETURN expression SEMICOLON;
+
 
 INT : 'int' ;
 CHAR : 'char' ;
@@ -47,11 +56,21 @@ OPENBRACKET : '{' ;
 CLOSEBRACKET : '}' ;
 OPENSQBRACKETS: '[';
 CLOSESQBRACKETS: ']';
+ISEQUAL : '==' ;
+ISDIFFERENT : '!=' ; 
 EQUAL : '=';
+DIFFERENT : '!' ;
+GREATER : '>' ;
+SMALLER : '<' ;
 PLUS : '+' ;
 MINUS : '-' ;
 MULTIPLY : '*' ;
 DIVIDE : '/' ;
+AND : '&' ;
+OR : '|' ;
+IF : 'if' ;
+ELSE : 'else' ;
+WHILE : 'while';
 OPM: MULTIPLY | DIVIDE;
 OPA: PLUS | MINUS;
 EXCLA: '!';
@@ -69,5 +88,3 @@ COMMA : ',';
 COMMENT : '/*' .*? '*/' -> skip ;
 DIRECTIVE : '#' .*? '\n' -> skip ;
 WS    : [ \t\r\n] -> channel(HIDDEN);
-
-

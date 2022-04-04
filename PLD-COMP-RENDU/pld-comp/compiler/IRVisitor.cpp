@@ -48,6 +48,15 @@ antlrcpp::Any IRVisitor::visitAffectationInstr(ifccParser::AffectationInstrConte
 }
 
 /*
+*	Visiteur de l'instruction if then else 
+*/
+antlrcpp::Any IRVisitor::visitIf_then_elseInstr(ifccParser::If_then_elseInstrContext *context){
+
+	visitIf_then_else(context->if_then_else());
+	return 0;
+}
+
+/*
 *	Visiteur de l'instruction return en fin de fonction 
 */
 antlrcpp::Any IRVisitor::visitReturn_stmtInstr(ifccParser::Return_stmtInstrContext *context){
@@ -319,6 +328,10 @@ antlrcpp::Any IRVisitor::visitPar(ifccParser::ParContext *context)
 	return var;	
 }
 
+antlrcpp::Any IRVisitor::visitExprAffecttion(ifccParser::ExprAffecttionContext *context){
+	string var = visit(context->affectation());
+	return var;
+}
 
 /*
 *	Visite d'une variable. Si elle a été déclarée, retourne son nom
@@ -372,7 +385,6 @@ antlrcpp::Any IRVisitor::visitOppose(ifccParser::OpposeContext *context){
 
 	return vartmp;
 }
-
 
 /*
 *	Visite d'un ! unaire qui signifie une négation boolean.
@@ -487,6 +499,219 @@ antlrcpp::Any IRVisitor::visitConst(ifccParser::ConstContext *context)
 	return var;
 }
 
+
+/*
+* Visite d'une comparaison d'égalité 	(== ou !=)
+* Retourne le résultat de comparaison entre deux expressions
+*/
+antlrcpp::Any IRVisitor::visitEquality(ifccParser::EqualityContext *context){
+
+	//Indique si l'expression est une == ou une !=
+	bool op = (context->ISEQUAL())? true : false;
+
+	//récuparation du nom de la première variable
+	std::string var= visit(context->expression(0));
+
+	//récuparation du nom de la deuxieme variable
+	std:: string var2=visit(context->expression(1));
+
+	//Creation d'une nouvelle variable résultat
+	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+
+	vector<string> params = {vartmp,var,var2};
+	if(op) {
+		cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
+
+	}else {
+		cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_ineq, Type::CMP_INEQ, params);
+
+	}
+
+	return vartmp;
+}
+
+
+/*
+* Visite d'une comparaison (< ou >)
+* Retourne le résultat de comparaison entre deux expressions
+*/
+antlrcpp::Any IRVisitor :: visitInequality(ifccParser::InequalityContext *context) {
+	//Indique si l'expression est une == ou une !=
+	bool op = (context->GREATER())? true : false;
+
+	//récuparation du nom de la première variable
+	std::string var= visit(context->expression(0));
+
+	//récuparation du nom de la deuxieme variable
+	std:: string var2=visit(context->expression(1));
+
+	//Creation d'une nouvelle variable résultat
+	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+
+	vector<string> params = {vartmp,var,var2};
+	if(op) {
+		cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_gt, Type::CMP_GT, params);
+
+	}else {
+		cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_lt, Type::CMP_LT, params);
+
+	}
+
+	return vartmp;
+}
+
+
+
+/*
+* Visite d'une comparaison 'is greater' (>)
+* Retourne le résultat de comparaison entre deux expressions
+*/
+// antlrcpp::Any IRVisitor :: visitIsgreater(ifccParser::IsgreaterContext *context) {
+// 	return 0;
+// }
+
+
+/*
+*	Visite du ITE statement (If Then Else). 
+*/
+antlrcpp::Any IRVisitor :: visitIf_then_else(ifccParser::If_then_elseContext *context) {
+
+	//visite de la condition
+	string var = visit(context->expression());
+
+	//Creation d'une nouvelle variable résultat
+	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+
+	vector<string> params = {vartmp,var,"$0"};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
+	
+	//sauvegarde de output avant de traiter la if 
+	BasicBlock* blockTmp = cfg->current_bb->exit_true;
+	
+	//créer les blocks then, else et endif
+	string nameBlock1= cfg->new_BB_name("then");
+    BasicBlock* block1 = new BasicBlock(cfg,nameBlock1);
+	cfg->add_bb(block1);
+	cfg->nextBBnumber++;
+
+	string nameBlock2= cfg->new_BB_name("else");
+    BasicBlock* block2 = new BasicBlock(cfg,nameBlock2);
+	cfg->add_bb(block2);
+	cfg->nextBBnumber++;
+
+	string nameBlock3= cfg->new_BB_name("endif");
+    BasicBlock* block3 = new BasicBlock(cfg,nameBlock3);
+	cfg->add_bb(block3);
+	cfg->nextBBnumber++;
+
+	cfg->current_bb->exit_true= block1; // true-> then
+	cfg->current_bb->exit_false= block2; // false->else
+
+	cfg->current_bb=block1;
+	block1->exit_true= block3;
+	block1->exit_false= nullptr;
+	
+
+	visit(context->blockthen); 
+	
+	cfg->current_bb=block2;
+	block2->exit_true= block3; 
+	block2->exit_false= nullptr;
+
+	visit(context->blockelse); 
+
+	cfg->current_bb=block3;
+	block3->exit_true = blockTmp;
+	block3->exit_false=nullptr;
+
+
+	return 0;
+}
+
+antlrcpp::Any IRVisitor:: visitWhileloop(ifccParser::WhileloopContext *context) {
+	
+	return 0;
+}
+/*
+*	Visite du block d'instructions d'une boucle
+*/
+antlrcpp::Any IRVisitor::visitBlock(ifccParser::BlockContext *context){
+
+	for(int i=0 ; i<context->instr().size(); i++){
+		linectr=context->instr().at(i)->getStart()->getLine();
+		visit(context->instr().at(i));
+	}
+
+	return 0;
+}
+
+/*
+*	.. 
+*/
+antlrcpp::Any IRVisitor :: visitCondition_affectation(ifccParser::Condition_affectationContext *context) {
+	string var = visit(context->affectation());
+
+	//Creation d'une nouvelle variable résultat
+	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+
+	vector<string> params = {vartmp,var,"$0"};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
+
+	return vartmp;
+}
+
+/*
+*	.. 
+*/
+antlrcpp::Any IRVisitor :: visitCondition_expression(ifccParser::Condition_expressionContext *context) {
+	string var = visit(context->expression());
+
+	//Creation d'une nouvelle variable résultat
+	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+
+	vector<string> params = {vartmp,var,"$0"};
+
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
+
+	return vartmp;
+}
+
+/*
+*	.. 
+*/
+antlrcpp::Any IRVisitor :: visitCondition_comparison(ifccParser::Condition_comparisonContext *context) {
+	string var = visit(context->comparison());
+	return var;
+}
+
+/*
+*	.. 
+*/
+antlrcpp::Any IRVisitor :: visitComparison_equal(ifccParser::Comparison_equalContext *context) {
+	
+	//récuparation du nom de la première variable
+	std::string var= visit(context->expression(0));
+	
+	//récuparation du nom de la deuxieme variable
+	std:: string var2=visit(context->expression(1));	
+	return var;
+}
+
+/*
+*	.. 
+*/
+antlrcpp::Any IRVisitor :: visitComparison_different(ifccParser::Comparison_differentContext *context) {
+
+	//récuparation du nom de la première variable
+	std::string var= visit(context->expression(0));
+	
+	//récuparation du nom de la deuxieme variable
+	std:: string var2=visit(context->expression(1));
+
+	return var;
+}
 
 /*
 *	Visite du return. Génère le code assembleur associé en utilisant le 

@@ -43,6 +43,8 @@ class  IRVisitor : public ifccBaseVisitor {
 
 		virtual antlrcpp::Any visitIf_then_elseInstr(ifccParser::If_then_elseInstrContext *context) override;
 
+		virtual antlrcpp::Any visitWhileloopInstr(ifccParser::WhileloopInstrContext *context) override;
+
 		virtual antlrcpp::Any visitReturn_stmtInstr(ifccParser::Return_stmtInstrContext *context) override;
 
 		virtual antlrcpp::Any visitLvalVar(ifccParser::LvalVarContext *context) override;
@@ -105,10 +107,12 @@ class  IRVisitor : public ifccBaseVisitor {
 
 		virtual antlrcpp::Any visitBlock(ifccParser::BlockContext *context) override;
 
+		virtual antlrcpp::Any visitBlockConditionWhile(ifccParser::BlockConditionWhileContext *context) override;
+
 		virtual antlrcpp::Any visitReturn_stmt(ifccParser::Return_stmtContext *context) override ;
 
 		// function table methods
-		void add_to_function_table(string name, string returnType, vector<pair<string,string>> args, size_t line);
+s		void add_to_function_table(string name, string returnType, vector<pair<string,string>> args, size_t line);
 		void redeclarationFunctionError(size_t linectr, string name, string returnType, vector<pair<string,string>> args);
 		void erreurFunctionNonDeclaree(string name, size_t linectr);
 		Type get_func_returnType(string name);

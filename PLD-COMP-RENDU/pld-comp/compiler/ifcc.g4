@@ -6,7 +6,7 @@ axiom : prog* ;
 prog : INT VAR OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET
     |  INT VAR OPENPAR INT VAR (COMMA INT VAR)* CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET;
     
-instr : declaration #declarationInstr | functionCall #functionCallInstr | if_then_else #if_then_elseInstr | affectation SEMICOLON #affectationInstr | return_stmt #return_stmtInstr ; 
+instr : declaration #declarationInstr | functionCall #functionCallInstr | if_then_else #if_then_elseInstr | whileloop #whileloopInstr| affectation SEMICOLON #affectationInstr | return_stmt #return_stmtInstr ; 
 
 declaration: type variables* enddeclaration SEMICOLON; 
 type: INT #int | CHAR #char;
@@ -43,9 +43,11 @@ expression: OPENPAR expression CLOSEPAR #par
 
 if_then_else : IF OPENPAR expression CLOSEPAR OPENBRACKET blockthen=block CLOSEBRACKET ELSE OPENBRACKET blockelse=block CLOSEBRACKET ;
 
-whileloop : WHILE OPENPAR expression CLOSEPAR OPENBRACKET blockwhile=block CLOSEBRACKET ;
+whileloop : WHILE OPENPAR blockConditionWhile CLOSEPAR OPENBRACKET blockwhile=block CLOSEBRACKET ;
 
 block: instr*;
+
+blockConditionWhile: expression ; 
 
 return_stmt : RETURN expression SEMICOLON;
 

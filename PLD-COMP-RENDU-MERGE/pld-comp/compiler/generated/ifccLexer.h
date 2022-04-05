@@ -1,5 +1,5 @@
 
-// Generated from ifcc.g4 by ANTLR 4.9.2
+// Generated from ifcc.g4 by ANTLR 4.7.2
 
 #pragma once
 
@@ -13,12 +13,14 @@ class  ifccLexer : public antlr4::Lexer {
 public:
   enum {
     T__0 = 1, INT = 2, CHAR = 3, OPENPAR = 4, CLOSEPAR = 5, SEMICOLON = 6, 
-    OPENBRACKET = 7, CLOSEBRACKET = 8, EQUAL = 9, PLUS = 10, MINUS = 11, 
-    MULTIPLY = 12, DIVIDE = 13, OPM = 14, OPA = 15, RETURN = 16, CONST = 17, 
-    VAR = 18, COMMA = 19, COMMENT = 20, DIRECTIVE = 21, WS = 22
+    OPENBRACKET = 7, CLOSEBRACKET = 8, OPENSQBRACKETS = 9, CLOSESQBRACKETS = 10, 
+    EQUAL = 11, PLUS = 12, MINUS = 13, MULTIPLY = 14, DIVIDE = 15, OPM = 16, 
+    OPA = 17, EXCLA = 18, AND = 19, OR = 20, XOR = 21, RETURN = 22, CONST = 23, 
+    VAR = 24, CHARACTER = 25, COMMA = 26, COMMENT = 27, DIRECTIVE = 28, 
+    WS = 29
   };
 
-  explicit ifccLexer(antlr4::CharStream *input);
+  ifccLexer(antlr4::CharStream *input);
   ~ifccLexer();
 
   virtual std::string getGrammarFileName() const override;

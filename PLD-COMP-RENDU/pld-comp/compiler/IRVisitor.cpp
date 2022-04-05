@@ -84,6 +84,16 @@ antlrcpp::Any IRVisitor::visitIf_then_elseInstr(ifccParser::If_then_elseInstrCon
 }
 
 /*
+*	Visiteur de l'instruction while
+*/
+antlrcpp::Any IRVisitor::visitWhileloopInstr(ifccParser::WhileloopInstrContext *context){
+
+	visitWhileloop(context->whileloop());
+	return 0;
+}
+
+
+/*
 *	Visiteur de l'instruction return en fin de fonction 
 */
 antlrcpp::Any IRVisitor::visitReturn_stmtInstr(ifccParser::Return_stmtInstrContext *context){
@@ -683,7 +693,7 @@ antlrcpp::Any IRVisitor :: visitInequality(ifccParser::InequalityContext *contex
 */
 antlrcpp::Any IRVisitor :: visitIf_then_else(ifccParser::If_then_elseContext *context) {
 
-	//visite de la condition
+	//visite de la condition de la boucle et renvoie son résultat
 	string var = visit(context->expression());
 
 	//Creation d'une nouvelle variable résultat
@@ -691,9 +701,10 @@ antlrcpp::Any IRVisitor :: visitIf_then_else(ifccParser::If_then_elseContext *co
 
 	vector<string> params = {vartmp,var,"$0"};
 
+	//Comparer le retour de la condition à 0
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
 	
-	//sauvegarde de output avant de traiter la if 
+	//sauvegarde le output avant d'entrer dans la boucle 
 	BasicBlock* blockTmp = cfg->current_bb->exit_true;
 	
 	//créer les blocks then, else et endif
@@ -737,20 +748,79 @@ antlrcpp::Any IRVisitor :: visitIf_then_else(ifccParser::If_then_elseContext *co
 }
 
 antlrcpp::Any IRVisitor:: visitWhileloop(ifccParser::WhileloopContext *context) {
+	//sauvegarde le output avant d'entrer dans la boucle 
+	BasicBlock* blockTmp = cfg->current_bb->exit_true;
+
 	
+	//créer les blocks condition, whileBlock et endwhile
+	string nameBlock1= cfg->new_BB_name("condition");
+    BasicBlock* block1 = new BasicBlock(cfg,nameBlock1);
+	cfg->add_bb(block1);
+	cfg->nextBBnumber++;
+
+	string nameBlock2= cfg->new_BB_name("whileBody");
+    BasicBlock* block2 = new BasicBlock(cfg,nameBlock2);
+	cfg->add_bb(block2);
+	cfg->nextBBnumber++;
+
+	string nameBlock3= cfg->new_BB_name("endwhile");
+    BasicBlock* block3 = new BasicBlock(cfg,nameBlock3);
+	cfg->add_bb(block3);
+	cfg->nextBBnumber++;
+
+	cfg->current_bb->exit_true= block1;
+	cfg->current_bb->exit_false= nullptr;
+
+	cfg->current_bb=block1;
+	cfg->current_bb->exit_true= block2; // true-> whileBody
+	cfg->current_bb->exit_false= block3; // false-> quit (endWhile)
+
+
+	//visite de la condition de la boucle et renvoie son résultat
+	string var = visit(context->blockConditionWhile());
+
+	//Creation d'une nouvelle variable résultat
+	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+
+	vector<string> params = {vartmp,var,"$0"};
+
+	//Comparer le retour de la condition à 0
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
+
+	//--------------------
+
+	cfg->current_bb=block2;
+	block2->exit_true= block1;
+	block2->exit_false= nullptr;
+	
+	visit(context->blockwhile); 
+
+
+	cfg->current_bb=block3;
+	block3->exit_true = blockTmp;
+	block3->exit_false=nullptr;
+
 	return 0;
 }
 /*
 *	Visite du block d'instructions d'une boucle
 */
 antlrcpp::Any IRVisitor::visitBlock(ifccParser::BlockContext *context){
-
 	for(int i=0 ; i<context->instr().size(); i++){
 		linectr=context->instr().at(i)->getStart()->getLine();
 		visit(context->instr().at(i));
 	}
 
 	return 0;
+}
+
+/*
+*	Visite de la condition de while loop
+*/
+antlrcpp::Any IRVisitor::visitBlockConditionWhile(ifccParser::BlockConditionWhileContext *context){
+	
+	string var =visit(context->expression());
+	return var;
 }
 
 

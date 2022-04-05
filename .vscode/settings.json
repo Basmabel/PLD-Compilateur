@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "iosfwd": "cpp"
+        "*.module": "php",
+        "iosfwd": "cpp",
+        "295-tableau-char.C": "cpp"
     }
 }

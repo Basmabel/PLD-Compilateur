@@ -1,5 +1,5 @@
 
-// Generated from ifcc.g4 by ANTLR 4.9.2
+// Generated from ifcc.g4 by ANTLR 4.7.2
 
 #pragma once
 
@@ -39,7 +39,27 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitVariables(ifccParser::VariablesContext *ctx) override {
+  virtual antlrcpp::Any visitInt(ifccParser::IntContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitChar(ifccParser::CharContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitVarsimpledecl(ifccParser::VarsimpledeclContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitVaraffectdecl(ifccParser::VaraffectdeclContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitEnddeclvar(ifccParser::EnddeclvarContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitEnddeclaffect(ifccParser::EnddeclaffectContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -47,11 +67,31 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitLvalVar(ifccParser::LvalVarContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitLvaltableau(ifccParser::LvaltableauContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitPar(ifccParser::ParContext *ctx) override {
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitValTableau(ifccParser::ValTableauContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitPlusminus(ifccParser::PlusminusContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitNegation(ifccParser::NegationContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitCharacter(ifccParser::CharacterContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -68,6 +108,18 @@ public:
   }
 
   virtual antlrcpp::Any visitOppose(ifccParser::OpposeContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitOrlogiq(ifccParser::OrlogiqContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitXorlogiq(ifccParser::XorlogiqContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitAndlogiq(ifccParser::AndlogiqContext *ctx) override {
     return visitChildren(ctx);
   }
 

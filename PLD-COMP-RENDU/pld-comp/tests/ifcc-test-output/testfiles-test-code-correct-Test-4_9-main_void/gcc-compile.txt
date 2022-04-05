@@ -1,0 +1,6 @@
+input.c: In function ‘main’:
+input.c:2:7: error: variable or field ‘a’ declared void
+    2 |  void a=5;
+      |       ^
+
+return code: 1

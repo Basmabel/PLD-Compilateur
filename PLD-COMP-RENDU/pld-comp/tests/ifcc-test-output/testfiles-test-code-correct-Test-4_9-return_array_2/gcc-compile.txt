@@ -1,0 +1,6 @@
+input.c: In function ‘main’:
+input.c:5:9: warning: returning ‘int *’ from a function with return type ‘int’ makes integer from pointer without a cast [-Wint-conversion]
+    5 |  return arr;
+      |         ^~~
+
+return code: 0

@@ -1,0 +1,4 @@
+line 2:1 extraneous input 'void' expecting {'int', 'char', '}', 'if', 'return', VAR}
+<source>:2: error: 'a' was not declared in this scope
+
+return code: 1

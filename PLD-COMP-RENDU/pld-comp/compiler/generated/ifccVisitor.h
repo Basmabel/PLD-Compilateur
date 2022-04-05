@@ -39,6 +39,10 @@ public:
 
     virtual antlrcpp::Any visitChar(ifccParser::CharContext *context) = 0;
 
+    virtual antlrcpp::Any visitTypeFunc(ifccParser::TypeFuncContext *context) = 0;
+
+    virtual antlrcpp::Any visitVoid(ifccParser::VoidContext *context) = 0;
+
     virtual antlrcpp::Any visitFunctionCall(ifccParser::FunctionCallContext *context) = 0;
 
     virtual antlrcpp::Any visitVarsimpledecl(ifccParser::VarsimpledeclContext *context) = 0;

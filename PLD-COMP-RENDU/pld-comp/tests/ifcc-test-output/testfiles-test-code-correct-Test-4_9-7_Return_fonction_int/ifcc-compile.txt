@@ -1,0 +1,3 @@
+line 7:0 extraneous input '<EOF>' expecting {'int', 'char', '}', 'if', 'return', VAR}
+
+return code: 0

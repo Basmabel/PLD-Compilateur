@@ -1,0 +1,4 @@
+line 5:16 mismatched input ')' expecting {'(', '-', '!', CONST, VAR, CHARACTER}
+ERROR
+
+return code: 1

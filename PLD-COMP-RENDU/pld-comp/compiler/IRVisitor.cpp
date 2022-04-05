@@ -14,7 +14,7 @@ IRVisitor::IRVisitor(ValeurVisitor v){
 */
 antlrcpp::Any IRVisitor::visitProg(ifccParser::ProgContext *context) 
 {
-
+	
 	string functionName = context->VAR(0)->getText();
 	cfg = new CFG(functionName);
 	
@@ -26,26 +26,35 @@ antlrcpp::Any IRVisitor::visitProg(ifccParser::ProgContext *context)
 	}
 	//gestion des paramètres d'une fonction
 	vector<string> types;
-	for (int i =1; i < context->INT().size(); i++) {
-		string newTypeArg = context->INT().at(i)->getText();
+	for (int i =0; i < context->type().size(); i++) {
+		string newTypeArg = context->type().at(i)->getText();
 		types.push_back(newTypeArg);
 	}
 	
+	
 	vector<pair<string,string>> args;
+	
 	for (int i =0; i<name.size(); i++){
 		args.push_back(pair<string, string>(name.at(i),types.at(i)));
 		string nameVar = name.at(i);
 		string type = types.at(i);
-		if(type == "int"){
-			cfg->create_new_tempvar_function(Type::INT,nameVar,linectr);
-		}else if (type =="char"){
-			cfg->create_new_tempvar_function(Type::CHAR,nameVar,linectr);
+		Type typeFonction = stringToType(type);
+		cfg->create_new_tempvar_function(typeFonction,nameVar,linectr);
+	}
+
+	
+	redeclarationFunctionError(linectr,functionName, typeToString(visit(context->typeFunction())), args);
+	if(functionName != "main"){
+		add_to_function_table(functionName,  typeToString(visit(context->typeFunction())),args, linectr);
+	}else{
+		string returnType = typeToString(visit(context->typeFunction()));
+		
+		if(returnType!="int"){
+			cerr<<"erreur"<<endl;
+			//exit(1);
 		}
 	}
-	
-	redeclarationFunctionError(linectr,functionName, context->INT(0)->getText(), args);
-	if(functionName != "main")
-		add_to_function_table(functionName, context->INT(0)->getText(),args, linectr);
+		
     
     for(int i=0 ; i<context->instr().size(); i++){
 		linectr=context->instr().at(i)->getStart()->getLine();
@@ -131,6 +140,16 @@ antlrcpp::Any IRVisitor::visitInt(ifccParser::IntContext *context){
 antlrcpp::Any IRVisitor::visitChar(ifccParser::CharContext *context){
 	return Type::CHAR;
 }
+
+antlrcpp::Any IRVisitor::visitTypeFunc(ifccParser::TypeFuncContext *context){
+	return visit(context->type());
+}
+
+antlrcpp::Any IRVisitor::visitVoid(ifccParser::VoidContext *context){
+	return Type::VOID;
+}
+
+
 //	Visite l'appel de fonction
 
 antlrcpp::Any IRVisitor::visitFunctionCall(ifccParser::FunctionCallContext *context)
@@ -140,9 +159,10 @@ antlrcpp::Any IRVisitor::visitFunctionCall(ifccParser::FunctionCallContext *cont
 	erreurFunctionNonDeclaree(functionName,linectr);
 
 	fonction* actualFunction = get_func(functionName);
+	string typeFunction = actualFunction->getReturnType();
 
 	//Creation d'une nouvelle variable résultat
-	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	std:: string vartmp = cfg->create_new_tempvar(stringToType(typeFunction), cfg->current_bb->label,linectr);
 		
 
 	if(actualFunction->getArgsSize() != context->expression().size()){
@@ -157,7 +177,15 @@ antlrcpp::Any IRVisitor::visitFunctionCall(ifccParser::FunctionCallContext *cont
 
 	for (int i = 0; i < context->expression().size(); i++) {
 			string arg = visit(context->expression().at(i));
-			params.push_back(arg);
+
+			Type typeArg = cfg->get_var_type(arg);
+
+			string param = cfg->create_new_tempvar(typeArg, cfg->current_bb->label,linectr);
+
+			vector<string> params2 = {to_string(cfg->get_var_index(param))+"(%rbp)", cfg->IR_reg_to_asm(cfg->get_var_index(arg))};
+
+			cfg->current_bb->add_IRInstr(IRInstr::Operation::mov, Type::MOV, params2);
+			params.push_back(param);
 	}
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::call, Type::CALL, params);
@@ -229,9 +257,9 @@ antlrcpp::Any IRVisitor::visitAffectation(ifccParser::AffectationContext *contex
 
 	string varOff = cfg->IR_reg_to_asm(cfg->get_var_index(var));
 	string localOff = cfg->IR_reg_to_asm(cfg->get_var_index(local));
-  vector<string> params = {varOff,localOff};
+ 	vector<string> params = {varOff,localOff};
 
-  cfg->current_bb->add_IRInstr(IRInstr::Operation::wmem, Type::WMEM, params);
+    cfg->current_bb->add_IRInstr(IRInstr::Operation::wmem, Type::WMEM, params);
 
 	affectation = false;
 
@@ -260,8 +288,10 @@ antlrcpp::Any IRVisitor::visitLvalVar(ifccParser::LvalVarContext *context){
 	//Recupere son offset dans la table des symboles
 	string offset = "-"+to_string(cfg->get_var_index(var));
 	
+	Type typeVar = cfg->get_var_type(var);
+
 	//Creation d'une nouvelle variable pour stocker l'offset
-	std:: string newVar = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	std:: string newVar = cfg->create_new_tempvar(typeVar, cfg->current_bb->label,linectr);
 
 	vector<string> params = {newVar,offset};
 
@@ -401,9 +431,14 @@ antlrcpp::Any IRVisitor::visitFuncCall(ifccParser::FuncCallContext *context)
 	erreurFunctionNonDeclaree(functionName,linectr);
 
 	fonction* actualFunction = get_func(functionName);
+	string typeFunction = actualFunction->getReturnType();
+	if(affectation && typeFunction =="void"){
+		cerr <<"ERROR"<<endl;
+		exit(1);
+	}
 
 	//Creation d'une nouvelle variable résultat
-	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	std:: string vartmp = cfg->create_new_tempvar(stringToType(typeFunction), cfg->current_bb->label,linectr);
 		
 
 	if(actualFunction->getArgsSize() != context->expression().size()){
@@ -418,12 +453,20 @@ antlrcpp::Any IRVisitor::visitFuncCall(ifccParser::FuncCallContext *context)
 
 	for (int i = 0; i < context->expression().size(); i++) {
 			string arg = visit(context->expression().at(i));
-			params.push_back(arg);
+
+			Type typeArg = cfg->get_var_type(arg);
+
+			string param = cfg->create_new_tempvar(typeArg, cfg->current_bb->label,linectr);
+
+			vector<string> params2 = {to_string(cfg->get_var_index(param))+"(%rbp)", cfg->IR_reg_to_asm(cfg->get_var_index(arg))};
+
+			cfg->current_bb->add_IRInstr(IRInstr::Operation::mov, Type::MOV, params2);
+			params.push_back(param);
 	}
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::call, Type::CALL, params);
 	
-	return vartmp;	 	
+	return vartmp;	
 }
 
 /*
@@ -469,7 +512,7 @@ antlrcpp::Any IRVisitor::visitValTableau(ifccParser::ValTableauContext *context)
 
 	//load content of the address contained in newVar in newVar
 	vector<string> params = {newVarOffSet,newVarOffSet};
-    cfg->current_bb->add_IRInstr(IRInstr::Operation::mov, Type::MOV, params);
+    cfg->current_bb->add_IRInstr(IRInstr::Operation::rmem, Type::RMEM, params);
 
 	return newVar;
 }
@@ -482,6 +525,7 @@ antlrcpp::Any IRVisitor::visitValTableau(ifccParser::ValTableauContext *context)
 antlrcpp::Any IRVisitor::visitOppose(ifccParser::OpposeContext *context){
 
 	std::string var =visit(context->expression());
+	
 
 	//Creation d'une nouvelle variable résultat
 	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
@@ -822,8 +866,10 @@ string IRVisitor::gestionTableau(string var, string index){
 	//variable utilisée
 	cfg->set_var_used(var,true);
 
+	Type typeVar = cfg->get_var_type(var);
+
 	//Stock l'offset de la première variable du tableau
-	std:: string offsetValeurTableau = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	std:: string offsetValeurTableau = cfg->create_new_tempvar(typeVar, cfg->current_bb->label,linectr);
 
 	vector<string> params = {offsetValeurTableau,offset};
 
@@ -835,7 +881,7 @@ string IRVisitor::gestionTableau(string var, string index){
 	string taille_var = "-"+to_string(sizeof(int64_t));
 
 	//Stock du resultat
-	string offsetIndex= cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string offsetIndex= cfg->create_new_tempvar(typeVar, cfg->current_bb->label,linectr);
 
 	vector<string> params_taille = {offsetIndex,taille_var};
 
@@ -863,7 +909,37 @@ string IRVisitor::gestionTableau(string var, string index){
 	return offsetValeurTableau;
 }
 
+Type IRVisitor::stringToType(string type){
+	if(type=="int"){
+        return Type::INT;
+    }
+    if(type=="char"){
+        return Type::CHAR;
+    }
+	if(type=="void"){
+        return Type::VOID;
+    }
+    return Type::DEFAULT;
+}
 
+string IRVisitor::typeToString(Type t){
+	string type="";
+	switch(t){
+        case Type::INT:
+            type="int";
+            break;
+        case Type::CHAR:
+            type="char";
+            break;
+		case Type::VOID:
+            type="void";
+            break;
+        default:
+            type="int";
+            break;
+    } 
+    return type;
+}
 
 
 

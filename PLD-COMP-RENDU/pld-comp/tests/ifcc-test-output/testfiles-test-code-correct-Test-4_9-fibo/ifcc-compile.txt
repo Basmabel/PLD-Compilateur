@@ -1,0 +1,6 @@
+line 4:10 missing '{' at 'if'
+line 11:8 no viable alternative at input 'main('
+line 11:9 mismatched input ')' expecting {'(', '-', '!', CONST, VAR, CHARACTER}
+Segmentation fault
+
+return code: 139

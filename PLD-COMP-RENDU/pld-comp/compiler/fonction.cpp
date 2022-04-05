@@ -5,7 +5,7 @@
 //Constructeur
 fonction::fonction(string name, string returnType, vector<pair<string,string>> args, size_t line){
     this->name=name;
-    this->type=type;
+    this->type=returnType;
     this->args=args;
     this->line=line;
 }

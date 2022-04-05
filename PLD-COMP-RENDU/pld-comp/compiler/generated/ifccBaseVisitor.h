@@ -55,6 +55,14 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitTypeFunc(ifccParser::TypeFuncContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitVoid(ifccParser::VoidContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitFunctionCall(ifccParser::FunctionCallContext *ctx) override {
     return visitChildren(ctx);
   }

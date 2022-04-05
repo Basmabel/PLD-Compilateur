@@ -114,27 +114,20 @@ void IRInstr::gen_asm(ostream &o){
             o<<"    movq   %rax, -"<<varDest<<"(%rbp)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
-        case Operation::mov:
-            /*o<<"    movq    "<<params[1]<<", %rax"<<endl;
-            o<<"    movq    %rax, "<<params[0]<<endl;*/
+        case Operation::rmem:
             o<<"    movq    "<<params[1]<<", %rax"<<endl;
             o<<"    movq     (%rax), %rdx"<<endl;
             o<<"    movq      %rdx, %rax"<<endl;
             o<<"    movq     %rax,"<<params[0]<<endl;
             break;
+        case Operation::mov:
+            o<<"    movq    "<<params[1]<<", %rax"<<endl;
+            o<<"    movq     %rax,"<<params[0]<<endl;
+            break;
         case Operation::wmem:
-           //var1 = bb->cfg->get_var_index(params[1]);
-            /*if(params[0].find("rbp")!=string::npos){
-                o<<"    movq    "<<params[0]<<", %rax"<<endl;
-            }else{
-                varDest = bb->cfg->get_var_index(params[0]);
-                o<<"    movq    -"<<varDest<<"(%rbp), %rax"<<endl;
-            }*/
             o<<"    movq    "<<params[0]<<", %rax"<<endl;
             o<<"    movq    "<<params[1]<<", %r10"<<endl;
-            //o<<"    movq    -"<<var1<<"(%rbp), %r10"<<endl;
             o<<"    movq    %r10, (%rax)"<<endl;
-            //o<<";"<<params[0]<<endl;;
             break;
         case Operation::cmp_eq:
             varDest= bb->cfg->get_var_index(params[0]);
@@ -203,8 +196,8 @@ void IRInstr::gen_asm(ostream &o){
 
             for (int i = 3; i < params.size(); i++) {
                 switch(i) {
-                    case 3: o << "    movq    -" << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdi" << endl; break;
-                    case 4: o << "    movq    -" << bb->cfg->get_var_index(params[i]) << "(%rbp), %rsi" << endl; break;
+                    case 3: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdi" << endl; break;
+                    case 4: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rsi" << endl; break;
                     case 5: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdx" << endl; break;
                     case 6: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rcx" << endl; break;
                     case 7: o << "    movq    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %r8" << endl; break;
@@ -212,11 +205,9 @@ void IRInstr::gen_asm(ostream &o){
                 }
             }
 
-            /*o << "    movq    %r8, %r9" <<endl;
-            o << "    movq    %rdi, %r8" <<endl;
-            o << "    movq    %rax, %rdi" <<endl;*/
             o << "    callq   " << function << endl;
-            o << "    movq    %rax,-"<<var2<<"(%rbp)"<<endl;
+            if(bb->cfg->getFunctionTable()->getFonction(function)->getReturnType() != "void")
+                o << "    movq    %rax,-"<<var2<<"(%rbp)"<<endl;
 
             break;
         }
@@ -296,6 +287,7 @@ void CFG::add_bb(BasicBlock* bb){
 
 void CFG::gen_asm(ostream& o, int size, functionTable *fonctionTable){
     gen_asm_prologue(o);
+    this->fonctionTable = fonctionTable;
 
     if(functionName!="main"){
         for(int i=0; i<fonctionTable->getFonction(this->functionName)->getArgsSize();i++){
@@ -310,7 +302,6 @@ void CFG::gen_asm(ostream& o, int size, functionTable *fonctionTable){
             }
         }
     }
-
     for(unsigned int i = 0; i < bbs.size(); i++)
     {
         if(bbs[i]->label != this->functionName+"_entry_block" ) { //&& bbs[i]->label != "exit_block"
@@ -329,6 +320,7 @@ string CFG::IR_reg_to_asm(int index){
 }
 
 void CFG::gen_asm_prologue(ostream& o){
+    
     #ifdef __APPLE__
 	    o<<".globl    _"<<this->functionName<<"\n"
         " _"<<this->functionName<<": \n"
@@ -419,6 +411,10 @@ string CFG::create_new_tempvar_function(Type t, string var, size_t line, int nbA
     add_to_symbol_table(var,t,line,nbAlloc);
     symboleTable->setUsed(var,true);
     return var;
+}
+
+functionTable* CFG::getFunctionTable(){
+    return this->fonctionTable;
 }
 
 

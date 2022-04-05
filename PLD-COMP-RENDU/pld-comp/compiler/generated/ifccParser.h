@@ -12,20 +12,20 @@
 class  ifccParser : public antlr4::Parser {
 public:
   enum {
-    INT = 1, CHAR = 2, OPENPAR = 3, CLOSEPAR = 4, SEMICOLON = 5, OPENBRACKET = 6, 
-    CLOSEBRACKET = 7, OPENSQBRACKETS = 8, CLOSESQBRACKETS = 9, ISEQUAL = 10, 
-    ISDIFFERENT = 11, EQUAL = 12, GREATER = 13, SMALLER = 14, PLUS = 15, 
-    MINUS = 16, MULTIPLY = 17, DIVIDE = 18, IF = 19, ELSE = 20, WHILE = 21, 
-    OPM = 22, OPA = 23, EXCLA = 24, AND = 25, OR = 26, XOR = 27, RETURN = 28, 
-    CONST = 29, VAR = 30, CHARACTER = 31, COMMA = 32, COMMENT = 33, DIRECTIVE = 34, 
-    WS = 35
+    INT = 1, CHAR = 2, VOID = 3, OPENPAR = 4, CLOSEPAR = 5, SEMICOLON = 6, 
+    OPENBRACKET = 7, CLOSEBRACKET = 8, OPENSQBRACKETS = 9, CLOSESQBRACKETS = 10, 
+    ISEQUAL = 11, ISDIFFERENT = 12, EQUAL = 13, GREATER = 14, SMALLER = 15, 
+    PLUS = 16, MINUS = 17, MULTIPLY = 18, DIVIDE = 19, IF = 20, ELSE = 21, 
+    WHILE = 22, OPM = 23, OPA = 24, EXCLA = 25, AND = 26, OR = 27, XOR = 28, 
+    RETURN = 29, CONST = 30, VAR = 31, CHARACTER = 32, COMMA = 33, COMMENT = 34, 
+    DIRECTIVE = 35, WS = 36
   };
 
   enum {
     RuleAxiom = 0, RuleProg = 1, RuleInstr = 2, RuleDeclaration = 3, RuleType = 4, 
-    RuleFunctionCall = 5, RuleVariables = 6, RuleEnddeclaration = 7, RuleAffectation = 8, 
-    RuleLvalue = 9, RuleExpression = 10, RuleIf_then_else = 11, RuleWhileloop = 12, 
-    RuleBlock = 13, RuleReturn_stmt = 14
+    RuleTypeFunction = 5, RuleFunctionCall = 6, RuleVariables = 7, RuleEnddeclaration = 8, 
+    RuleAffectation = 9, RuleLvalue = 10, RuleExpression = 11, RuleIf_then_else = 12, 
+    RuleWhileloop = 13, RuleBlock = 14, RuleReturn_stmt = 15
   };
 
   ifccParser(antlr4::TokenStream *input);
@@ -43,6 +43,7 @@ public:
   class InstrContext;
   class DeclarationContext;
   class TypeContext;
+  class TypeFunctionContext;
   class FunctionCallContext;
   class VariablesContext;
   class EnddeclarationContext;
@@ -71,8 +72,7 @@ public:
   public:
     ProgContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    std::vector<antlr4::tree::TerminalNode *> INT();
-    antlr4::tree::TerminalNode* INT(size_t i);
+    TypeFunctionContext *typeFunction();
     std::vector<antlr4::tree::TerminalNode *> VAR();
     antlr4::tree::TerminalNode* VAR(size_t i);
     antlr4::tree::TerminalNode *OPENPAR();
@@ -81,6 +81,8 @@ public:
     antlr4::tree::TerminalNode *CLOSEBRACKET();
     std::vector<InstrContext *> instr();
     InstrContext* instr(size_t i);
+    std::vector<TypeContext *> type();
+    TypeContext* type(size_t i);
     std::vector<antlr4::tree::TerminalNode *> COMMA();
     antlr4::tree::TerminalNode* COMMA(size_t i);
 
@@ -192,6 +194,37 @@ public:
   };
 
   TypeContext* type();
+
+  class  TypeFunctionContext : public antlr4::ParserRuleContext {
+  public:
+    TypeFunctionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+   
+    TypeFunctionContext() = default;
+    void copyFrom(TypeFunctionContext *context);
+    using antlr4::ParserRuleContext::copyFrom;
+
+    virtual size_t getRuleIndex() const override;
+
+   
+  };
+
+  class  VoidContext : public TypeFunctionContext {
+  public:
+    VoidContext(TypeFunctionContext *ctx);
+
+    antlr4::tree::TerminalNode *VOID();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  TypeFuncContext : public TypeFunctionContext {
+  public:
+    TypeFuncContext(TypeFunctionContext *ctx);
+
+    TypeContext *type();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  TypeFunctionContext* typeFunction();
 
   class  FunctionCallContext : public antlr4::ParserRuleContext {
   public:

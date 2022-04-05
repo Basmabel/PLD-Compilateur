@@ -1,0 +1,9 @@
+input.c: In function ‘main’:
+input.c:6:12: warning: ‘return’ with a value, in function returning void
+    6 |     return x;
+      |            ^
+input.c:3:6: note: declared here
+    3 | void main() {
+      |      ^~~~
+
+return code: 0

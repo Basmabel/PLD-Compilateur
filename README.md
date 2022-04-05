@@ -1,7 +1,7 @@
 # `ifcc` : Compiler for a subset of the C language
 
 ## 1. Abstract
-This document details how to use the ifcc compiler. `ifcc` is a compiler built to compile a subset of the C language, which we define in our `ifcc.g4` grammar. Our compiler translates the instructions in C language to `x86` assembly language
+This document details how to use the ifcc compiler. `ifcc` is a compiler built to compile a subset of the C language, which we define in our `ifcc.g4` grammar. Our compiler translates the instructions in C language to `x86` assembly language, and has been written with the framework `Antlr4` with the C++ langage. It has been constrcuted through an agile project management with short sprints.
 
 ## 2. Team Members
 - ALAMI Meryem : meryem.alami-kasri@insa-lyon.fr
@@ -61,7 +61,7 @@ int main() {
   return m;
 }
 ```
-****
+**Computing of the power function for positive integers**
 ```c
 /* computes the power p>0 of an integer n>0 */
   int power(int n,int p) {

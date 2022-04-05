@@ -112,7 +112,7 @@ class  IRVisitor : public ifccBaseVisitor {
 		virtual antlrcpp::Any visitReturn_stmt(ifccParser::Return_stmtContext *context) override ;
 
 		// function table methods
-s		void add_to_function_table(string name, string returnType, vector<pair<string,string>> args, size_t line);
+		void add_to_function_table(string name, string returnType, vector<pair<string,string>> args, size_t line);
 		void redeclarationFunctionError(size_t linectr, string name, string returnType, vector<pair<string,string>> args);
 		void erreurFunctionNonDeclaree(string name, size_t linectr);
 		Type get_func_returnType(string name);

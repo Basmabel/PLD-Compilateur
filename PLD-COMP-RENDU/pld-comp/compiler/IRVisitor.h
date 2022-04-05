@@ -40,6 +40,8 @@ class  IRVisitor : public ifccBaseVisitor {
 
 		virtual antlrcpp::Any visitIf_then_elseInstr(ifccParser::If_then_elseInstrContext *context) override;
 
+		virtual antlrcpp::Any visitWhileloopInstr(ifccParser::WhileloopInstrContext *context) override;
+
 		virtual antlrcpp::Any visitReturn_stmtInstr(ifccParser::Return_stmtInstrContext *context) override;
 
 		virtual antlrcpp::Any visitLvalVar(ifccParser::LvalVarContext *context) override;
@@ -98,6 +100,8 @@ class  IRVisitor : public ifccBaseVisitor {
 
 		virtual antlrcpp::Any visitBlock(ifccParser::BlockContext *context) override;
 
+		virtual antlrcpp::Any visitBlockConditionWhile(ifccParser::BlockConditionWhileContext *context) override;
+
 		virtual antlrcpp::Any visitReturn_stmt(ifccParser::Return_stmtContext *context) override ;
 
 	private:
@@ -108,7 +112,6 @@ class  IRVisitor : public ifccBaseVisitor {
 
 		int linectr =0; //Ligne de l'instruction courante
 		bool declaration = false;
-
         CFG* cfg;
 
 		ValeurVisitor v;

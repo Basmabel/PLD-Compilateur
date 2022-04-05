@@ -1,0 +1,4 @@
+line 1:0 mismatched input 'char' expecting 'int'
+error: syntax error during parsing
+
+return code: 1

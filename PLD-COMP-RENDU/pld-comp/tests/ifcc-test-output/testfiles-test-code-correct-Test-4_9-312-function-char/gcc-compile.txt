@@ -1,0 +1,9 @@
+input.c: In function ‘function’:
+input.c:4:15: error: expected ‘;’ before ‘}’ token
+    4 |     return ret
+      |               ^
+      |               ;
+    5 | }
+      | ~              
+
+return code: 1

@@ -183,12 +183,16 @@ class CFG {
 	BasicBlock* return_bb;
 	int nextBBnumber; /**< just for naming */
 
+	//return called
+	bool get_returnCalled();
+	void set_returnCalled(bool val);
 	
  protected:
 	int nextFreeSymbolIndex; /**< to allocate new symbols in the symbol table */
 	symbolTable* symboleTable;
 	functionTable *fonctionTable;
 	string functionName;
+	bool returnCalled = false;
 
 	
 	vector <BasicBlock*> bbs; /**< all the basic blocks of this CFG*/

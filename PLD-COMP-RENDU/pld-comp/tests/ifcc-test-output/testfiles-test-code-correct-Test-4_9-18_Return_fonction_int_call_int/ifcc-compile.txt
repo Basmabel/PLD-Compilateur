@@ -1,3 +1,0 @@
-line 11:11 mismatched input ')' expecting {'(', '-', '!', CONST, VAR, CHARACTER}
-
-return code: 0

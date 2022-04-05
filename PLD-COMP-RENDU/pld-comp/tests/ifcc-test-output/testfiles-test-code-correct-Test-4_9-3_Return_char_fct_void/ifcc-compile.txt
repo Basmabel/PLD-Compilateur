@@ -1,3 +1,0 @@
-erreur
-
-return code: 0

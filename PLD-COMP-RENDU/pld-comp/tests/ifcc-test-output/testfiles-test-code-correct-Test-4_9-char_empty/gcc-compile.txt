@@ -1,6 +1,0 @@
-input.c: In function ‘main’:
-input.c:2:9: error: empty character constant
-    2 |  char a='';
-      |         ^~
-
-return code: 1

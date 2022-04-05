@@ -1,6 +1,0 @@
-input.c: In function ‘main’:
-input.c:6:4: error: void value not ignored as it ought to be
-    6 |  b = do_nothing(5);
-      |    ^
-
-return code: 1

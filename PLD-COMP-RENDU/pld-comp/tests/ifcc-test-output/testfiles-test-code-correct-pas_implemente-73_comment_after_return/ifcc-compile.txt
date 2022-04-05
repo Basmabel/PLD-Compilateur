@@ -1,9 +1,0 @@
-line 8:23 token recognition error at: ':'
-line 9:29 token recognition error at: '''
-line 9:75 token recognition error at: ':'
-line 6:4 extraneous input '/' expecting {'int', '}', 'return', VAR}
-line 7:5 mismatched input '=' expecting ';'
-line 10:0 mismatched input '}' expecting {'(', '-', '!', CONST, VAR}
-<source>:9: error: 'statement' was not declared in this scope
-
-return code: 1

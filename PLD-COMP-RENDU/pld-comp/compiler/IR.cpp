@@ -258,21 +258,21 @@ void BasicBlock::gen_asm(ostream &o){
 }
 
 
-CFG::CFG(int nextFreeSymbolIndex){
+CFG::CFG(string functionName){
 
     //Aucun symbol pour l'instant
-    this->nextFreeSymbolIndex=nextFreeSymbolIndex;
-
+    this->nextFreeSymbolIndex=0;
+    this->functionName = functionName;
     nextBBnumber=0;
 
     //Création des premiers blocs
-    string firstBlockName = "entry_block";
+    string firstBlockName = functionName+"_entry_block";
     BasicBlock* firstBlock = new BasicBlock(this,firstBlockName);
     add_bb(firstBlock);
     nextBBnumber++;
 
     //Création des premiers blocs
-    string lastBlockName = "exit_block";
+    string lastBlockName = functionName+"_exit_block";
     BasicBlock* lastBlock = new BasicBlock(this,lastBlockName);
     add_bb(lastBlock);
 
@@ -294,12 +294,12 @@ void CFG::add_bb(BasicBlock* bb){
     bbs.insert(bbs.begin()+nextBBnumber,bb);
 }
 
-void CFG::gen_asm(ostream& o,string functionName, int size, functionTable *fonctionTable){
-    gen_asm_prologue(o,functionName);
+void CFG::gen_asm(ostream& o, int size, functionTable *fonctionTable){
+    gen_asm_prologue(o);
 
     if(functionName!="main"){
-        for(int i=0; i<fonctionTable->getFonction(functionName)->getArgsSize();i++){
-            string arg = fonctionTable->getFonction(functionName)->getArgs().at(i).first;
+        for(int i=0; i<fonctionTable->getFonction(this->functionName)->getArgsSize();i++){
+            string arg = fonctionTable->getFonction(this->functionName)->getArgs().at(i).first;
             switch(i) {
                     case 0: o << "    movq    %rdi, -" <<get_var_index(arg) << "(%rbp)"<<endl; break;
                     case 1: o << "    movq    %rsi, -" <<get_var_index(arg) << "(%rbp)"<<endl; break;
@@ -313,14 +313,14 @@ void CFG::gen_asm(ostream& o,string functionName, int size, functionTable *fonct
 
     for(unsigned int i = 0; i < bbs.size(); i++)
     {
-        if(bbs[i]->label != "entry_block" ) { //&& bbs[i]->label != "exit_block"
+        if(bbs[i]->label != this->functionName+"_entry_block" ) { //&& bbs[i]->label != "exit_block"
             o<<bbs[i]->label<<":"<<endl;
             
         }
         bbs[i]->gen_asm(o);
         
     }
-    gen_asm_epilogue(o,functionName,size);
+    gen_asm_epilogue(o,size);
 }
 
 string CFG::IR_reg_to_asm(int index){
@@ -328,27 +328,27 @@ string CFG::IR_reg_to_asm(int index){
     return string_var;
 }
 
-void CFG::gen_asm_prologue(ostream& o,string functionName){
+void CFG::gen_asm_prologue(ostream& o){
     #ifdef __APPLE__
-	    o<<".globl    _"<<functionName<<"\n"
-        " _"<<functionName<<": \n"
+	    o<<".globl    _"<<this->functionName<<"\n"
+        " _"<<this->functionName<<": \n"
 	#else
-	    o<<".globl    "<<functionName<<"\n"
-        " "<<functionName<<": \n"
+	    o<<".globl    "<<this->functionName<<"\n"
+        " "<<this->functionName<<": \n"
 	#endif
         "    #prologue\n"
         "    pushq %rbp\n"
         "    movq %rsp, %rbp\n";
-    if(functionName=="main"){
-        int size=(symboleTable->symbols.size()+1)*sizeof(int64_t);
+    if(this->functionName=="main"){
+        int size=(symboleTable->getSymbols().size()+1)*sizeof(int64_t);
         o<<"    subq   $"<<size<<", %rsp"<<endl;
     }
         
 }
 
-void CFG::gen_asm_epilogue(ostream& o, string functionName, int size){
+void CFG::gen_asm_epilogue(ostream& o, int size){
     o<<"    #epilogue\n";
-    if(functionName=="main" && size!=0){
+    if(this->functionName=="main"){
         o<<"    leave\n";
     }else{
         o<<"    popq %rbp\n";
@@ -453,7 +453,7 @@ void CFG::set_var_used(string name, bool used){
 
 string CFG::new_BB_name(string name){
     //return "block_"+to_string(line);
-    return name+"block"+to_string(nextBBnumber);
+    return functionName+"_"+name+"block"+to_string(nextBBnumber);
 }
 
 

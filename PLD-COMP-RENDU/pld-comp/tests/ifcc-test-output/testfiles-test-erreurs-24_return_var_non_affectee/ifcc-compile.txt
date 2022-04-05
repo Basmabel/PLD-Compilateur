@@ -1,3 +1,0 @@
-line 3:4 extraneous input '/' expecting {'int', '}', 'return', VAR}
-
-return code: 0

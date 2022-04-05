@@ -1,6 +1,0 @@
-line 1:6 no viable alternative at input 'int a ='
-line 5:4 no viable alternative at input 'var2 = var2/3\r\n    return'
-line 5:4 missing ';' at 'return'
-Segmentation fault
-
-return code: 139

@@ -40,6 +40,7 @@ class  symbolTable {
 		int getOffset(string name);
 		string getType(string name);
 		int getLine(string name);
+		map<string,symbol*> getSymbols();
 		bool contains(string name);
 		map<string,int> checkIfSymbolsUsed();
 

@@ -151,15 +151,15 @@ class BasicBlock {
  */
 class CFG {
  public:
-	CFG(int nextFreeSymbolIndex);
+	CFG(string functionName);
 	
 	void add_bb(BasicBlock* bb); 
 
 	// x86 code generation: could be encapsulated in a processor class in a retargetable compiler
-	void gen_asm(ostream& o,string functionName, int size, functionTable *fonctionTable);
+	void gen_asm(ostream& o, int size, functionTable *fonctionTable);
 	string IR_reg_to_asm(int index); /**< helper method: inputs a IR reg or input variable, returns e.g. "-24(%rbp)" for the proper value of 24 */
-	void gen_asm_prologue(ostream& o,string functionName);
-	void gen_asm_epilogue(ostream& o,string functionName,int size);
+	void gen_asm_prologue(ostream& o);
+	void gen_asm_epilogue(ostream& o,int size);
 
 	// symbol table methods
 	void add_to_symbol_table(string name, Type t, int line,int nbAlloc=1);
@@ -186,6 +186,7 @@ class CFG {
 	int nextFreeSymbolIndex; /**< to allocate new symbols in the symbol table */
 	symbolTable* symboleTable;
 	
+	string functionName;
 
 	
 	vector <BasicBlock*> bbs; /**< all the basic blocks of this CFG*/

@@ -14,9 +14,11 @@ IRVisitor::IRVisitor(ValeurVisitor v){
 */
 antlrcpp::Any IRVisitor::visitProg(ifccParser::ProgContext *context) 
 {
-	cfg = new CFG(0);
-	
+
 	string functionName = context->VAR(0)->getText();
+	cfg = new CFG(functionName);
+	
+	
 	vector<string> name;
 	for (int i =1; i < context->VAR().size(); i++) {
 		string newArg = context->VAR().at(i)->getText();
@@ -50,10 +52,7 @@ antlrcpp::Any IRVisitor::visitProg(ifccParser::ProgContext *context)
 		visit(context->instr().at(i));
 	}
     
-    cfg->gen_asm(cout,functionName, fonctionTable->getSize(), fonctionTable);
-	
-
-	nextFreeSymbolIndex=cfg->nextFreeSymbolIndex;
+    cfg->gen_asm(cout, fonctionTable->getSize(), fonctionTable);
 
 	return 0;
 }

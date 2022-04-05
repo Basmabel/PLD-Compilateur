@@ -83,6 +83,10 @@
 		return symbols.at(name)->getLine();
 	}
 
+	map<string,symbol*> symbolTable::getSymbols(){
+		return symbols;
+	}
+
 
 	//Setters
 

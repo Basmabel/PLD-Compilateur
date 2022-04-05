@@ -1,3 +1,0 @@
-Segmentation fault
-
-return code: 139

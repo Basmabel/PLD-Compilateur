@@ -1,9 +1,0 @@
-line 3:12 token recognition error at: '.'
-line 3:16 token recognition error at: '.'
-line 3:20 token recognition error at: '.'
-line 3:25 token recognition error at: '.'
-line 5:18 token recognition error at: ':'
-line 5:22 token recognition error at: '.'
-line 3:13 mismatched input '5' expecting ';'
-
-return code: 0

@@ -1,7 +1,0 @@
-input.c: In function ‘main’:
-input.c:6:5: error: ‘c’ undeclared (first use in this function)
-    6 |     c = a - (b*5+3);
-      |     ^
-input.c:6:5: note: each undeclared identifier is reported only once for each function it appears in
-
-return code: 1

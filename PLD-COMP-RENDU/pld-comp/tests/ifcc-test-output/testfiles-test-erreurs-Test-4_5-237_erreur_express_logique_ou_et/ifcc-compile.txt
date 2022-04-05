@@ -1,3 +1,0 @@
-line 2:14 extraneous input '|' expecting {'(', '-', '!', CONST, VAR}
-
-return code: 0

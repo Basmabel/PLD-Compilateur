@@ -6,7 +6,8 @@ int fibbonacci(int n) {
    if(n == 1) {
       return 1;
    } else {
-      return (fibbonacci(n-1) + fibbonacci(n-2));
+      int a = (fibbonacci(n-1) + fibbonacci(n-2));
+      return a;
    }
 }
 

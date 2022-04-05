@@ -225,7 +225,7 @@ void IRInstr::gen_asm(ostream &o){
             break;
         case Operation::call:
         {
-            if(true){
+            if(!bb->cfg->get_returnCalled()){
                 string function = params[1];
                 //varDest = bb->cfg->get_var_index(params[3]);
                 var2 = bb->cfg->get_var_index(params[2]);

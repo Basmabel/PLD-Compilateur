@@ -10,9 +10,8 @@ int test(int a){
 int main() {
     char f;
     f = 'b';
-    return 3;
     int x,c,a;
     x=6;
-    c=4+5;
-    return test(1);
+    c=test(1);
+    return c;
 }

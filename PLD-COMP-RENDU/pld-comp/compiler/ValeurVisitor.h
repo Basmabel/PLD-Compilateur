@@ -27,6 +27,8 @@ class  ValeurVisitor : public ifccBaseVisitor {
 
 		virtual antlrcpp::Any visitDeclarationInstr(ifccParser::DeclarationInstrContext *context) override;
 
+		virtual antlrcpp::Any visitFunctionCallInstr(ifccParser::FunctionCallInstrContext *context) override;
+
 		virtual antlrcpp::Any visitAffectationInstr(ifccParser::AffectationInstrContext *context) override;
 
 		virtual antlrcpp::Any visitReturn_stmtInstr(ifccParser::Return_stmtInstrContext *context) override;
@@ -36,6 +38,8 @@ class  ValeurVisitor : public ifccBaseVisitor {
 		virtual antlrcpp::Any visitLvaltableau(ifccParser::LvaltableauContext *context) override;
 
 		virtual antlrcpp::Any visitDeclaration(ifccParser::DeclarationContext *context) override;
+
+		virtual antlrcpp::Any visitFunctionCall(ifccParser::FunctionCallContext *context) override;
 
 		virtual antlrcpp::Any visitEnddeclvar(ifccParser::EnddeclvarContext *context) override;
 
@@ -52,6 +56,8 @@ class  ValeurVisitor : public ifccBaseVisitor {
 		virtual antlrcpp::Any visitCharacter(ifccParser::CharacterContext *context) override;
 
 		virtual antlrcpp::Any visitMultdiv(ifccParser::MultdivContext *context) override;
+
+		virtual antlrcpp::Any visitFuncCall(ifccParser::FuncCallContext *context) override;
 
 		virtual antlrcpp::Any visitPar(ifccParser::ParContext *context) override;
 

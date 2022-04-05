@@ -193,6 +193,33 @@ void IRInstr::gen_asm(ostream &o){
             o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;
+        case Operation::call:
+        {
+            string function = params[1];
+            //varDest = bb->cfg->get_var_index(params[3]);
+            var2 = bb->cfg->get_var_index(params[2]);
+            //o << "    movq    " << var2 << "(%rbp), %edi" << endl;
+            //o << "    call    " << function << endl;
+
+            for (int i = 3; i < params.size(); i++) {
+                switch(i) {
+                    case 3: o << "    movq    -" << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdi" << endl; break;
+                    case 4: o << "    movq    -" << bb->cfg->get_var_index(params[i]) << "(%rbp), %rsi" << endl; break;
+                    case 5: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdx" << endl; break;
+                    case 6: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rcx" << endl; break;
+                    case 7: o << "    movq    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %r8" << endl; break;
+                    case 8: o << "    movq    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %r9" << endl; break;
+                }
+            }
+
+            /*o << "    movq    %r8, %r9" <<endl;
+            o << "    movq    %rdi, %r8" <<endl;
+            o << "    movq    %rax, %rdi" <<endl;*/
+            o << "    callq   " << function << endl;
+            o << "    movq    %rax,-"<<var2<<"(%rbp)"<<endl;
+
+            break;
+        }
         default:
             break;
     }
@@ -211,6 +238,7 @@ void BasicBlock::add_IRInstr(IRInstr::Operation op, Type t, vector<string> param
 void BasicBlock::gen_asm(ostream &o){
     
     for (auto instr : instrs) {
+        
         instr->gen_asm(o);
     }
 
@@ -230,10 +258,11 @@ void BasicBlock::gen_asm(ostream &o){
 }
 
 
-CFG::CFG(){
+CFG::CFG(int nextFreeSymbolIndex){
 
     //Aucun symbol pour l'instant
-    nextFreeSymbolIndex=0;
+    this->nextFreeSymbolIndex=nextFreeSymbolIndex;
+
     nextBBnumber=0;
 
     //Création des premiers blocs
@@ -265,8 +294,23 @@ void CFG::add_bb(BasicBlock* bb){
     bbs.insert(bbs.begin()+nextBBnumber,bb);
 }
 
-void CFG::gen_asm(ostream& o){
-    gen_asm_prologue(o);
+void CFG::gen_asm(ostream& o,string functionName, int size, functionTable *fonctionTable){
+    gen_asm_prologue(o,functionName);
+
+    if(functionName!="main"){
+        for(int i=0; i<fonctionTable->getFonction(functionName)->getArgsSize();i++){
+            string arg = fonctionTable->getFonction(functionName)->getArgs().at(i).first;
+            switch(i) {
+                    case 0: o << "    movq    %rdi, -" <<get_var_index(arg) << "(%rbp)"<<endl; break;
+                    case 1: o << "    movq    %rsi, -" <<get_var_index(arg) << "(%rbp)"<<endl; break;
+                    case 2: o << "    movq    %rdx, -" <<get_var_index(arg) << "(%rbp)"<<endl; break;
+                    case 3: o << "    movq    %rcx, -" <<get_var_index(arg) << "(%rbp)"<<endl; break;
+                    case 4: o << "    movq    %r8, -" <<get_var_index(arg) << "(%rbp)"<<endl; break;
+                    case 5: o << "    movq    %r9, -" <<get_var_index(arg) << "(%rbp)"<<endl; break;
+            }
+        }
+    }
+
     for(unsigned int i = 0; i < bbs.size(); i++)
     {
         if(bbs[i]->label != "entry_block" ) { //&& bbs[i]->label != "exit_block"
@@ -274,8 +318,9 @@ void CFG::gen_asm(ostream& o){
             
         }
         bbs[i]->gen_asm(o);
+        
     }
-    gen_asm_epilogue(o);
+    gen_asm_epilogue(o,functionName,size);
 }
 
 string CFG::IR_reg_to_asm(int index){
@@ -283,29 +328,39 @@ string CFG::IR_reg_to_asm(int index){
     return string_var;
 }
 
-void CFG::gen_asm_prologue(ostream& o){
+void CFG::gen_asm_prologue(ostream& o,string functionName){
     #ifdef __APPLE__
-	    o<<".globl    _main\n"
-        " _main: \n"
+	    o<<".globl    _"<<functionName<<"\n"
+        " _"<<functionName<<": \n"
 	#else
-	    o<<".globl    main\n"
-        " main: \n"
+	    o<<".globl    "<<functionName<<"\n"
+        " "<<functionName<<": \n"
 	#endif
         "    #prologue\n"
         "    pushq %rbp\n"
         "    movq %rsp, %rbp\n";
+    if(functionName=="main"){
+        int size=(symboleTable->symbols.size()+1)*sizeof(int64_t);
+        o<<"    subq   $"<<size<<", %rsp"<<endl;
+    }
+        
 }
 
-void CFG::gen_asm_epilogue(ostream& o){
-    o<<"    #epilogue\n"
-        "    popq %rbp\n"
-        "    ret\n";
+void CFG::gen_asm_epilogue(ostream& o, string functionName, int size){
+    o<<"    #epilogue\n";
+    if(functionName=="main" && size!=0){
+        o<<"    leave\n";
+    }else{
+        o<<"    popq %rbp\n";
+    }
+        
+    o<<"    ret"<<endl;
 }
 
 
+//SymbolTable
 void CFG::add_to_symbol_table(string name, Type t, int line, int nbAlloc){
     string type;
-
     switch(t){
         case Type::INT:
             type="int";
@@ -316,8 +371,7 @@ void CFG::add_to_symbol_table(string name, Type t, int line, int nbAlloc){
         default:
             type="int";
             break;
-    }
-    
+    }    
     symboleTable->add(name,type,line, nextFreeSymbolIndex);
     nextFreeSymbolIndex+=nbAlloc;
 }
@@ -361,6 +415,12 @@ string CFG::create_new_tempvar(Type t, string blockName, int line, int nbAlloc){
     return name;
 }
 
+string CFG::create_new_tempvar_function(Type t, string var, size_t line, int nbAlloc){
+    add_to_symbol_table(var,t,line,nbAlloc);
+    symboleTable->setUsed(var,true);
+    return var;
+}
+
 
 int CFG::get_var_index(string name){
     return symboleTable->getOffset(name);
@@ -395,4 +455,6 @@ string CFG::new_BB_name(string name){
     //return "block_"+to_string(line);
     return name+"block"+to_string(nextBBnumber);
 }
+
+
 

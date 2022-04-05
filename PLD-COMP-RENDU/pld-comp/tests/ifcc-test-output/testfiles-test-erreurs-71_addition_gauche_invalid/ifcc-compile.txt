@@ -1,0 +1,4 @@
+line 7:18 token recognition error at: ':'
+line 4:5 no viable alternative at input 'a+'
+
+return code: 0

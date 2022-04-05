@@ -39,11 +39,11 @@ int main(int argn, const char **argv)
   ifccParser parser(&tokens);
   tree::ParseTree* tree = parser.axiom();
 
-  if(parser.getNumberOfSyntaxErrors() != 0)
+  /*if(parser.getNumberOfSyntaxErrors() != 0)
   {
       cerr << "error: syntax error during parsing" << endl;
       exit(1);
-  }
+  }*/
 
 
   /*CodeGenVisitor v;
@@ -54,6 +54,6 @@ int main(int argn, const char **argv)
 
   IRVisitor ir(v);
   ir.visit(tree);
-
+  
   return 0;
 }

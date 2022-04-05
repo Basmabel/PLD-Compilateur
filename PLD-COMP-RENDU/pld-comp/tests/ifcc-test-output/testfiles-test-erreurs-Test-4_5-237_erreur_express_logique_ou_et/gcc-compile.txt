@@ -1,0 +1,6 @@
+input.c: In function ‘main’:
+input.c:2:15: error: expected expression before ‘|’ token
+    2 |     return 28&|9;
+      |               ^
+
+return code: 1

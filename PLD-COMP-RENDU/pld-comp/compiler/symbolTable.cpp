@@ -1,6 +1,6 @@
 #include "symbolTable.h"
 
-
+#include <iostream>
 
 	symbolTable::symbolTable(){}
 	

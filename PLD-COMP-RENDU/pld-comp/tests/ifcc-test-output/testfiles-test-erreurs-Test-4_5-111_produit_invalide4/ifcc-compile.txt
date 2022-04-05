@@ -1,0 +1,4 @@
+line 5:18 token recognition error at: ':'
+line 3:11 extraneous input '*' expecting {'(', '-', '!', CONST, VAR}
+
+return code: 0

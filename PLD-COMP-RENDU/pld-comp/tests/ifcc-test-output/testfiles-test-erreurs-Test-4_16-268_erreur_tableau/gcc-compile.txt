@@ -1,0 +1,6 @@
+input.c: In function ‘main’:
+input.c:2:9: error: size of array ‘a’ is negative
+    2 |     int a [-9];
+      |         ^
+
+return code: 1

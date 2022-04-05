@@ -1,0 +1,7 @@
+line 8:18 token recognition error at: ':'
+line 5:11 mismatched input ';' expecting {'(', '-', '!', CONST, VAR}
+terminate called after throwing an instance of 'std::bad_cast'
+  what():  std::bad_cast
+Aborted
+
+return code: 134

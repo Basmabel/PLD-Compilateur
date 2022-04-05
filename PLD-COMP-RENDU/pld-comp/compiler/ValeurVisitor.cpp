@@ -30,6 +30,14 @@ antlrcpp::Any ValeurVisitor::visitDeclarationInstr(ifccParser::DeclarationInstrC
 }
 
 /*
+*	Visiteur de l'instruction d'appel de fonction 
+*/
+antlrcpp::Any ValeurVisitor::visitFunctionCallInstr(ifccParser::FunctionCallInstrContext *context){
+	visitFunctionCall(context->functionCall());
+	return 0;
+}
+
+/*
 *	Visiteur de l'instruction affectation d'une variable 
 */
 antlrcpp::Any ValeurVisitor::visitAffectationInstr(ifccParser::AffectationInstrContext *context){
@@ -68,6 +76,23 @@ antlrcpp::Any ValeurVisitor::visitDeclaration(ifccParser::DeclarationContext *co
 	declaration = false;
 
 	return 0;
+}
+
+/*
+*	Visite l'appel de fonction
+*/
+antlrcpp::Any ValeurVisitor::visitFunctionCall(ifccParser::FunctionCallContext *context)
+{
+	int a = 5;
+	
+	return a;
+}
+
+antlrcpp::Any ValeurVisitor::visitFuncCall(ifccParser::FuncCallContext *context) 
+{
+	int a = 5;
+	
+	return a;
 }
 
 

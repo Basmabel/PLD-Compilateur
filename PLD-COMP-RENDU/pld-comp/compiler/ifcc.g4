@@ -1,18 +1,20 @@
 grammar ifcc;
 
-axiom : prog ;
-
-prog : INT 'main' OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET ;
+axiom : prog* ;
 
 
-instr : declaration #declarationInstr | affectation SEMICOLON #affectationInstr | if_then_else #if_then_elseInstr | return_stmt #return_stmtInstr   ; 
+prog : INT VAR OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET
+    |  INT VAR OPENPAR INT VAR (COMMA INT VAR)* CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET;
+    
+instr : declaration #declarationInstr | functionCall #functionCallInstr | if_then_else #if_then_elseInstr | affectation SEMICOLON #affectationInstr | return_stmt #return_stmtInstr ; 
 
 declaration: type variables* enddeclaration SEMICOLON; 
 type: INT #int | CHAR #char;
 
+functionCall: VAR OPENPAR (expression COMMA)* expression CLOSEPAR SEMICOLON; 
+
 variables: lvalue COMMA #varsimpledecl
 | affectation COMMA #varaffectdecl;
-
 
 enddeclaration: lvalue #enddeclvar
 | affectation #enddeclaffect;
@@ -22,12 +24,12 @@ affectation: lvalue EQUAL expression;
 lvalue: VAR #lvalVar
 | VAR OPENSQBRACKETS expression CLOSESQBRACKETS #lvaltableau;
 
-
 expression: OPENPAR expression CLOSEPAR #par
 | MINUS expression #oppose
 | EXCLA expression #negation
 | expression (MULTIPLY | DIVIDE) expression #multdiv
 | expression (PLUS | MINUS) expression #plusminus
+| VAR OPENPAR (expression COMMA)* expression CLOSEPAR #funcCall
 | expression AND expression #andlogiq
 | expression XOR expression #xorlogiq
 | expression OR expression #orlogiq

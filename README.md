@@ -4,12 +4,12 @@
 This document details how to use the ifcc compiler. `ifcc` is a compiler built to compile a subset of the C language, which we define in our `ifcc.g4` grammar. Our compiler translates the instructions in C language to `x86` assembly language
 
 ## 2. Team Members
-- ALAMI Meryem : meryem.alami@insa-lyon.fr
+- ALAMI Meryem : meryem.alami-kasri@insa-lyon.fr
 - AL ZAHABI Hanaa : hanaa.al-zahabi@insa-lyon.fr
 - BELAHCEN Basma : basma.belahcen@insa-lyon.fr
 - CHELLAOUI Adam : adam.chellaoui@insa-lyon.fr
-- GREVAUD Paul : grevaud.paul@insa-lyon.fr
-- GUILLEVIC Marie : guillevic.marie@insa-lyon.fr
+- GREVAUD Paul : paul.grevaud@insa-lyon.fr
+- GUILLEVIC Marie : marie.guillevic@insa-lyon.fr
 - M’BARECK Aichetou : aichetou.m-bareck@insa-lyon.fr
 - PREVOT Jade : jade.prevot@insa-lyon.fr
 - WAQIF Salma : salma.waqif@insa-lyon.fr
@@ -61,29 +61,36 @@ int main() {
   return m;
 }
 ```
-**Mean of an integer array**
+****
 ```c
-  int main() {
-    int arr[5] = {16,17,12,20,11};
-    int i,sum=0;
-    while (i<5) {
-        sum = sum + arr[i];
-        i = i+1;
+/* computes the power p>0 of an integer n>0 */
+  int power(int n,int p) {
+    int res=n;
+    int i=0;
+    while(i<p-1) {
+      res = res*n;
+      i = i+1;
     }
-    return sum;
+    return res;
+  }
+  int main() {
+    int n=5;
+    int p=4;
+    int res = power(n,p);
+    return res;
   }
 ```
 ## 7. Running tests
 
 In order to run the tests already implemented, you have to execute depending of your configuration :
 
- - If you are on WSL  :
+ - If you are on WSL or MacOs :
 ``` 
 $ python3 ifcc-test.py tests/testfiles
 ```
  - If you are on Ubuntu : 
 ``` 
-$ ./TRUC tests/testfiles
+$ ./ifcc-wrapper.sh tests/testfiles
 ```
 
 If you want to add a new test or a set or tests, add the test file (file.c) or the directory of tests in `tests/testfiles`.

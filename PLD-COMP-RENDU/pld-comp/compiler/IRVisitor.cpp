@@ -787,10 +787,10 @@ antlrcpp::Any IRVisitor:: visitWhileloop(ifccParser::WhileloopContext *context) 
 	//Comparer le retour de la condition à 0
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
 
-	//--------------------
+	
 
 	cfg->current_bb=block2;
-	block2->exit_true= block1;
+	block2->exit_true= block1; // après l'execution du block while, on revient toujours à la condition
 	block2->exit_false= nullptr;
 	
 	visit(context->blockwhile); 

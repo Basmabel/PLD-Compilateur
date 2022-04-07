@@ -1,4 +1,0 @@
-*** stack smashing detected ***: terminated
-Aborted
-
-return code: 134

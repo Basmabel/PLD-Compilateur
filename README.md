@@ -51,6 +51,8 @@ To compile your file `file.c`, located in a child repositary of where your compi
 $ ifcc file.c
 ```
 ## 6. Code exemples
+Here are some examples of the code that our compiler is able to manage :
+
 **Fibbonnaci recursive function**
 ```c
 

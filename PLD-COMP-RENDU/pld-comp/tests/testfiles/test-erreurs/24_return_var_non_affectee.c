@@ -1,5 +1,5 @@
-int boo(){
+int main(){
     int var;
-    //nice var
-    return var;
+    var = 5;
+    return var
 }

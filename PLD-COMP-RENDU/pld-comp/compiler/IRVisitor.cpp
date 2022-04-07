@@ -57,12 +57,15 @@ antlrcpp::Any IRVisitor::visitProg(ifccParser::ProgContext *context)
 		
     
     for(int i=0 ; i<context->instr().size(); i++){
-		linectr=context->instr().at(i)->getStart()->getLine();
-		visit(context->instr().at(i));
+		if(!returnStmt){
+			linectr=context->instr().at(i)->getStart()->getLine();
+			visit(context->instr().at(i));
+		}
+		
 	}
     
     cfg->gen_asm(cout, fonctionTable->getSize(), fonctionTable);
-
+	returnStmt=false;
 	return 0;
 }
 
@@ -737,6 +740,7 @@ antlrcpp::Any IRVisitor :: visitInequality(ifccParser::InequalityContext *contex
 */
 antlrcpp::Any IRVisitor :: visitIf_then_else(ifccParser::If_then_elseContext *context) {
 
+	condition= true;
 	//visite de la condition de la boucle et renvoie son résultat
 	string var = visit(context->expression());
 
@@ -787,11 +791,13 @@ antlrcpp::Any IRVisitor :: visitIf_then_else(ifccParser::If_then_elseContext *co
 	block3->exit_true = blockTmp;
 	block3->exit_false=nullptr;
 
-
+	condition=false;
 	return 0;
 }
 
 antlrcpp::Any IRVisitor:: visitWhileloop(ifccParser::WhileloopContext *context) {
+
+	condition = true;
 	//sauvegarde le output avant d'entrer dans la boucle 
 	BasicBlock* blockTmp = cfg->current_bb->exit_true;
 
@@ -844,6 +850,8 @@ antlrcpp::Any IRVisitor:: visitWhileloop(ifccParser::WhileloopContext *context) 
 	block3->exit_true = blockTmp;
 	block3->exit_false=nullptr;
 
+	condition = false;
+
 	return 0;
 }
 /*
@@ -880,6 +888,12 @@ antlrcpp::Any IRVisitor::visitReturn_stmt(ifccParser::Return_stmtContext *contex
     vector<string> params = {ret};
 
     cfg->current_bb->add_IRInstr(IRInstr::Operation::ret, Type::RET, params); 
+
+	if(condition){
+		cfg->current_bb->exit_true= cfg->return_bb;
+	}else {
+		returnStmt = true;
+	}
 	
 	return 0;
 }

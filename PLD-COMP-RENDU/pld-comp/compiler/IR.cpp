@@ -20,7 +20,7 @@ void IRInstr::gen_asm(ostream &o){
     long long int temp;
     switch(op){
         case Operation::ldconst:
-            if(!bb->cfg->get_returnCalled()){
+             
                 varDest = bb->cfg->get_var_index(params[0]);
                 try{
                     temp = stoll(params[1]);
@@ -30,10 +30,10 @@ void IRInstr::gen_asm(ostream &o){
                 }
                 o<<"    movq    $"<<params[1]<<", -"<<varDest<<"(%rbp)"<<endl;
                 //o<<";"<<params[0]<<endl;;
-            }
+            
             break;
         case Operation::add:
-            if(!bb->cfg->get_returnCalled()){
+             
                 varDest = bb->cfg->get_var_index(params[0]);
                 var2 = bb->cfg->get_var_index(params[2]);
                 if(params[1]=="%rbp"){
@@ -45,10 +45,10 @@ void IRInstr::gen_asm(ostream &o){
                 o<<"    addq    -"<<var2<<"(%rbp), %rax"<<endl;
                 o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
             // o<<";"<<params[0]<<endl;;
-            }
+            
             break;
         case Operation::sub:
-            if(!bb->cfg->get_returnCalled()){
+             
                 varDest = bb->cfg->get_var_index(params[0]);
                 var1 = bb->cfg->get_var_index(params[1]);
                 var2 = bb->cfg->get_var_index(params[2]);
@@ -56,10 +56,10 @@ void IRInstr::gen_asm(ostream &o){
                 o<<"    subq    -"<<var2<<"(%rbp), %rax"<<endl;
                 o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
                 //o<<";"<<params[0]<<endl;;
-            }
+            
             break;
         case Operation::mul:
-            if(!bb->cfg->get_returnCalled()){
+             
                 varDest = bb->cfg->get_var_index(params[0]);
                 var1 = bb->cfg->get_var_index(params[1]);
                 var2 = bb->cfg->get_var_index(params[2]);
@@ -67,10 +67,10 @@ void IRInstr::gen_asm(ostream &o){
                 o<<"    imulq    -"<<var1<<"(%rbp), %rax"<<endl;
                 o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
                 //o<<";"<<params[0]<<endl;;
-            }
+            
             break;
         case Operation::div:
-            if(!bb->cfg->get_returnCalled()){
+             
                 varDest = bb->cfg->get_var_index(params[0]);
                 var1 = bb->cfg->get_var_index(params[1]);
                 var2 = bb->cfg->get_var_index(params[2]);
@@ -78,10 +78,10 @@ void IRInstr::gen_asm(ostream &o){
                 o<<"    cqo\n 	 idivq    -"<<var2<<"(%rbp)"<<endl;
                 o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
                 //o<<";"<<params[0]<<endl;;
-            }
+            
             break;
         case Operation::andq:
-            if(!bb->cfg->get_returnCalled()){
+             
                 varDest = bb->cfg->get_var_index(params[0]);
                 var1 = bb->cfg->get_var_index(params[1]);
                 var2 = bb->cfg->get_var_index(params[2]);
@@ -89,10 +89,10 @@ void IRInstr::gen_asm(ostream &o){
                 o<<"    andq    -"<<var2<<"(%rbp), %rax"<<endl;
                 o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
                 //o<<";"<<params[0]<<endl;;
-            }
+            
             break;
         case Operation::xorq:
-            if(!bb->cfg->get_returnCalled()){
+             
                 varDest = bb->cfg->get_var_index(params[0]);
                 var1 = bb->cfg->get_var_index(params[1]);
                 var2 = bb->cfg->get_var_index(params[2]);
@@ -100,10 +100,10 @@ void IRInstr::gen_asm(ostream &o){
                 o<<"    xorq    -"<<var2<<"(%rbp), %rax"<<endl;
                 o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
                 //o<<";"<<params[0]<<endl;;
-            }
+            
             break;
         case Operation::orq:
-            if(!bb->cfg->get_returnCalled()){
+             
                 varDest = bb->cfg->get_var_index(params[0]);
                 var1 = bb->cfg->get_var_index(params[1]);
                 var2 = bb->cfg->get_var_index(params[2]);
@@ -111,52 +111,52 @@ void IRInstr::gen_asm(ostream &o){
                 o<<"    orq    -"<<var2<<"(%rbp), %rax"<<endl;
                 o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
                 //o<<";"<<params[0]<<endl;;
-            }
+            
             break;
         case Operation::neg:
-            if(!bb->cfg->get_returnCalled()){
+             
                 varDest = bb->cfg->get_var_index(params[0]);
                 var1 = bb->cfg->get_var_index(params[1]);
                 o<<" 	 movq   -"<<var1<<"(%rbp), %rax"<<endl;
                 o<<" 	 negq   %rax"<<endl;
                 o<<" 	 movq   %rax, -"<<varDest<<"(%rbp)"<<endl;
                 //o<<";"<<params[0]<<endl;;
-            }
+            
             break;
         case Operation::setz:
-            if(!bb->cfg->get_returnCalled()){
+             
                 varDest = bb->cfg->get_var_index(params[0]);
                 var1 = bb->cfg->get_var_index(params[1]);
                 o<<"    cmpq   $0, -"<<var1<<"(%rbp)"<<endl;
                 o<<"    sete    %al"<<endl;
                 o<<"    movzbq  %al, %rax"<<endl;
                 o<<"    movq   %rax, -"<<varDest<<"(%rbp)"<<endl;
-            }
+            
             //o<<";"<<params[0]<<endl;;
             break;
         case Operation::rmem:
-            if(!bb->cfg->get_returnCalled()){
+             
                 o<<"    movq    "<<params[1]<<", %rax"<<endl;
                 o<<"    movq     (%rax), %rdx"<<endl;
                 o<<"    movq      %rdx, %rax"<<endl;
                 o<<"    movq     %rax,"<<params[0]<<endl;
-            }
+            
             break;
         case Operation::mov:
-            if(!bb->cfg->get_returnCalled()){
+             
                 o<<"    movq    "<<params[1]<<", %rax"<<endl;
                 o<<"    movq     %rax,"<<params[0]<<endl;
-            }
+            
             break;
         case Operation::wmem:
-            if(!bb->cfg->get_returnCalled()){
+             
                 o<<"    movq    "<<params[0]<<", %rax"<<endl;
                 o<<"    movq    "<<params[1]<<", %r10"<<endl;
                 o<<"    movq    %r10, (%rax)"<<endl;
-            }
+            
             break;
         case Operation::cmp_eq:
-            if(!bb->cfg->get_returnCalled()){
+             
                 varDest= bb->cfg->get_var_index(params[0]);
                 var1= bb->cfg->get_var_index(params[1]);
                 
@@ -170,10 +170,10 @@ void IRInstr::gen_asm(ostream &o){
                 o<<"    sete    %al"<<endl;
                 o<<"    movzbq  %al, %rax"<<endl;
                 o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
-            }
+            
             break;
         case Operation::cmp_ineq:
-            if(!bb->cfg->get_returnCalled()){
+             
                 var1= bb->cfg->get_var_index(params[1]);
                 var2= bb->cfg->get_var_index(params[2]);
                 if(params[0]=="$0"){
@@ -186,10 +186,10 @@ void IRInstr::gen_asm(ostream &o){
                     o<<"    movzbq  %al, %rax"<<endl;
                     o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
                 }
-            }
+            
             break;
         case Operation::cmp_gt:
-            if(!bb->cfg->get_returnCalled()){
+             
                 var1= bb->cfg->get_var_index(params[1]);
                 var2= bb->cfg->get_var_index(params[2]);
                 
@@ -199,11 +199,11 @@ void IRInstr::gen_asm(ostream &o){
                 o<<"    setg    %al"<<endl;
                 o<<"    movzbq  %al, %rax"<<endl;
                 o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
-            }
+            
             
             break;
         case Operation::cmp_lt:
-            if(!bb->cfg->get_returnCalled()){
+             
                 var1= bb->cfg->get_var_index(params[1]);
                 var2= bb->cfg->get_var_index(params[2]);
                 
@@ -213,19 +213,19 @@ void IRInstr::gen_asm(ostream &o){
                 o<<"    setl    %al"<<endl;
                 o<<"    movzbq  %al, %rax"<<endl;
                 o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
-            }
+            
             break;
         case Operation::ret:
-            if(!bb->cfg->get_returnCalled()){
+             
                 var1 = bb->cfg->get_var_index(params[0]);
                 o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
                 //o<<";"<<params[0]<<endl;;
                 bb->cfg->set_returnCalled(true);
-            }
+            
             break;
         case Operation::call:
         {
-            if(!bb->cfg->get_returnCalled()){
+             
                 string function = params[1];
                 //varDest = bb->cfg->get_var_index(params[3]);
                 var2 = bb->cfg->get_var_index(params[2]);
@@ -246,7 +246,7 @@ void IRInstr::gen_asm(ostream &o){
                 o << "    callq   " << function << endl;
                 if(bb->cfg->getFunctionTable()->getFonction(function)->getReturnType() != "void")
                     o << "    movq    %rax,-"<<var2<<"(%rbp)"<<endl;
-            }
+            
 
             break;
         }

@@ -1,4 +1,4 @@
-int function(int a, char b){
+int function(char a, char b){
     int res = a + b;
     if(res > 6){
         return res;
@@ -9,14 +9,14 @@ int function(int a, char b){
 }
 
 int main(){
-    int a = 5;
-    char b = 7;
+    char a = 'b';
+    char b = 'c';
     int res = function(a,b);
     while(res<60){
         res = res + 5;
         if(res>35){
             return res;
-        } else {
+        }else{
             return 1;
         }
     }

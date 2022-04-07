@@ -136,6 +136,8 @@ class  IRVisitor : public ifccBaseVisitor {
 
 		bool declaration = false;
 		bool affectation = false;
+		bool condition = false;
+		bool returnStmt = false;
 
         CFG* cfg;
 		int nextFreeSymbolIndex = 0;

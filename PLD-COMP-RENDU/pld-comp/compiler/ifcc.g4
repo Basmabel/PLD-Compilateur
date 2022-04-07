@@ -12,7 +12,7 @@ declaration: type variables* enddeclaration SEMICOLON;
 type: INT #int | CHAR #char;
 typeFunction : type #typeFunc | VOID #void;
 
-functionCall: VAR OPENPAR (expression COMMA)* expression CLOSEPAR SEMICOLON; 
+functionCall: VAR OPENPAR (expression COMMA)* expression? CLOSEPAR SEMICOLON; 
 
 variables: lvalue COMMA #varsimpledecl
 | affectation COMMA #varaffectdecl;
@@ -30,7 +30,7 @@ expression: OPENPAR expression CLOSEPAR #par
 | EXCLA expression #negation
 | expression (MULTIPLY | DIVIDE) expression #multdiv
 | expression (PLUS | MINUS) expression #plusminus
-| VAR OPENPAR (expression COMMA)* expression CLOSEPAR #funcCall
+| VAR OPENPAR (expression COMMA)* expression? CLOSEPAR #funcCall
 | expression AND expression #andlogiq
 | expression XOR expression #xorlogiq
 | expression OR expression #orlogiq

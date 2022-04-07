@@ -268,7 +268,9 @@ antlrcpp::Any ValeurVisitor::visitMultdiv(ifccParser::MultdivContext *context)
 		return val;
     }
 
-
+	if(val2==0){
+		return val1;
+	}
     int val =val1/val2;
 
 

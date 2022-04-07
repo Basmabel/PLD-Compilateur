@@ -92,6 +92,8 @@ int main() {
 ```
 ## 7. Running tests
 
+A test environment is located in the tests subdirectory and allows the automation of functional tests. The tests are placed in the tests/tests subdirectory, in folders that are named after the tested functionalities, in .c format. This C source code is compiled with gcc and with our ifcc compiler. The binaries are executed and the results are compared with the output code and the standard output. If both behave in the same way, the test is validated.
+
 In order to run the tests already implemented, you have to execute depending of your configuration :
 
  - If you are on WSL or MacOs :

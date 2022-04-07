@@ -16,7 +16,16 @@ This document details how to use the ifcc compiler. `ifcc` is a compiler built t
 
 
 ## 3. Prerequisites
-In order to use the ifcc compiler, you need to have a unix environment XXXXXX.
+### A) User mode
+In order to use the ifcc compiler, you need to have a Linux environment, and an Intel processor as the assembly language destination is `x86`.
+
+### B) Developper mode
+If you want to complete our work by adding features to our compiler for example, you have to first clone the git repo, and have a valid Antlr4 installation on your computer according to your environment :
+
+- `BV VMWare Horizon` on Linux-2D : you don't have to do anything everything is already installed, to compile use the script ./compiler/runmake_fedora.sh
+- `MacOS` : use the script ./install-antlr.sh, to compile use directly make in ./compiler/
+- `Ubuntu` or `WSL/Ubuntu` machine : install the packages indicated in the beginning of the file ./compiler/runmake_ubuntu.sh, to compile use the script ./compiler/runmake_ubuntu.sh. Warning under WSL, to be able to use the derivation tree display feature, you will have to install the GWSL package from Microsoft Store.
+- Other `Linux` distribution: look if the distribution offers packages for Antlr4 and Antlr4-runtime, if so you will avoid recompiling everything. For example under Fedora, these are the antlr4, antlr4-cpp-runtime and antlr4-cpp-runtime-devel packages. Otherwise run the script ./install-antlr.sh.
 
 ## 4. Features suported
 ### A) Types
@@ -24,15 +33,16 @@ In order to use the ifcc compiler, you need to have a unix environment XXXXXX.
 - `char`
 - `void`
 
-### B) Operations
+### B) Operators
 - Plus / Minus / Multiply / Divide
 - AND / OR / XOR
+- < / > / <= / >= / == / != / =
 
 ### C) Structures
 - If/Else
 - While
-- Functions with an unlimited number of arguments
-- One-dimensional arrays of integers or char
+- Functions with at most 6 arguments
+- One-dimensional arrays of integer or char
 
 ## 5. How to use it
 
@@ -90,7 +100,7 @@ $ python3 ifcc-test.py tests/testfiles
 ```
  - If you are on Ubuntu : 
 ``` 
-$ ./ifcc-wrapper.sh tests/testfiles
+$ ./ifcc-test tests/testfiles
 ```
 
 If you want to add a new test or a set or tests, add the test file (file.c) or the directory of tests in `tests/testfiles`.

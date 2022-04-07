@@ -1,4 +1,5 @@
-#ifndef IR_H
+
+#if ! defined ( IR_H )
 #define IR_H
 
 #include <vector>
@@ -9,6 +10,7 @@
 // Declarations from the parser -- replace with your own
 #include "symbolTable.h"
 #include "functionTable.h"
+#include "fonction.h"
 
 using namespace std;
 
@@ -16,31 +18,7 @@ class BasicBlock;
 class CFG;
 class DefFonction;
 
-typedef enum {
-		INT,
-		CHAR,
-		VOID,
-		ADD,
-		SUB,
-		MUL,
-		NEG,
-		SETZ,
-		DIV,
-		AND,
-		OR,
-		XOR,
-		CONST,
-		MOV,
-		CALL,
-		WMEM,
-		RMEM,
-		RET,
-		CMP_EQ,
-		CMP_INEQ,
-		CMP_LT,
-		CMP_GT,
-		DEFAULT
-} Type;
+
 
 
 //! The class for one 3-address instruction
@@ -171,7 +149,7 @@ class CFG {
 	void erreurInvalidInitializer(int linectr);
 	string create_new_tempvar(Type t, string blockName, int line,int nbAlloc=1);
 	string create_new_tempvar_function(Type t, string var, size_t line, int nbAlloc=1);
-	functionTable* getFunctionTable();
+	fonction *getFonction();
 	int get_var_index(string name);
 	Type get_var_type(string name);
 	void set_var_used(string name, bool used);
@@ -186,12 +164,14 @@ class CFG {
 	//return called
 	bool get_returnCalled();
 	void set_returnCalled(bool val);
+
+	//setters
+	void setFonction(fonction *fonction);
 	
  protected:
 	int nextFreeSymbolIndex; /**< to allocate new symbols in the symbol table */
 	symbolTable* symboleTable;
-	functionTable *fonctionTable;
-	string functionName;
+	fonction *function;
 	bool returnCalled = false;
 
 	

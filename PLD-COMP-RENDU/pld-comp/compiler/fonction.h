@@ -13,6 +13,7 @@
 //--------------------------------------------------- Interfaces utilisées
 #include <string>
 #include <vector>
+#include "symbol.h"
 using namespace std;
 
 /* Rôle de la classe <fonction>
@@ -21,17 +22,19 @@ using namespace std;
 */
 
 
+
 class  fonction{
         
         public:
 		
-                fonction(string name, string returnType, vector<pair<string,string>> args, size_t line);
+                fonction(string name, Type returnType, size_t line);
 
                 string getNameFonction();
-                string getReturnType();
+                Type getReturnType();
                 size_t getLine();
                 int getArgsSize();
-                vector<pair<string,string>> getArgs();
+                vector<pair<string,Type>> getArgs();
+                void setArgs(vector<pair<string,Type>> arguments);
 
 
 	private:
@@ -39,9 +42,9 @@ class  fonction{
         //------------------------------------------------------------------ Attributes
 
                 string name;
-                string type;
+                Type type;
                 size_t line;
-                vector<pair<string,string>> args;
+                vector<pair<string,Type>> args;
 
 };
 #endif //FONCTION_H

@@ -10,21 +10,12 @@
 	*	A DEFINIR
     *
 	*/
-	void functionTable::add(string name, string returnType, vector<pair<string,string>> arguments, size_t line)
+	fonction* functionTable::add(string name, Type returnType, size_t line)
 	{
-		/*size_t index =0;
-		if(returnType=="int"){
-			index = sizeof(int)*(functions.size()+1);
-		}else if(returnType=="char"){
-			index = sizeof(char)*(functions.size()+1);
-		}else if(returnType=="void"){
-			index = sizeof(void)*(functions.size()+1);
-        }*/
-        for(int i =0; i<arguments.size(); i++){
-            args.push_back(arguments.at(i).first);
-        }
+		fonction * function = new fonction(name,returnType, line);
+		fonctions.insert(make_pair(name, function));
 
-		fonctions.insert(make_pair(name, new fonction(name,returnType,arguments, line)));
+		return function;
 	}
 
 	/*
@@ -49,7 +40,7 @@
 
 	// Getters
 
-	string functionTable::getReturnType(string name){
+	Type functionTable::getReturnType(string name){
 		return fonctions.at(name)->getReturnType();
 	}
 

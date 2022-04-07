@@ -7,7 +7,6 @@
 							AL ZAHABI Hanaa, WAQIF Salma, GREVAUD Paul
 *************************************************************************/
 
-#pragma once
 
 #if ! defined ( SYMBOLTABLE_H )
 #define SYMBOLTABLE_H
@@ -18,7 +17,7 @@
 #include <string>
 #include <cstdio>
 #include "symbol.h"
-//#include "IR.h"
+
 
 using namespace std;
 
@@ -30,15 +29,15 @@ using namespace std;
 class  symbolTable {
 	public:
 		symbolTable();
-		void add(string name, string type, int line, int length);
+		void add(string name, Type type, int line, int length);
 		void setUsed(string name,bool used);
 		void setNull(string name, bool null);
-		void setType(string name, string type);
+		void setType(string name, Type type);
 		void remove(string name);
 		bool isUsed(string name);
 		bool isNull(string name);
 		int getOffset(string name);
-		string getType(string name);
+		Type getType(string name);
 		int getLine(string name);
 		map<string,symbol*> getSymbols();
 		bool contains(string name);

@@ -3,7 +3,7 @@
 
 
 //Constructeur
-symbol::symbol(string name, int offset, string type, int line){
+symbol::symbol(string name, int offset, Type type, int line){
     this->name=name;
     this->offset=offset;
     this->type=type;
@@ -22,7 +22,7 @@ int symbol::getOffset(){
     return this->offset;
 }
 
-string symbol::getType(){
+Type symbol::getType(){
     return this->type;
 }
 
@@ -48,6 +48,6 @@ void symbol::setNull(bool null){
     this->null=null;
 }
 
-void symbol::setType(string type) {
+void symbol::setType(Type type) {
     this->type=type;
 }

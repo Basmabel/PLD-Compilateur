@@ -6,7 +6,6 @@
 							AL ZAHABI Hanaa, WAQIF Salma, GREVAUD Paul
 *************************************************************************/
 
-#pragma once
 
 #if ! defined ( IRVISITOR_H )
 #define IRVISITOR_H
@@ -116,8 +115,8 @@ class  IRVisitor : public ifccBaseVisitor {
 		virtual antlrcpp::Any visitReturn_stmt(ifccParser::Return_stmtContext *context) override ;
 
 		// function table methods
-		void add_to_function_table(string name, string returnType, vector<pair<string,string>> args, size_t line);
-		void redeclarationFunctionError(size_t linectr, string name, string returnType, vector<pair<string,string>> args);
+		fonction *add_to_function_table(string name, Type returnType, size_t line);
+		void redeclarationFunctionError(size_t linectr, string name, Type returnType, vector<pair<string,Type>> args);
 		void erreurFunctionNonDeclaree(string name, size_t linectr);
 		Type get_func_returnType(string name);
 		fonction* get_func(string name);
@@ -128,7 +127,6 @@ class  IRVisitor : public ifccBaseVisitor {
 		void addValToTab(string var, int size);
 		string gestionTableau(string var, string index);
 		Type stringToType(string type);
-		string typeToString(Type t);
 
 		int linectr =0; //Ligne de l'instruction courante
 		int nextFreeFunctionIndex=0; /**< to allocate new functions in the function table */

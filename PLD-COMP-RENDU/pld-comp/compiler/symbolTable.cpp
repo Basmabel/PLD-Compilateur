@@ -9,12 +9,12 @@
 	*	Permet d'ajouter un symbol dans la table avec son nom, sont type et sa ligne de déclaration
 	*   La position dans la pile est calculé à partir de la type en octet du type.
 	*/
-	void symbolTable::add(string name, string typeStr, int lineSz, int length)
+	void symbolTable::add(string name, Type typeStr, int lineSz, int length)
 	{
 		int index =0;
-		if(typeStr=="int"){
+		if(typeStr==Type::INT){
 			index = sizeof(int64_t)*(length+1);
-		}else if(typeStr=="char"){
+		}else if(typeStr==Type::CHAR){
 			index = sizeof(int64_t)*(length+1);
 		}
 
@@ -75,7 +75,7 @@
 		return symbols.at(name)->getOffset();
 	}
 
-	string symbolTable::getType(string name){
+	Type symbolTable::getType(string name){
 		return symbols.at(name)->getType();
 	}
 
@@ -98,7 +98,7 @@
 		symbols.at(name)->setUsed(null);
 	}
 
-	void symbolTable::setType(string name, string type){
+	void symbolTable::setType(string name, Type type){
 		symbols.at(name)->setType(type);
 	}
 

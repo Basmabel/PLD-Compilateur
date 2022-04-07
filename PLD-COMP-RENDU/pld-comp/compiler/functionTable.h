@@ -29,9 +29,9 @@ using namespace std;
 class  functionTable {
 	public:
 		functionTable();
-		void add(string name, string returnType, vector<pair<string,string>> args, size_t line);
+		fonction* add(string name, Type returnType,size_t line);
 		void remove(string name);
-		string getReturnType(string name);
+		Type getReturnType(string name);
         int getArgsSize(string name);
         bool argsContains (string variable);
 		bool contains(string name);

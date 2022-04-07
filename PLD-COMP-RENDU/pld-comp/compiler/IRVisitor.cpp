@@ -16,46 +16,55 @@ antlrcpp::Any IRVisitor::visitProg(ifccParser::ProgContext *context)
 {
 	
 	string functionName = context->VAR(0)->getText();
+	Type typeFonction = visit(context->typeFunction());
+
+	
+
+	
 	cfg = new CFG(functionName);
 	
 	
+	//recuperation du nom des variables introduites par la declaration d'une fonction
 	vector<string> name;
 	for (int i =1; i < context->VAR().size(); i++) {
 		string newArg = context->VAR().at(i)->getText();
 		name.push_back(newArg);
 	}
-	//gestion des paramètres d'une fonction
-	vector<string> types;
+
+	//gestion des types des variables
+	vector<Type> types;
 	for (int i =0; i < context->type().size(); i++) {
-		string newTypeArg = context->type().at(i)->getText();
+		Type newTypeArg = stringToType(context->type().at(i)->getText());
 		types.push_back(newTypeArg);
 	}
 	
-	
-	vector<pair<string,string>> args;
-	
+	//gestion des arguments d'une fonction
+	vector<pair<string,Type>> args;
 	for (int i =0; i<name.size(); i++){
-		args.push_back(pair<string, string>(name.at(i),types.at(i)));
+		args.push_back(pair<string, Type>(name.at(i),types.at(i)));
 		string nameVar = name.at(i);
-		string type = types.at(i);
-		Type typeFonction = stringToType(type);
-		cfg->create_new_tempvar_function(typeFonction,nameVar,linectr);
+		Type type = types.at(i);
+		cfg->create_new_tempvar_function(type,nameVar,linectr);
 	}
 
-	
-	redeclarationFunctionError(linectr,functionName, typeToString(visit(context->typeFunction())), args);
-	if(functionName != "main"){
-		add_to_function_table(functionName,  typeToString(visit(context->typeFunction())),args, linectr);
-	}else{
-		string returnType = typeToString(visit(context->typeFunction()));
+
+	redeclarationFunctionError(linectr,functionName, typeFonction, args);
+
+	//Creation du cfg lié à la fonction
+	fonction * f = add_to_function_table(functionName,  typeFonction, linectr);
+	f->setArgs(args);
+	cfg->setFonction(f);
+
+	if(functionName == "main"){
 		
-		if(returnType!="int"){
+		if(typeFonction!=Type::INT){
 			cerr<<"erreur"<<endl;
-			//exit(1);
 		}
 	}
-		
-    
+
+
+	
+	//parcours des instructions de la fonction si il n'y a pas eu de return au milieu
     for(int i=0 ; i<context->instr().size(); i++){
 		if(!returnStmt){
 			linectr=context->instr().at(i)->getStart()->getLine();
@@ -63,9 +72,13 @@ antlrcpp::Any IRVisitor::visitProg(ifccParser::ProgContext *context)
 		}
 		
 	}
+
+
     
     cfg->gen_asm(cout, fonctionTable->getSize(), fonctionTable);
+	
 	returnStmt=false;
+
 	return 0;
 }
 
@@ -129,7 +142,6 @@ antlrcpp::Any IRVisitor::visitDeclaration(ifccParser::DeclarationContext *contex
 {
 	typeVardecl = visit(context->type());
 	
-	
 	declaration = true;
 
 	for(int i=0 ; i<context->variables().size(); i++){
@@ -137,8 +149,9 @@ antlrcpp::Any IRVisitor::visitDeclaration(ifccParser::DeclarationContext *contex
 	}
 
 	string var =visit(context->enddeclaration());
-	
+
 	declaration = false;
+
 	return 0;
 }
 
@@ -172,11 +185,11 @@ antlrcpp::Any IRVisitor::visitFunctionCall(ifccParser::FunctionCallContext *cont
 	erreurFunctionNonDeclaree(functionName,linectr);
 
 	fonction* actualFunction = get_func(functionName);
-	string typeFunction = actualFunction->getReturnType();
+	Type typeFunction = actualFunction->getReturnType();
 
 	//Creation d'une nouvelle variable résultat
-	std:: string vartmp = cfg->create_new_tempvar(stringToType(typeFunction), cfg->current_bb->label,linectr);
-		
+	string vartmp = cfg->create_new_tempvar(typeFunction, cfg->current_bb->label,linectr);
+	string varTmpReg = cfg->IR_reg_to_asm(cfg->get_var_index(vartmp));
 
 	if(actualFunction->getArgsSize() != context->expression().size()){
 		cerr << "Error : no function with this declaration exists" << endl;
@@ -186,7 +199,8 @@ antlrcpp::Any IRVisitor::visitFunctionCall(ifccParser::FunctionCallContext *cont
 			cerr << "Error : function can't have more than 6 arguments" << endl;
 			exit(1);
 	}
-	vector<string> params = {"test", functionName, vartmp};
+
+	vector<string> params = {"test", functionName, varTmpReg};
 
 	for (int i = 0; i < context->expression().size(); i++) {
 			string arg = visit(context->expression().at(i));
@@ -195,10 +209,13 @@ antlrcpp::Any IRVisitor::visitFunctionCall(ifccParser::FunctionCallContext *cont
 
 			string param = cfg->create_new_tempvar(typeArg, cfg->current_bb->label,linectr);
 
-			vector<string> params2 = {to_string(cfg->get_var_index(param))+"(%rbp)", cfg->IR_reg_to_asm(cfg->get_var_index(arg))};
+			string paramReg = to_string(cfg->get_var_index(param))+"(%rbp)";
+			string argReg = cfg->IR_reg_to_asm(cfg->get_var_index(arg));
+
+			vector<string> params2 = {paramReg,argReg};
 
 			cfg->current_bb->add_IRInstr(IRInstr::Operation::mov, Type::MOV, params2);
-			params.push_back(param);
+			params.push_back(paramReg);
 	}
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::call, Type::CALL, params);
@@ -257,10 +274,12 @@ antlrcpp::Any IRVisitor::visitAffectation(ifccParser::AffectationContext *contex
 
 	//Recuperation nouvelle variable droite
 	string local = visit(context->expression());
+	string localReg = cfg->IR_reg_to_asm(cfg->get_var_index(local));
 
 	//Recuperation nouvelle variable gauche
 	string var =visit(context->lvalue());
-
+	string varReg = cfg->IR_reg_to_asm(cfg->get_var_index(var));
+	
 
 	//verifie que l'on a pas b[5] = 6 dans une declaration
 	if(declaration && v.contains(var+"_tab_size")){
@@ -268,9 +287,7 @@ antlrcpp::Any IRVisitor::visitAffectation(ifccParser::AffectationContext *contex
 		cfg->erreurInvalidInitializer(linectr);
 	}
 
-	string varOff = cfg->IR_reg_to_asm(cfg->get_var_index(var));
-	string localOff = cfg->IR_reg_to_asm(cfg->get_var_index(local));
- 	vector<string> params = {varOff,localOff};
+ 	vector<string> params = {varReg,localReg};
 
     cfg->current_bb->add_IRInstr(IRInstr::Operation::wmem, Type::WMEM, params);
 
@@ -286,7 +303,7 @@ antlrcpp::Any IRVisitor::visitAffectation(ifccParser::AffectationContext *contex
 antlrcpp::Any IRVisitor::visitLvalVar(ifccParser::LvalVarContext *context){
 
 	string var = context->VAR()->getText();
-
+	
 	if(declaration){
 		addSymbolToTable(var,typeVardecl);
 		if(!affectation){
@@ -298,19 +315,22 @@ antlrcpp::Any IRVisitor::visitLvalVar(ifccParser::LvalVarContext *context){
 	//Check si la var a été déclaree
 	cfg->erreurVariableNonDeclare(var,linectr);
 
+	string varReg = cfg->IR_reg_to_asm(cfg->get_var_index(var));
+
 	//Recupere son offset dans la table des symboles
 	string offset = "-"+to_string(cfg->get_var_index(var));
 	
 	Type typeVar = cfg->get_var_type(var);
 
 	//Creation d'une nouvelle variable pour stocker l'offset
-	std:: string newVar = cfg->create_new_tempvar(typeVar, cfg->current_bb->label,linectr);
+	string newVar = cfg->create_new_tempvar(typeVar, cfg->current_bb->label,linectr);
+	string newVarReg = cfg->IR_reg_to_asm(cfg->get_var_index(newVar));
 
-	vector<string> params = {newVar,offset};
+	vector<string> params = {newVarReg,offset};
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::ldconst, Type::CONST, params);
 
-	vector<string> params2 = {newVar,"%rbp",newVar};
+	vector<string> params2 = {newVarReg,"%rbp",newVarReg};
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::add, Type::ADD, params2);
 
@@ -341,8 +361,9 @@ antlrcpp::Any IRVisitor::visitLvaltableau(ifccParser::LvaltableauContext *contex
 
 	//Récupération de l'index du tableau
 	string index = visit(context->expression());
+	string indexReg = cfg->IR_reg_to_asm(cfg->get_var_index(index));
 
-	string offsetValeurTableau = gestionTableau(var,index);
+	string offsetValeurTableau = gestionTableau(var,indexReg);
 	
 	return offsetValeurTableau;
 }
@@ -361,16 +382,18 @@ antlrcpp::Any IRVisitor::visitPlusminus(ifccParser::PlusminusContext *context)
 
 
 	//récuparation du nom de la première variable
-	std::string var= visit(context->expression(0));
+	string var= visit(context->expression(0));
+	string varReg = cfg->IR_reg_to_asm(cfg->get_var_index(var));
 	
 	//récuparation du nom de la deuxieme variable
-	std:: string var2=visit(context->expression(1));	
-
+	string var2=visit(context->expression(1));	
+	string var2Reg = cfg->IR_reg_to_asm(cfg->get_var_index(var2));
 
 	//Creation d'une nouvelle variable résultat
-	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmpReg = cfg->IR_reg_to_asm(cfg->get_var_index(vartmp));
 
-    vector<string> params = {vartmp,var,var2};
+    vector<string> params = {vartmpReg,varReg,var2Reg};
 
     if(op){
         cfg->current_bb->add_IRInstr(IRInstr::Operation::add, Type::ADD, params);
@@ -391,9 +414,10 @@ antlrcpp::Any IRVisitor::visitCharacter(ifccParser::CharacterContext *context)
 
 
 	//Creation d'une nouvelle variable résultat
-	std:: string var = cfg->create_new_tempvar(Type::CHAR, cfg->current_bb->label,linectr);
+	string var = cfg->create_new_tempvar(Type::CHAR, cfg->current_bb->label,linectr);
+	string varReg = cfg->IR_reg_to_asm(cfg->get_var_index(var));
 
-    vector<string> params = {var,val};
+    vector<string> params = {varReg,val};
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::ldconst, Type::CONST, params); 
 
@@ -414,15 +438,18 @@ antlrcpp::Any IRVisitor::visitMultdiv(ifccParser::MultdivContext *context)
 	bool op = (context->MULTIPLY())? true : false;
 
 	//récuparation du nom de la première variable
-	std::string var= visit(context->expression(0));
+	string var= visit(context->expression(0));
+	string varReg = cfg->IR_reg_to_asm(cfg->get_var_index(var));
 
 	//récuparation du nom de la deuxieme variable
-	std:: string var2=visit(context->expression(1));
+	string var2=visit(context->expression(1));
+	string var2Reg = cfg->IR_reg_to_asm(cfg->get_var_index(var2));
 
 	//Creation d'une nouvelle variable résultat
-	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmpReg = cfg->IR_reg_to_asm(cfg->get_var_index(vartmp));
 
-    vector<string> params = {vartmp,var,var2};
+    vector<string> params = {vartmpReg,varReg,var2Reg};
 
 	if(op){
         cfg->current_bb->add_IRInstr(IRInstr::Operation::mul, Type::MUL, params);
@@ -444,15 +471,16 @@ antlrcpp::Any IRVisitor::visitFuncCall(ifccParser::FuncCallContext *context)
 	erreurFunctionNonDeclaree(functionName,linectr);
 
 	fonction* actualFunction = get_func(functionName);
-	string typeFunction = actualFunction->getReturnType();
-	if(affectation && typeFunction =="void"){
+	Type typeFunction = actualFunction->getReturnType();
+
+	if(affectation && typeFunction ==Type::VOID){
 		cerr <<"ERROR"<<endl;
 		exit(1);
 	}
 
 	//Creation d'une nouvelle variable résultat
-	std:: string vartmp = cfg->create_new_tempvar(stringToType(typeFunction), cfg->current_bb->label,linectr);
-		
+	string vartmp = cfg->create_new_tempvar(typeFunction, cfg->current_bb->label,linectr);
+	string vartmpReg = cfg->IR_reg_to_asm(cfg->get_var_index(vartmp));
 
 	if(actualFunction->getArgsSize() != context->expression().size()){
 		cerr << "Error : no function with this declaration exists" << endl;
@@ -462,19 +490,22 @@ antlrcpp::Any IRVisitor::visitFuncCall(ifccParser::FuncCallContext *context)
 			cerr << "Error : function can't have more than 6 arguments" << endl;
 			exit(1);
 	}
-	vector<string> params = {"test", functionName, vartmp};
+
+	vector<string> params = {"test", functionName, vartmpReg};
 
 	for (int i = 0; i < context->expression().size(); i++) {
 			string arg = visit(context->expression().at(i));
+			string argReg = cfg->IR_reg_to_asm(cfg->get_var_index(arg));
 
 			Type typeArg = cfg->get_var_type(arg);
 
 			string param = cfg->create_new_tempvar(typeArg, cfg->current_bb->label,linectr);
+			string paramReg =to_string(cfg->get_var_index(param))+"(%rbp)";
 
-			vector<string> params2 = {to_string(cfg->get_var_index(param))+"(%rbp)", cfg->IR_reg_to_asm(cfg->get_var_index(arg))};
+			vector<string> params2 = {paramReg, argReg};
 
 			cfg->current_bb->add_IRInstr(IRInstr::Operation::mov, Type::MOV, params2);
-			params.push_back(param);
+			params.push_back(paramReg);
 	}
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::call, Type::CALL, params);
@@ -516,15 +547,19 @@ antlrcpp::Any IRVisitor::visitVar(ifccParser::VarContext *context)
 antlrcpp::Any IRVisitor::visitValTableau(ifccParser::ValTableauContext *context){
 	
 	string var = context->VAR()->getText();
+	string varReg = cfg->IR_reg_to_asm(cfg->get_var_index(var));
 
 	//Récupération de l'index
-	string var2 = visit(context->expression());
+	string index = visit(context->expression());
+	string indexReg = cfg->IR_reg_to_asm(cfg->get_var_index(index));
 
-	string newVar = gestionTableau(var,var2);
-	string newVarOffSet = cfg->IR_reg_to_asm(cfg->get_var_index(newVar));
+	string newVar = gestionTableau(var,indexReg);
+	string newVarReg = cfg->IR_reg_to_asm(cfg->get_var_index(newVar));
+
+	
 
 	//load content of the address contained in newVar in newVar
-	vector<string> params = {newVarOffSet,newVarOffSet};
+	vector<string> params = {newVarReg,newVarReg};
     cfg->current_bb->add_IRInstr(IRInstr::Operation::rmem, Type::RMEM, params);
 
 	return newVar;
@@ -537,13 +572,14 @@ antlrcpp::Any IRVisitor::visitValTableau(ifccParser::ValTableauContext *context)
 */
 antlrcpp::Any IRVisitor::visitOppose(ifccParser::OpposeContext *context){
 
-	std::string var =visit(context->expression());
-	
+	string var =visit(context->expression());
+	string varReg = cfg->IR_reg_to_asm(cfg->get_var_index(var));
 
 	//Creation d'une nouvelle variable résultat
-	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmpReg = cfg->IR_reg_to_asm(cfg->get_var_index(vartmp));
 
-    vector<string> params = {vartmp,var};
+    vector<string> params = {vartmpReg,varReg};
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::neg, Type::NEG, params);
 
@@ -557,13 +593,15 @@ antlrcpp::Any IRVisitor::visitOppose(ifccParser::OpposeContext *context){
 */
 antlrcpp::Any IRVisitor::visitNegation(ifccParser::NegationContext *context){
 	string var = visit(context->expression());
+	string varReg = cfg->IR_reg_to_asm(cfg->get_var_index(var));
 
 	//Creation d'une nouvelle variable résultat
 	string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmpReg = cfg->IR_reg_to_asm(cfg->get_var_index(vartmp));
 
-    vector<string> params = {vartmp,var};
+    vector<string> params = {vartmpReg,"$0",varReg};
 
-	cfg->current_bb->add_IRInstr(IRInstr::Operation::setz, Type::SETZ, params);
+	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
 
 	return vartmp;
 }
@@ -577,16 +615,18 @@ antlrcpp::Any IRVisitor::visitNegation(ifccParser::NegationContext *context){
 antlrcpp::Any IRVisitor::visitAndlogiq(ifccParser::AndlogiqContext *context){
 
 	//récuparation du nom de la première variable
-	std::string var= visit(context->expression(0));
+	string var= visit(context->expression(0));
+	string varReg = cfg->IR_reg_to_asm(cfg->get_var_index(var));
 	
 	//récuparation du nom de la deuxieme variable
-	std:: string var2=visit(context->expression(1));	
-
+	string var2=visit(context->expression(1));	
+	string var2Reg = cfg->IR_reg_to_asm(cfg->get_var_index(var2));
 
 	//Creation d'une nouvelle variable résultat
-	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmpReg = cfg->IR_reg_to_asm(cfg->get_var_index(vartmp));
 
-    vector<string> params = {vartmp,var,var2};
+    vector<string> params = {vartmpReg,varReg,var2Reg};
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::andq, Type::AND, params);
 
@@ -601,16 +641,18 @@ antlrcpp::Any IRVisitor::visitAndlogiq(ifccParser::AndlogiqContext *context){
 antlrcpp::Any IRVisitor::visitXorlogiq(ifccParser::XorlogiqContext *context){
 
 	//récuparation du nom de la première variable
-	std::string var= visit(context->expression(0));
+	string var= visit(context->expression(0));
+	string varReg = cfg->IR_reg_to_asm(cfg->get_var_index(var));
 	
 	//récuparation du nom de la deuxieme variable
-	std:: string var2=visit(context->expression(1));	
-
+	string var2=visit(context->expression(1));	
+	string var2Reg = cfg->IR_reg_to_asm(cfg->get_var_index(var2));
 
 	//Creation d'une nouvelle variable résultat
-	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmpReg = cfg->IR_reg_to_asm(cfg->get_var_index(vartmp));
 
-    vector<string> params = {vartmp,var,var2};
+    vector<string> params = {vartmpReg,varReg,var2Reg};
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::xorq, Type::XOR, params);
 
@@ -624,17 +666,20 @@ antlrcpp::Any IRVisitor::visitXorlogiq(ifccParser::XorlogiqContext *context){
 *	Stock et retourne le nom du résultat dans une nouvelle variable temporaire
 */
 antlrcpp::Any IRVisitor::visitOrlogiq(ifccParser::OrlogiqContext *context){
+	
 	//récuparation du nom de la première variable
-	std::string var= visit(context->expression(0));
+	string var= visit(context->expression(0));
+	string varReg = cfg->IR_reg_to_asm(cfg->get_var_index(var));
 	
 	//récuparation du nom de la deuxieme variable
-	std:: string var2=visit(context->expression(1));	
-
+	string var2=visit(context->expression(1));	
+	string var2Reg = cfg->IR_reg_to_asm(cfg->get_var_index(var2));
 
 	//Creation d'une nouvelle variable résultat
-	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmpReg = cfg->IR_reg_to_asm(cfg->get_var_index(vartmp));
 
-    vector<string> params = {vartmp,var,var2};
+    vector<string> params = {vartmpReg,varReg,var2Reg};
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::orq, Type::OR, params);
 
@@ -654,9 +699,10 @@ antlrcpp::Any IRVisitor::visitConst(ifccParser::ConstContext *context)
 	string val = context->CONST()->getText();
 
     //Creation d'une nouvelle variable résultat
-	std:: string var = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
-	
-    vector<string> params = {var,val};
+	string var = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string varReg =cfg->IR_reg_to_asm(cfg->get_var_index(var));
+
+    vector<string> params = {varReg,val};
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::ldconst, Type::CONST, params); 
 
@@ -674,15 +720,19 @@ antlrcpp::Any IRVisitor::visitEquality(ifccParser::EqualityContext *context){
 	bool op = (context->ISEQUAL())? true : false;
 
 	//récuparation du nom de la première variable
-	std::string var= visit(context->expression(0));
-
+	string var= visit(context->expression(0));
+	string varReg = cfg->IR_reg_to_asm(cfg->get_var_index(var));
+	
 	//récuparation du nom de la deuxieme variable
-	std:: string var2=visit(context->expression(1));
+	string var2=visit(context->expression(1));	
+	string var2Reg = cfg->IR_reg_to_asm(cfg->get_var_index(var2));
 
 	//Creation d'une nouvelle variable résultat
-	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmpReg = cfg->IR_reg_to_asm(cfg->get_var_index(vartmp));
 
-	vector<string> params = {vartmp,var,var2};
+    vector<string> params = {vartmpReg,varReg,var2Reg};
+
 	if(op) {
 		cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
 
@@ -700,19 +750,24 @@ antlrcpp::Any IRVisitor::visitEquality(ifccParser::EqualityContext *context){
 * Retourne le résultat de comparaison entre deux expressions
 */
 antlrcpp::Any IRVisitor :: visitInequality(ifccParser::InequalityContext *context) {
+
 	//Indique si l'expression est une == ou une !=
 	bool op = (context->GREATER())? true : false;
 
 	//récuparation du nom de la première variable
-	std::string var= visit(context->expression(0));
-
+	string var= visit(context->expression(0));
+	string varReg = cfg->IR_reg_to_asm(cfg->get_var_index(var));
+	
 	//récuparation du nom de la deuxieme variable
-	std:: string var2=visit(context->expression(1));
+	string var2=visit(context->expression(1));	
+	string var2Reg = cfg->IR_reg_to_asm(cfg->get_var_index(var2));
 
 	//Creation d'une nouvelle variable résultat
-	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmpReg = cfg->IR_reg_to_asm(cfg->get_var_index(vartmp));
 
-	vector<string> params = {vartmp,var,var2};
+    vector<string> params = {vartmpReg,varReg,var2Reg};
+
 	if(op) {
 		cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_gt, Type::CMP_GT, params);
 
@@ -743,11 +798,13 @@ antlrcpp::Any IRVisitor :: visitIf_then_else(ifccParser::If_then_elseContext *co
 	condition= true;
 	//visite de la condition de la boucle et renvoie son résultat
 	string var = visit(context->expression());
+	string varReg = cfg->IR_reg_to_asm(cfg->get_var_index(var));
 
 	//Creation d'une nouvelle variable résultat
-	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmpReg = cfg->IR_reg_to_asm(cfg->get_var_index(vartmp));
 
-	vector<string> params = {vartmp,var,"$0"};
+	vector<string> params = {vartmpReg,varReg,"$0"};
 
 	//Comparer le retour de la condition à 0
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
@@ -828,11 +885,13 @@ antlrcpp::Any IRVisitor:: visitWhileloop(ifccParser::WhileloopContext *context) 
 
 	//visite de la condition de la boucle et renvoie son résultat
 	string var = visit(context->blockConditionWhile());
+	string varReg = cfg->IR_reg_to_asm(cfg->get_var_index(var));
 
 	//Creation d'une nouvelle variable résultat
-	std:: string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
-
-	vector<string> params = {vartmp,var,"$0"};
+	string vartmp = cfg->create_new_tempvar(Type::INT, cfg->current_bb->label,linectr);
+	string vartmpReg = cfg->IR_reg_to_asm(cfg->get_var_index(vartmp));
+	
+	vector<string> params = {vartmpReg,varReg,"$0"};
 
 	//Comparer le retour de la condition à 0
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::cmp_eq, Type::CMP_EQ, params);
@@ -883,9 +942,10 @@ antlrcpp::Any IRVisitor::visitBlockConditionWhile(ifccParser::BlockConditionWhil
 antlrcpp::Any IRVisitor::visitReturn_stmt(ifccParser::Return_stmtContext *context) 
 {
 	
-	std:string ret = visit(context->expression());
-	
-    vector<string> params = {ret};
+	string ret = visit(context->expression());
+	string retReg = cfg->IR_reg_to_asm(cfg->get_var_index(ret));
+
+    vector<string> params = {retReg};
 
     cfg->current_bb->add_IRInstr(IRInstr::Operation::ret, Type::RET, params); 
 
@@ -900,12 +960,12 @@ antlrcpp::Any IRVisitor::visitReturn_stmt(ifccParser::Return_stmtContext *contex
 
 
 //FunctionTable
-void IRVisitor::add_to_function_table(string name, string returnType, vector<pair<string,string>> args, size_t line){
-    fonctionTable->add(name,returnType,args,line);
-    nextFreeFunctionIndex++;
+fonction * IRVisitor::add_to_function_table(string name, Type returnType, size_t line){
+	nextFreeFunctionIndex++;
+    return fonctionTable->add(name,returnType,line);
 }
 
-void IRVisitor::redeclarationFunctionError(size_t linectr, string name, string returnType, vector<pair<string,string>> args){
+void IRVisitor::redeclarationFunctionError(size_t linectr, string name, Type returnType, vector<pair<string,Type>> args){
     if(fonctionTable->contains(name) && fonctionTable->getReturnType(name)==returnType && fonctionTable->getArgsSize(name)==args.size() ){  
 		cerr << "<source>:"<<linectr<<": error: redeclaration of '"<<fonctionTable->getReturnType(name)<<" "<<name<<"'" << endl;
 		cerr << "<source>:"<<fonctionTable->getLine(name)<<": error: '"<<fonctionTable->getReturnType(name)<<" "<<name<<"' previously declared here" << endl;
@@ -926,14 +986,7 @@ void IRVisitor::erreurFunctionNonDeclaree(string name, size_t linectr){
 
 
 Type IRVisitor::get_func_returnType(string name){
-    if(fonctionTable->getReturnType(name)=="int"){
-        return Type::INT;
-    }else if(fonctionTable->getReturnType(name)=="char"){
-        return Type::CHAR;
-    }else if(fonctionTable->getReturnType(name)=="void"){
-        return Type::VOID;
-    }
-    return Type::DEFAULT;
+    return fonctionTable->getReturnType(name);
 }
 
 fonction* IRVisitor::get_func(string name){
@@ -941,6 +994,7 @@ fonction* IRVisitor::get_func(string name){
 }
 
 string IRVisitor::gestionTableau(string var, string index){
+
 	//Check si la var a été déclaree
 	cfg->erreurVariableNonDeclare(var,linectr);
 
@@ -953,9 +1007,10 @@ string IRVisitor::gestionTableau(string var, string index){
 	Type typeVar = cfg->get_var_type(var);
 
 	//Stock l'offset de la première variable du tableau
-	std:: string offsetValeurTableau = cfg->create_new_tempvar(typeVar, cfg->current_bb->label,linectr);
+	string offsetValeurTableau = cfg->create_new_tempvar(typeVar, cfg->current_bb->label,linectr);
+	string offsetValeurTableauReg = cfg->IR_reg_to_asm(cfg->get_var_index(offsetValeurTableau));
 
-	vector<string> params = {offsetValeurTableau,offset};
+	vector<string> params = {offsetValeurTableauReg,offset};
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::ldconst, Type::CONST, params);
 
@@ -966,29 +1021,31 @@ string IRVisitor::gestionTableau(string var, string index){
 
 	//Stock du resultat
 	string offsetIndex= cfg->create_new_tempvar(typeVar, cfg->current_bb->label,linectr);
+	string offsetIndexReg = cfg->IR_reg_to_asm(cfg->get_var_index(offsetIndex));
 
-	vector<string> params_taille = {offsetIndex,taille_var};
+	vector<string> params_taille = {offsetIndexReg,taille_var};
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::ldconst, Type::CONST, params_taille);
 
 	//Multiplication de l'index par la taille
 
-	vector<string> params_mul = {offsetIndex,offsetIndex,index};
+	vector<string> params_mul = {offsetIndexReg,offsetIndexReg,index};
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::mul, Type::MUL, params_mul);
 
 
 	//Addition de l'offset de l'index à l'offset de la première variable du tableau
 
-	vector<string> params2 = {offsetValeurTableau,offsetIndex,offsetValeurTableau};
+	vector<string> params2 = {offsetValeurTableauReg,offsetIndexReg,offsetValeurTableauReg};
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::add, Type::ADD, params2);
 
 	//Ajout de l'ofset de la variable du tableau à l'index i à rbp
 
-	vector<string> params3 = {offsetValeurTableau,"%rbp",offsetValeurTableau};
+	vector<string> params3 = {offsetValeurTableauReg,"%rbp",offsetValeurTableauReg};
 
 	cfg->current_bb->add_IRInstr(IRInstr::Operation::add, Type::ADD, params3);
+
 
 	return offsetValeurTableau;
 }
@@ -1004,25 +1061,6 @@ Type IRVisitor::stringToType(string type){
         return Type::VOID;
     }
     return Type::DEFAULT;
-}
-
-string IRVisitor::typeToString(Type t){
-	string type="";
-	switch(t){
-        case Type::INT:
-            type="int";
-            break;
-        case Type::CHAR:
-            type="char";
-            break;
-		case Type::VOID:
-            type="void";
-            break;
-        default:
-            type="int";
-            break;
-    } 
-    return type;
 }
 
 

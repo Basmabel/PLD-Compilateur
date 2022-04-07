@@ -3,10 +3,9 @@
 
 
 //Constructeur
-fonction::fonction(string name, string returnType, vector<pair<string,string>> args, size_t line){
+fonction::fonction(string name, Type returnType,  size_t line){
     this->name=name;
     this->type=returnType;
-    this->args=args;
     this->line=line;
 }
 
@@ -17,7 +16,7 @@ string fonction::getNameFonction(){
 }
 
 
-string fonction::getReturnType(){
+Type fonction::getReturnType(){
     return this->type;
 }
 
@@ -28,6 +27,16 @@ size_t fonction::getLine(){
 int fonction::getArgsSize(){
     return this->args.size();
 }
-vector<pair<string,string>> fonction::getArgs(){
+
+vector<pair<string,Type>> fonction::getArgs(){
     return this->args;
+}
+
+void fonction::setArgs(vector<pair<string,Type>> arguments){
+
+    /*for(int i =0; i<arguments.size(); i++){
+            args.push_back(arguments.at(i).first);
+    }*/
+
+    this->args = arguments;
 }

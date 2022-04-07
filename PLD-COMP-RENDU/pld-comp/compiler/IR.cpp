@@ -66,7 +66,7 @@ void IRInstr::gen_asm(ostream &o){
             var1 = bb->cfg->get_var_index(params[1]);
             var2 = bb->cfg->get_var_index(params[2]);
             o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
-            o<<"    cltd\n 	 idivl    -"<<var2<<"(%rbp)"<<endl;
+            o<<"    cqo\n 	 idivq    -"<<var2<<"(%rbp)"<<endl;
             o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
             //o<<";"<<params[0]<<endl;;
             break;

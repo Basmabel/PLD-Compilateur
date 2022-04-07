@@ -35,6 +35,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitWhileloopInstr(ifccParser::WhileloopInstrContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitAffectationInstr(ifccParser::AffectationInstrContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -160,6 +164,10 @@ public:
   }
 
   virtual antlrcpp::Any visitBlock(ifccParser::BlockContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitBlockConditionWhile(ifccParser::BlockConditionWhileContext *ctx) override {
     return visitChildren(ctx);
   }
 

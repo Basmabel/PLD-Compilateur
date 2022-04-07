@@ -29,6 +29,8 @@ public:
 
     virtual antlrcpp::Any visitIf_then_elseInstr(ifccParser::If_then_elseInstrContext *context) = 0;
 
+    virtual antlrcpp::Any visitWhileloopInstr(ifccParser::WhileloopInstrContext *context) = 0;
+
     virtual antlrcpp::Any visitAffectationInstr(ifccParser::AffectationInstrContext *context) = 0;
 
     virtual antlrcpp::Any visitReturn_stmtInstr(ifccParser::Return_stmtInstrContext *context) = 0;
@@ -92,6 +94,8 @@ public:
     virtual antlrcpp::Any visitWhileloop(ifccParser::WhileloopContext *context) = 0;
 
     virtual antlrcpp::Any visitBlock(ifccParser::BlockContext *context) = 0;
+
+    virtual antlrcpp::Any visitBlockConditionWhile(ifccParser::BlockConditionWhileContext *context) = 0;
 
     virtual antlrcpp::Any visitReturn_stmt(ifccParser::Return_stmtContext *context) = 0;
 

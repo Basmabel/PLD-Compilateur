@@ -25,7 +25,7 @@ public:
     RuleAxiom = 0, RuleProg = 1, RuleInstr = 2, RuleDeclaration = 3, RuleType = 4, 
     RuleFunctionCall = 5, RuleVariables = 6, RuleEnddeclaration = 7, RuleAffectation = 8, 
     RuleLvalue = 9, RuleExpression = 10, RuleIf_then_else = 11, RuleWhileloop = 12, 
-    RuleBlock = 13, RuleReturn_stmt = 14
+    RuleBlock = 13, RuleBlockConditionWhile = 14, RuleReturn_stmt = 15
   };
 
   ifccParser(antlr4::TokenStream *input);
@@ -52,6 +52,7 @@ public:
   class If_then_elseContext;
   class WhileloopContext;
   class BlockContext;
+  class BlockConditionWhileContext;
   class Return_stmtContext; 
 
   class  AxiomContext : public antlr4::ParserRuleContext {
@@ -125,6 +126,14 @@ public:
     Return_stmtInstrContext(InstrContext *ctx);
 
     Return_stmtContext *return_stmt();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  WhileloopInstrContext : public InstrContext {
+  public:
+    WhileloopInstrContext(InstrContext *ctx);
+
+    WhileloopContext *whileloop();
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
@@ -529,7 +538,7 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *WHILE();
     antlr4::tree::TerminalNode *OPENPAR();
-    ExpressionContext *expression();
+    BlockConditionWhileContext *blockConditionWhile();
     antlr4::tree::TerminalNode *CLOSEPAR();
     antlr4::tree::TerminalNode *OPENBRACKET();
     antlr4::tree::TerminalNode *CLOSEBRACKET();
@@ -553,6 +562,18 @@ public:
   };
 
   BlockContext* block();
+
+  class  BlockConditionWhileContext : public antlr4::ParserRuleContext {
+  public:
+    BlockConditionWhileContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    ExpressionContext *expression();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  BlockConditionWhileContext* blockConditionWhile();
 
   class  Return_stmtContext : public antlr4::ParserRuleContext {
   public:

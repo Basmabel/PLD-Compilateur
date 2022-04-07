@@ -153,10 +153,11 @@ antlrcpp::Any ValeurVisitor::visitAffectation(ifccParser::AffectationContext *co
 		var+=to_string(linectr);
 	}
 
-	
+	addValue(var,local);
+	//cout<<getLastValForVar(var)<<endl;
 	
 	if(declaration){
-		addValue(var,local);
+		
 		return var;
 	}else{
 		return local;
@@ -266,9 +267,10 @@ antlrcpp::Any ValeurVisitor::visitMultdiv(ifccParser::MultdivContext *context)
 
 		return val;
     }
-    
 
-    int val ((int) val1/val2);
+
+    int val =val1/val2;
+
 
 	create_new_tempvar(val);
 

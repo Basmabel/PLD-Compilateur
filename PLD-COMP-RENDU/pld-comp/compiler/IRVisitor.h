@@ -57,6 +57,10 @@ class  IRVisitor : public ifccBaseVisitor {
 
 		virtual antlrcpp::Any visitChar(ifccParser::CharContext *context) override;
 
+		virtual antlrcpp::Any visitTypeFunc(ifccParser::TypeFuncContext *context) override;
+
+    	virtual antlrcpp::Any visitVoid(ifccParser::VoidContext *context) override;
+
 		virtual antlrcpp::Any visitFunctionCall(ifccParser::FunctionCallContext *context) override;
   
 		virtual antlrcpp::Any visitEnddeclvar(ifccParser::EnddeclvarContext *context) override;
@@ -123,6 +127,8 @@ class  IRVisitor : public ifccBaseVisitor {
 		void addSymbolToTable(string var,Type type, int nbAlloc=1);
 		void addValToTab(string var, int size);
 		string gestionTableau(string var, string index);
+		Type stringToType(string type);
+		string typeToString(Type t);
 
 		int linectr =0; //Ligne de l'instruction courante
 		int nextFreeFunctionIndex=0; /**< to allocate new functions in the function table */

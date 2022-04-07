@@ -33,6 +33,7 @@ typedef enum {
 		MOV,
 		CALL,
 		WMEM,
+		RMEM,
 		RET,
 		CMP_EQ,
 		CMP_INEQ,
@@ -170,6 +171,7 @@ class CFG {
 	void erreurInvalidInitializer(int linectr);
 	string create_new_tempvar(Type t, string blockName, int line,int nbAlloc=1);
 	string create_new_tempvar_function(Type t, string var, size_t line, int nbAlloc=1);
+	functionTable* getFunctionTable();
 	int get_var_index(string name);
 	Type get_var_type(string name);
 	void set_var_used(string name, bool used);
@@ -181,12 +183,16 @@ class CFG {
 	BasicBlock* return_bb;
 	int nextBBnumber; /**< just for naming */
 
+	//return called
+	bool get_returnCalled();
+	void set_returnCalled(bool val);
 	
  protected:
 	int nextFreeSymbolIndex; /**< to allocate new symbols in the symbol table */
 	symbolTable* symboleTable;
-	
+	functionTable *fonctionTable;
 	string functionName;
+	bool returnCalled = false;
 
 	
 	vector <BasicBlock*> bbs; /**< all the basic blocks of this CFG*/

@@ -3,13 +3,14 @@ grammar ifcc;
 axiom : prog* ;
 
 
-prog : INT VAR OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET
-    |  INT VAR OPENPAR INT VAR (COMMA INT VAR)* CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET;
+prog : typeFunction VAR OPENPAR CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET
+    |  typeFunction VAR OPENPAR type VAR (COMMA type VAR)* CLOSEPAR OPENBRACKET instr*  CLOSEBRACKET;
     
 instr : declaration #declarationInstr | functionCall #functionCallInstr | if_then_else #if_then_elseInstr | whileloop #whileloopInstr| affectation SEMICOLON #affectationInstr | return_stmt #return_stmtInstr ; 
 
 declaration: type variables* enddeclaration SEMICOLON; 
 type: INT #int | CHAR #char;
+typeFunction : type #typeFunc | VOID #void;
 
 functionCall: VAR OPENPAR (expression COMMA)* expression CLOSEPAR SEMICOLON; 
 
@@ -54,6 +55,7 @@ return_stmt : RETURN expression SEMICOLON;
 
 INT : 'int' ;
 CHAR : 'char' ;
+VOID : 'void';
 OPENPAR : '(' ;
 CLOSEPAR : ')' ;
 SEMICOLON : ';' ;

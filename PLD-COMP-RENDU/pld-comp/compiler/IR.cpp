@@ -20,203 +20,233 @@ void IRInstr::gen_asm(ostream &o){
     long long int temp;
     switch(op){
         case Operation::ldconst:
-            varDest = bb->cfg->get_var_index(params[0]);
-            try{
-                temp = stoll(params[1]);
+            if(!bb->cfg->get_returnCalled()){
+                varDest = bb->cfg->get_var_index(params[0]);
+                try{
+                    temp = stoll(params[1]);
+                }
+                catch(std::out_of_range& e){
+                    std::cerr<<"warning : variable too big"<<endl;   
+                }
+                o<<"    movq    $"<<params[1]<<", -"<<varDest<<"(%rbp)"<<endl;
+                //o<<";"<<params[0]<<endl;;
             }
-            catch(std::out_of_range& e){
-                std::cerr<<"warning : variable too big"<<endl;   
-            }
-            o<<"    movq    $"<<params[1]<<", -"<<varDest<<"(%rbp)"<<endl;
-            //o<<";"<<params[0]<<endl;;
             break;
         case Operation::add:
-            varDest = bb->cfg->get_var_index(params[0]);
-            var2 = bb->cfg->get_var_index(params[2]);
-            if(params[1]=="%rbp"){
-                 o<<"    movq    "<<params[1]<<", %rax"<<endl;
-            }else{
-                var1 = bb->cfg->get_var_index(params[1]);
-                o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
-            }  
-            o<<"    addq    -"<<var2<<"(%rbp), %rax"<<endl;
-            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
-           // o<<";"<<params[0]<<endl;;
+            if(!bb->cfg->get_returnCalled()){
+                varDest = bb->cfg->get_var_index(params[0]);
+                var2 = bb->cfg->get_var_index(params[2]);
+                if(params[1]=="%rbp"){
+                    o<<"    movq    "<<params[1]<<", %rax"<<endl;
+                }else{
+                    var1 = bb->cfg->get_var_index(params[1]);
+                    o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+                }  
+                o<<"    addq    -"<<var2<<"(%rbp), %rax"<<endl;
+                o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+            // o<<";"<<params[0]<<endl;;
+            }
             break;
         case Operation::sub:
-            varDest = bb->cfg->get_var_index(params[0]);
-            var1 = bb->cfg->get_var_index(params[1]);
-            var2 = bb->cfg->get_var_index(params[2]);
-            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
-            o<<"    subq    -"<<var2<<"(%rbp), %rax"<<endl;
-            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
-            //o<<";"<<params[0]<<endl;;
+            if(!bb->cfg->get_returnCalled()){
+                varDest = bb->cfg->get_var_index(params[0]);
+                var1 = bb->cfg->get_var_index(params[1]);
+                var2 = bb->cfg->get_var_index(params[2]);
+                o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+                o<<"    subq    -"<<var2<<"(%rbp), %rax"<<endl;
+                o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+                //o<<";"<<params[0]<<endl;;
+            }
             break;
         case Operation::mul:
-            varDest = bb->cfg->get_var_index(params[0]);
-            var1 = bb->cfg->get_var_index(params[1]);
-            var2 = bb->cfg->get_var_index(params[2]);
-            o<<"    movq    -"<<var2<<"(%rbp), %rax"<<endl;
-            o<<"    imulq    -"<<var1<<"(%rbp), %rax"<<endl;
-            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
-            //o<<";"<<params[0]<<endl;;
+            if(!bb->cfg->get_returnCalled()){
+                varDest = bb->cfg->get_var_index(params[0]);
+                var1 = bb->cfg->get_var_index(params[1]);
+                var2 = bb->cfg->get_var_index(params[2]);
+                o<<"    movq    -"<<var2<<"(%rbp), %rax"<<endl;
+                o<<"    imulq    -"<<var1<<"(%rbp), %rax"<<endl;
+                o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+                //o<<";"<<params[0]<<endl;;
+            }
             break;
         case Operation::div:
-            varDest = bb->cfg->get_var_index(params[0]);
-            var1 = bb->cfg->get_var_index(params[1]);
-            var2 = bb->cfg->get_var_index(params[2]);
-            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
-            o<<"    cqo\n 	 idivq    -"<<var2<<"(%rbp)"<<endl;
-            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
-            //o<<";"<<params[0]<<endl;;
+            if(!bb->cfg->get_returnCalled()){
+                varDest = bb->cfg->get_var_index(params[0]);
+                var1 = bb->cfg->get_var_index(params[1]);
+                var2 = bb->cfg->get_var_index(params[2]);
+                o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+                o<<"    cqo\n 	 idivq    -"<<var2<<"(%rbp)"<<endl;
+                o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+                //o<<";"<<params[0]<<endl;;
+            }
             break;
         case Operation::andq:
-            varDest = bb->cfg->get_var_index(params[0]);
-            var1 = bb->cfg->get_var_index(params[1]);
-            var2 = bb->cfg->get_var_index(params[2]);
-            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
-            o<<"    andq    -"<<var2<<"(%rbp), %rax"<<endl;
-            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
-            //o<<";"<<params[0]<<endl;;
+            if(!bb->cfg->get_returnCalled()){
+                varDest = bb->cfg->get_var_index(params[0]);
+                var1 = bb->cfg->get_var_index(params[1]);
+                var2 = bb->cfg->get_var_index(params[2]);
+                o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+                o<<"    andq    -"<<var2<<"(%rbp), %rax"<<endl;
+                o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+                //o<<";"<<params[0]<<endl;;
+            }
             break;
         case Operation::xorq:
-            varDest = bb->cfg->get_var_index(params[0]);
-            var1 = bb->cfg->get_var_index(params[1]);
-            var2 = bb->cfg->get_var_index(params[2]);
-            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
-            o<<"    xorq    -"<<var2<<"(%rbp), %rax"<<endl;
-            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
-            //o<<";"<<params[0]<<endl;;
+            if(!bb->cfg->get_returnCalled()){
+                varDest = bb->cfg->get_var_index(params[0]);
+                var1 = bb->cfg->get_var_index(params[1]);
+                var2 = bb->cfg->get_var_index(params[2]);
+                o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+                o<<"    xorq    -"<<var2<<"(%rbp), %rax"<<endl;
+                o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+                //o<<";"<<params[0]<<endl;;
+            }
             break;
         case Operation::orq:
-            varDest = bb->cfg->get_var_index(params[0]);
-            var1 = bb->cfg->get_var_index(params[1]);
-            var2 = bb->cfg->get_var_index(params[2]);
-            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
-            o<<"    orq    -"<<var2<<"(%rbp), %rax"<<endl;
-            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
-            //o<<";"<<params[0]<<endl;;
+            if(!bb->cfg->get_returnCalled()){
+                varDest = bb->cfg->get_var_index(params[0]);
+                var1 = bb->cfg->get_var_index(params[1]);
+                var2 = bb->cfg->get_var_index(params[2]);
+                o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+                o<<"    orq    -"<<var2<<"(%rbp), %rax"<<endl;
+                o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+                //o<<";"<<params[0]<<endl;;
+            }
             break;
         case Operation::neg:
-            varDest = bb->cfg->get_var_index(params[0]);
-            var1 = bb->cfg->get_var_index(params[1]);
-            o<<" 	 movq   -"<<var1<<"(%rbp), %rax"<<endl;
-            o<<" 	 negq   %rax"<<endl;
-            o<<" 	 movq   %rax, -"<<varDest<<"(%rbp)"<<endl;
-            //o<<";"<<params[0]<<endl;;
+            if(!bb->cfg->get_returnCalled()){
+                varDest = bb->cfg->get_var_index(params[0]);
+                var1 = bb->cfg->get_var_index(params[1]);
+                o<<" 	 movq   -"<<var1<<"(%rbp), %rax"<<endl;
+                o<<" 	 negq   %rax"<<endl;
+                o<<" 	 movq   %rax, -"<<varDest<<"(%rbp)"<<endl;
+                //o<<";"<<params[0]<<endl;;
+            }
             break;
         case Operation::setz:
-            varDest = bb->cfg->get_var_index(params[0]);
-            var1 = bb->cfg->get_var_index(params[1]);
-            o<<"    cmpq   $0, -"<<var1<<"(%rbp)"<<endl;
-            o<<"    sete    %al"<<endl;
-            o<<"    movzbq  %al, %rax"<<endl;
-            o<<"    movq   %rax, -"<<varDest<<"(%rbp)"<<endl;
+            if(!bb->cfg->get_returnCalled()){
+                varDest = bb->cfg->get_var_index(params[0]);
+                var1 = bb->cfg->get_var_index(params[1]);
+                o<<"    cmpq   $0, -"<<var1<<"(%rbp)"<<endl;
+                o<<"    sete    %al"<<endl;
+                o<<"    movzbq  %al, %rax"<<endl;
+                o<<"    movq   %rax, -"<<varDest<<"(%rbp)"<<endl;
+            }
             //o<<";"<<params[0]<<endl;;
+            break;
+        case Operation::rmem:
+            if(!bb->cfg->get_returnCalled()){
+                o<<"    movq    "<<params[1]<<", %rax"<<endl;
+                o<<"    movq     (%rax), %rdx"<<endl;
+                o<<"    movq      %rdx, %rax"<<endl;
+                o<<"    movq     %rax,"<<params[0]<<endl;
+            }
             break;
         case Operation::mov:
-            /*o<<"    movq    "<<params[1]<<", %rax"<<endl;
-            o<<"    movq    %rax, "<<params[0]<<endl;*/
-            o<<"    movq    "<<params[1]<<", %rax"<<endl;
-            o<<"    movq     (%rax), %rdx"<<endl;
-            o<<"    movq      %rdx, %rax"<<endl;
-            o<<"    movq     %rax,"<<params[0]<<endl;
+            if(!bb->cfg->get_returnCalled()){
+                o<<"    movq    "<<params[1]<<", %rax"<<endl;
+                o<<"    movq     %rax,"<<params[0]<<endl;
+            }
             break;
         case Operation::wmem:
-           //var1 = bb->cfg->get_var_index(params[1]);
-            /*if(params[0].find("rbp")!=string::npos){
+            if(!bb->cfg->get_returnCalled()){
                 o<<"    movq    "<<params[0]<<", %rax"<<endl;
-            }else{
-                varDest = bb->cfg->get_var_index(params[0]);
-                o<<"    movq    -"<<varDest<<"(%rbp), %rax"<<endl;
-            }*/
-            o<<"    movq    "<<params[0]<<", %rax"<<endl;
-            o<<"    movq    "<<params[1]<<", %r10"<<endl;
-            //o<<"    movq    -"<<var1<<"(%rbp), %r10"<<endl;
-            o<<"    movq    %r10, (%rax)"<<endl;
-            //o<<";"<<params[0]<<endl;;
+                o<<"    movq    "<<params[1]<<", %r10"<<endl;
+                o<<"    movq    %r10, (%rax)"<<endl;
+            }
             break;
         case Operation::cmp_eq:
-            varDest= bb->cfg->get_var_index(params[0]);
-            var1= bb->cfg->get_var_index(params[1]);
-            
-            if(params[2]=="$0"){
-                o<<"    cmpq    "<<params[2]<<", -"<<var1<<"(%rbp)"<<endl;
-            }else{
-                var2= bb->cfg->get_var_index(params[2]);
-                o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
-                o<<"    cmpq    -"<<var2<<"(%rbp), %rax"<<endl;
-            }
-            o<<"    sete    %al"<<endl;
-            o<<"    movzbq  %al, %rax"<<endl;
-            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
-            break;
-        case Operation::cmp_ineq:
-            var1= bb->cfg->get_var_index(params[1]);
-            var2= bb->cfg->get_var_index(params[2]);
-            if(params[0]=="$0"){
-                o<<"    cmpq    "<<params[0]<<", -"<<var1<<"(%rbp)"<<endl;
-            }else{
+            if(!bb->cfg->get_returnCalled()){
                 varDest= bb->cfg->get_var_index(params[0]);
-                o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
-                o<<"    cmpq    -"<<var2<<"(%rbp), %rax"<<endl;
-                o<<"    setne    %al"<<endl;
+                var1= bb->cfg->get_var_index(params[1]);
+                
+                if(params[2]=="$0"){
+                    o<<"    cmpq    "<<params[2]<<", -"<<var1<<"(%rbp)"<<endl;
+                }else{
+                    var2= bb->cfg->get_var_index(params[2]);
+                    o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+                    o<<"    cmpq    -"<<var2<<"(%rbp), %rax"<<endl;
+                }
+                o<<"    sete    %al"<<endl;
                 o<<"    movzbq  %al, %rax"<<endl;
                 o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
             }
             break;
+        case Operation::cmp_ineq:
+            if(!bb->cfg->get_returnCalled()){
+                var1= bb->cfg->get_var_index(params[1]);
+                var2= bb->cfg->get_var_index(params[2]);
+                if(params[0]=="$0"){
+                    o<<"    cmpq    "<<params[0]<<", -"<<var1<<"(%rbp)"<<endl;
+                }else{
+                    varDest= bb->cfg->get_var_index(params[0]);
+                    o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+                    o<<"    cmpq    -"<<var2<<"(%rbp), %rax"<<endl;
+                    o<<"    setne    %al"<<endl;
+                    o<<"    movzbq  %al, %rax"<<endl;
+                    o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+                }
+            }
+            break;
         case Operation::cmp_gt:
-            var1= bb->cfg->get_var_index(params[1]);
-            var2= bb->cfg->get_var_index(params[2]);
-            
-            varDest= bb->cfg->get_var_index(params[0]);
-            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
-            o<<"    cmpq    -"<<var2<<"(%rbp), %rax"<<endl;
-            o<<"    setg    %al"<<endl;
-            o<<"    movzbq  %al, %rax"<<endl;
-            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+            if(!bb->cfg->get_returnCalled()){
+                var1= bb->cfg->get_var_index(params[1]);
+                var2= bb->cfg->get_var_index(params[2]);
+                
+                varDest= bb->cfg->get_var_index(params[0]);
+                o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+                o<<"    cmpq    -"<<var2<<"(%rbp), %rax"<<endl;
+                o<<"    setg    %al"<<endl;
+                o<<"    movzbq  %al, %rax"<<endl;
+                o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+            }
             
             break;
         case Operation::cmp_lt:
-            var1= bb->cfg->get_var_index(params[1]);
-            var2= bb->cfg->get_var_index(params[2]);
-            
-            varDest= bb->cfg->get_var_index(params[0]);
-            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
-            o<<"    cmpq    -"<<var2<<"(%rbp), %rax"<<endl;
-            o<<"    setl    %al"<<endl;
-            o<<"    movzbq  %al, %rax"<<endl;
-            o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+            if(!bb->cfg->get_returnCalled()){
+                var1= bb->cfg->get_var_index(params[1]);
+                var2= bb->cfg->get_var_index(params[2]);
+                
+                varDest= bb->cfg->get_var_index(params[0]);
+                o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+                o<<"    cmpq    -"<<var2<<"(%rbp), %rax"<<endl;
+                o<<"    setl    %al"<<endl;
+                o<<"    movzbq  %al, %rax"<<endl;
+                o<<"    movq    %rax, -"<<varDest<<"(%rbp)"<<endl;
+            }
             break;
         case Operation::ret:
-            var1 = bb->cfg->get_var_index(params[0]);
-            o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
-            //o<<";"<<params[0]<<endl;;
+            if(!bb->cfg->get_returnCalled()){
+                var1 = bb->cfg->get_var_index(params[0]);
+                o<<"    movq    -"<<var1<<"(%rbp), %rax"<<endl;
+                //o<<";"<<params[0]<<endl;;
+                bb->cfg->set_returnCalled(true);
+            }
             break;
         case Operation::call:
         {
-            string function = params[1];
-            //varDest = bb->cfg->get_var_index(params[3]);
-            var2 = bb->cfg->get_var_index(params[2]);
-            //o << "    movq    " << var2 << "(%rbp), %edi" << endl;
-            //o << "    call    " << function << endl;
+            if(!bb->cfg->get_returnCalled()){
+                string function = params[1];
+                //varDest = bb->cfg->get_var_index(params[3]);
+                var2 = bb->cfg->get_var_index(params[2]);
+                //o << "    movq    " << var2 << "(%rbp), %edi" << endl;
+                //o << "    call    " << function << endl;
 
-            for (int i = 3; i < params.size(); i++) {
-                switch(i) {
-                    case 3: o << "    movq    -" << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdi" << endl; break;
-                    case 4: o << "    movq    -" << bb->cfg->get_var_index(params[i]) << "(%rbp), %rsi" << endl; break;
-                    case 5: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdx" << endl; break;
-                    case 6: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rcx" << endl; break;
-                    case 7: o << "    movq    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %r8" << endl; break;
-                    case 8: o << "    movq    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %r9" << endl; break;
+                for (int i = 3; i < params.size(); i++) {
+                    switch(i) {
+                        case 3: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdi" << endl; break;
+                        case 4: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rsi" << endl; break;
+                        case 5: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rdx" << endl; break;
+                        case 6: o << "    movq    " << bb->cfg->get_var_index(params[i]) << "(%rbp), %rcx" << endl; break;
+                        case 7: o << "    movq    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %r8" << endl; break;
+                        case 8: o << "    movq    "  << bb->cfg->get_var_index(params[i]) << "(%rbp), %r9" << endl; break;
+                    }
                 }
-            }
 
-            /*o << "    movq    %r8, %r9" <<endl;
-            o << "    movq    %rdi, %r8" <<endl;
-            o << "    movq    %rax, %rdi" <<endl;*/
-            o << "    callq   " << function << endl;
-            o << "    movq    %rax,-"<<var2<<"(%rbp)"<<endl;
+                o << "    callq   " << function << endl;
+                if(bb->cfg->getFunctionTable()->getFonction(function)->getReturnType() != "void")
+                    o << "    movq    %rax,-"<<var2<<"(%rbp)"<<endl;
+            }
 
             break;
         }
@@ -296,6 +326,7 @@ void CFG::add_bb(BasicBlock* bb){
 
 void CFG::gen_asm(ostream& o, int size, functionTable *fonctionTable){
     gen_asm_prologue(o);
+    this->fonctionTable = fonctionTable;
 
     if(functionName!="main"){
         for(int i=0; i<fonctionTable->getFonction(this->functionName)->getArgsSize();i++){
@@ -310,7 +341,6 @@ void CFG::gen_asm(ostream& o, int size, functionTable *fonctionTable){
             }
         }
     }
-
     for(unsigned int i = 0; i < bbs.size(); i++)
     {
         if(bbs[i]->label != this->functionName+"_entry_block" ) { //&& bbs[i]->label != "exit_block"
@@ -329,6 +359,7 @@ string CFG::IR_reg_to_asm(int index){
 }
 
 void CFG::gen_asm_prologue(ostream& o){
+    
     #ifdef __APPLE__
 	    o<<".globl    _"<<this->functionName<<"\n"
         " _"<<this->functionName<<": \n"
@@ -421,6 +452,10 @@ string CFG::create_new_tempvar_function(Type t, string var, size_t line, int nbA
     return var;
 }
 
+functionTable* CFG::getFunctionTable(){
+    return this->fonctionTable;
+}
+
 
 int CFG::get_var_index(string name){
     return symboleTable->getOffset(name);
@@ -454,6 +489,14 @@ void CFG::set_var_used(string name, bool used){
 string CFG::new_BB_name(string name){
     //return "block_"+to_string(line);
     return functionName+"_"+name+"block"+to_string(nextBBnumber);
+}
+
+bool CFG::get_returnCalled(){
+    return this->returnCalled;
+}
+
+void CFG::set_returnCalled(bool val){
+    this->returnCalled = val;
 }
 
 

@@ -394,7 +394,7 @@ void CodeGenVisitor::addSymbol(string var){
 		exit(1);
 	}
 
-	symboltable->add(var,"int",linectr,1);
+	symboltable->add(var,Type::INT,linectr,1);
 }
 
 /*

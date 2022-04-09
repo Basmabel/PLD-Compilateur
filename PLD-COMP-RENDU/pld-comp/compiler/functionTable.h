@@ -21,16 +21,18 @@
 
 using namespace std;
 
-/* Rôle de la classe <symbolTable>
-*  Joue le rôle de la table des symbole avec comme attribut une map stockant les Symbols. 
-*  Ses fonctions permettent d'ajouter des symboles, d'en retirer ou encore d'accéder aux différents attributs d'un symbole
+/* Rôle de la classe <functionTable>
+*  Joue le rôle de la table des fonctions avec comme attribut une map stockant les Fonctions. 
+*  Ses fonctions permettent d'ajouter des fonctions, d'en retirer ou encore d'accéder aux différents attributs d'une fonction
 */
 
 class  functionTable {
 	public:
 		functionTable();
+
 		fonction* add(string name, Type returnType,size_t line);
 		void remove(string name);
+		
 		Type getReturnType(string name);
         int getArgsSize(string name);
         bool argsContains (string variable);

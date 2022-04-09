@@ -114,34 +114,49 @@ class  IRVisitor : public ifccBaseVisitor {
 
 		virtual antlrcpp::Any visitReturn_stmt(ifccParser::Return_stmtContext *context) override ;
 
-		// function table methods
-		fonction *add_to_function_table(string name, Type returnType, size_t line);
-		void redeclarationFunctionError(size_t linectr, string name, Type returnType, vector<pair<string,Type>> args);
-		void erreurFunctionNonDeclaree(string name, size_t linectr);
-		Type get_func_returnType(string name);
-		fonction* get_func(string name);
+		
 
 	private:
 
+		//--------Methods
 		void addSymbolToTable(string var,Type type, int nbAlloc=1);
-		void addValToTab(string var, int size);
+
 		string gestionTableau(string var, string index);
+
 		Type stringToType(string type);
 
-		int linectr =0; //Ligne de l'instruction courante
-		int nextFreeFunctionIndex=0; /**< to allocate new functions in the function table */
-		functionTable* fonctionTable= new functionTable();
+		// function table methods
+		fonction *add_to_function_table(string name, Type returnType, size_t line);
+		void redeclarationFunctionError(size_t currentLine, string name, Type returnType, vector<pair<string,Type>> args);
+		void erreurFunctionNonDeclaree(string name, size_t currentLine);
+		Type get_func_returnType(string name);
+		fonction* get_func(string name);
 
-		bool declaration = false;
-		bool affectation = false;
+		void add_put_and_get_char();
+
+		//---------Attributes
+		Type typeVardecl;
+
+		int currentLine =0; //Ligne de l'instruction courante
+		int nextFreeSymbolIndex = 0;
+		
+
+		functionTable* fonctionTable= new functionTable();
+		int nextFreeFunctionIndex=0; /**< to allocate new functions in the function table */
+		CFG* cfg;
+		
+
+		//Works like states to handle exceptions for affectations or return statements
+		bool declaration = false; 
+		bool affectation = false; 
+		bool nestedAffectation = false; //check if a= b=5
+		bool exprGauche = false; //check if we are in the left part of expression ex: c = a+ b=5 => error
 		bool condition = false;
 		bool returnStmt = false;
 
-        CFG* cfg;
-		int nextFreeSymbolIndex = 0;
-
+		//To get the size of an array
 		ValeurVisitor v;
-		Type typeVardecl;
+		
 };
 
 #endif //IRVISITOR_H

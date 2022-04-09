@@ -9,7 +9,7 @@ using namespace std;
 antlrcpp::Any ValeurVisitor::visitProg(ifccParser::ProgContext *ctx) 
 {
     for(int i=0 ; i<ctx->instr().size(); i++){
-		linectr=ctx->instr().at(i)->getStart()->getLine();
+		currentLine=ctx->instr().at(i)->getStart()->getLine();
 		visit(ctx->instr().at(i));
 	}
 
@@ -150,7 +150,7 @@ antlrcpp::Any ValeurVisitor::visitAffectation(ifccParser::AffectationContext *co
 	std::string var =visit(context->lvalue());
 
 	if(!declaration){
-		var+=to_string(linectr);
+		var+=to_string(currentLine);
 	}
 
 	addValue(var,local);
@@ -192,7 +192,7 @@ antlrcpp::Any ValeurVisitor::visitLvaltableau(ifccParser::LvaltableauContext *co
 		addValue(name,size);
 		nbNewVar+=size;
 	}else{
-		string name = var+"_index_"+to_string(linectr);
+		string name = var+"_index_"+to_string(currentLine);
 		addValue(name,size);
 	}
 

@@ -7,7 +7,7 @@
 	
 
 	/*
-	*	A DEFINIR
+	*	Ajoute la fonction à la table
     *
 	*/
 	fonction* functionTable::add(string name, Type returnType, size_t line)

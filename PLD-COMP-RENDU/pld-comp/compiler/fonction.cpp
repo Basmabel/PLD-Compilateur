@@ -32,11 +32,8 @@ vector<pair<string,Type>> fonction::getArgs(){
     return this->args;
 }
 
+//Setters
+
 void fonction::setArgs(vector<pair<string,Type>> arguments){
-
-    /*for(int i =0; i<arguments.size(); i++){
-            args.push_back(arguments.at(i).first);
-    }*/
-
     this->args = arguments;
 }

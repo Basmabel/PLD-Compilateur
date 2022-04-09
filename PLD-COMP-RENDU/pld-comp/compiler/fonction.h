@@ -17,8 +17,8 @@
 using namespace std;
 
 /* Rôle de la classe <fonction>
-*  A DEFINIR
-*  
+*  Représente une avec un nom, son type de retour (int, char ou void), sa ligne de déclaration et 
+*  et ses paramètres (args)*  
 */
 
 
@@ -34,6 +34,7 @@ class  fonction{
                 size_t getLine();
                 int getArgsSize();
                 vector<pair<string,Type>> getArgs();
+                
                 void setArgs(vector<pair<string,Type>> arguments);
 
 

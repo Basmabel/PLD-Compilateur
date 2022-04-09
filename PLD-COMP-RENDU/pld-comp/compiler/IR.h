@@ -1,24 +1,33 @@
+/*************************************************************************
+                           IR  -  description
+                             -------------------
+    début                : 11/03/2022
+    copyright            : (C) 2022 par GUILLEVIC Marie, BELAHCEN Basma, ALAMI Meryem, PREVOT Jade, CHELLAOUI Adam, M BARECK Aichetou, 
+							AL ZAHABI Hanaa, WAQIF Salma, GREVAUD Paul
+*************************************************************************/
+
+#pragma once
 
 #if ! defined ( IR_H )
 #define IR_H
 
+//--------------------------------------------------- Interfaces utilisées
 #include <vector>
 #include <string>
 #include <iostream>
 #include <initializer_list>
 
-// Declarations from the parser -- replace with your own
+
 #include "symbolTable.h"
 #include "functionTable.h"
 #include "fonction.h"
 
 using namespace std;
 
+
 class BasicBlock;
 class CFG;
 class DefFonction;
-
-
 
 
 //! The class for one 3-address instruction
@@ -52,7 +61,7 @@ class IRInstr {
 
 
 	/**  constructor */
-	IRInstr(BasicBlock* bb_, Operation op, Type t, vector<string> params);
+	IRInstr(BasicBlock* bb_, Operation op, vector<string> params);
 	
 	/** Actual code generation */
 	void gen_asm(ostream &o); /**< x86 assembly code generation for this IR instruction */
@@ -60,7 +69,6 @@ class IRInstr {
  private:
 	BasicBlock* bb; /**< The BB this instruction belongs to, which provides a pointer to the CFG this instruction belong to */
 	Operation op;
-	Type t;
 	vector<string> params; /**< For 3-op instrs: d, x, y; for ldconst: d, c;  For call: label, d, params;  for wmem and rmem: choose yourself */
 	// if you subclass IRInstr, each IRInstr subclass has its parameters and the previous (very important) comment becomes useless: it would be a better design. 
 };
@@ -101,7 +109,7 @@ class BasicBlock {
 	BasicBlock(CFG* cfg, string entry_label);
 	void gen_asm(ostream &o); /**< x86 assembly code generation for this basic block (very simple) */
 
-	void add_IRInstr(IRInstr::Operation op, Type t, vector<string> params);
+	void add_IRInstr(IRInstr::Operation op, vector<string> params);
 
 	// No encapsulation whatsoever here. Feel free to do better.
 	BasicBlock* exit_true;  /**< pointer to the next basic block, true branch. If nullptr, return from procedure */ 
@@ -131,35 +139,48 @@ class BasicBlock {
 class CFG {
  public:
 	CFG(string functionName);
+
+
+	/****Gestion des  basics blocks ****/
 	
 	void add_bb(BasicBlock* bb); 
+	string new_BB_name(string name);
+	BasicBlock* current_bb;
+	BasicBlock* return_bb;
+	int nextBBnumber; 
+
+
+	/****Gestion de l'asm ****/
 
 	// x86 code generation: could be encapsulated in a processor class in a retargetable compiler
-	void gen_asm(ostream& o, int size, functionTable *fonctionTable);
+	void gen_asm(ostream& o);
 	string IR_reg_to_asm(int index); /**< helper method: inputs a IR reg or input variable, returns e.g. "-24(%rbp)" for the proper value of 24 */
 	void gen_asm_prologue(ostream& o);
-	void gen_asm_epilogue(ostream& o,int size);
+	void gen_asm_epilogue(ostream& o);
 
-	// symbol table methods
+	/****Gestion de la table des symboles *****/
 	void add_to_symbol_table(string name, Type t, int line,int nbAlloc=1);
+
 	void redeclarationError(int linectr, string name);
 	void erreurVariableNonDeclare(string name, int linectr);
 	void erreurNegativeTabSize(string name, int linectr);
 	void erreurScalarObject(string name, int linectr);
 	void erreurInvalidInitializer(int linectr);
+	void errorlvalMisPlaced(int currentLine);
+	void warningVarNotUsed();
+
 	string create_new_tempvar(Type t, string blockName, int line,int nbAlloc=1);
 	string create_new_tempvar_function(Type t, string var, size_t line, int nbAlloc=1);
-	fonction *getFonction();
+
 	int get_var_index(string name);
 	Type get_var_type(string name);
 	void set_var_used(string name, bool used);
 	void set_var_type(string name, Type type);
 
-	// basic block management
-	string new_BB_name(string name);
-	BasicBlock* current_bb;
-	BasicBlock* return_bb;
-	int nextBBnumber; /**< just for naming */
+	
+	/****Gestion de la fonction du CFG *****/
+		
+	fonction *getFonction();
 
 	//return called
 	bool get_returnCalled();
@@ -167,13 +188,19 @@ class CFG {
 
 	//setters
 	void setFonction(fonction *fonction);
+
+	void warningReturnVoid(int linectr);
+
+	
 	
  protected:
-	int nextFreeSymbolIndex; /**< to allocate new symbols in the symbol table */
 	symbolTable* symboleTable;
+	int nextFreeSymbolIndex; /**< to allocate new symbols in the symbol table */
+	
 	fonction *function;
-	bool returnCalled = false;
 
+
+	bool returnCalled = false; //savoir si un return a été fait au milieu du programme
 	
 	vector <BasicBlock*> bbs; /**< all the basic blocks of this CFG*/
 	

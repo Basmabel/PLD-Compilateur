@@ -91,7 +91,7 @@ class  ValeurVisitor : public ifccBaseVisitor {
 		int getLastValForVar(string name);
 		string create_new_tempvar(int val);
 
-		int linectr = 0;
+		int currentLine = 0;
 		bool declaration = false;
 		int nbNewVar = 1;
 

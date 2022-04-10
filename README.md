@@ -21,7 +21,9 @@ For information on how to use the compiler, we invite you to read the user docum
 
 ## 3. Prerequisites
 ### A) User mode
+Read user documentation.
 In order to use the ifcc compiler, you need to have a Linux environment, and an Intel processor as the assembly language destination is `x86`.
+Read user documentation.
 
 ### B) Developper mode
 If you want to complete our work by adding features to our compiler for example, you have to first clone the git repo, and have a valid Antlr4 installation on your computer according to your environment :
@@ -31,15 +33,17 @@ If you want to complete our work by adding features to our compiler for example,
 - `Ubuntu` or `WSL/Ubuntu` machine : install the packages indicated in the beginning of the file ./compiler/runmake_ubuntu.sh, to compile use the script ./compiler/runmake_ubuntu.sh. Warning under WSL, to be able to use the derivation tree display feature, you will have to install the GWSL package from Microsoft Store. In case the tests fail, try the following command "dos2unix ifcc-wrapper.sh". You may need to install dos2unix using the command "sudo apt dos2unix".
 - Other `Linux` distribution: look if the distribution offers packages for Antlr4 and Antlr4-runtime, if so you will avoid recompiling everything. For example under Fedora, these are the antlr4, antlr4-cpp-runtime and antlr4-cpp-runtime-devel packages. Otherwise run the script ./install-antlr.sh.
 
+Read Developper documentation.
+
 ## 4. Features suported
 ### A) Types
 - `int`
 - `char`
 - `void`
 
-### B) Operators
-- Plus / Minus / Multiply / Divide
-- AND / OR / XOR
+### B) Operators supported
+- Plus(+) / Minus(-) / Multiply(*) / Divide(/)
+- AND(&) / OR(|) / NOT (!)
 - < / > / <= / >= / == / != / =
 
 ### C) Structures
@@ -111,11 +115,11 @@ A test environment is located in the tests subdirectory and allows the automatio
 
 In order to run the tests already implemented, you have to execute depending of your configuration :
 
- - If you are on WSL or MacOs :
+ - If you are on WSL/Ubuntu  :
 ``` 
 $ python3 ifcc-test.py tests/testfiles
 ```
- - If you are on Ubuntu : 
+ - If you are on VMWare Horizon with Linux-2D : 
 ``` 
 $ ./ifcc-test tests/testfiles
 ```

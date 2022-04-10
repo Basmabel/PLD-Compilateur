@@ -24,7 +24,7 @@ If you want to complete our work by adding features to our compiler for example,
 
 - `BV VMWare Horizon` on Linux-2D : you don't have to do anything everything is already installed, to compile use the script ./compiler/runmake_fedora.sh
 - `MacOS` : use the script ./install-antlr.sh, to compile use directly make in ./compiler/
-- `Ubuntu` or `WSL/Ubuntu` machine : install the packages indicated in the beginning of the file ./compiler/runmake_ubuntu.sh, to compile use the script ./compiler/runmake_ubuntu.sh. Warning under WSL, to be able to use the derivation tree display feature, you will have to install the GWSL package from Microsoft Store.
+- `Ubuntu` or `WSL/Ubuntu` machine : install the packages indicated in the beginning of the file ./compiler/runmake_ubuntu.sh, to compile use the script ./compiler/runmake_ubuntu.sh. Warning under WSL, to be able to use the derivation tree display feature, you will have to install the GWSL package from Microsoft Store. In case the tests fail, try the following command "dos2unix ifcc-wrapper.sh". You may need to install dos2unix using the command "sudo apt dos2unix".
 - Other `Linux` distribution: look if the distribution offers packages for Antlr4 and Antlr4-runtime, if so you will avoid recompiling everything. For example under Fedora, these are the antlr4, antlr4-cpp-runtime and antlr4-cpp-runtime-devel packages. Otherwise run the script ./install-antlr.sh.
 
 ## 4. Features suported

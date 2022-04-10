@@ -1,7 +1,11 @@
 # `ifcc` : Compiler for a subset of the C language
 
 ## 1. Abstract
-This document details how to use the ifcc compiler. `ifcc` is a compiler built to compile a subset of the C language, which we define in our `ifcc.g4` grammar. Our compiler translates the instructions in C language to `x86` assembly language, and has been written with the framework `Antlr4` with the C++ langage. It has been constrcuted through an agile project management with short sprints.
+This document details how to use the ifcc compiler. `ifcc` is a compiler built to compile a subset of the C language, which we define in our `ifcc.g4` grammar. 
+
+Our compiler translates the instructions in C language to `x86` assembly language, and has been written with the framework `Antlr4` with the C++ langage. It has been constrcuted through an agile project management with short sprints.
+
+For information on how to use the compiler, we invite you to read the user documentation, and if you want to know how the compiler was coded and the development choices made, we invite you to read the developer documentation.
 
 ## 2. Team Members
 - ALAMI Meryem : meryem.alami-kasri@insa-lyon.fr
@@ -53,24 +57,33 @@ $ ifcc file.c
 ## 6. Code exemples
 Here are some examples of the code that our compiler is able to manage :
 
-**Fibbonnaci recursive function**
+**Selection sort of an array**
 ```c
+#include <stdio.h>
 
-int fibbonacci(int n) {
-   if(n == 0){
-      return 0;
-   } else if(n == 1) {
-      return 1;
-   } else {
-      return (fibbonacci(n-1) + fibbonacci(n-2));
-   }
-}
-
-int main() {
-  int n,m;
-  n = 5;
-  m = fibbonacci(n);
-  return m;
+int main(){
+    int array[3];
+    int size = 3;
+    array[0] = 4;
+    array[1] = 7;
+    array[2] = 3;
+    int step, i = 0;
+    while(step<size){
+        int min_idx = step;
+        i = step + 1;
+        while(i<size){
+            if (array[i] < array[min_idx]){
+                min_idx = i;
+                }else{}
+            i =i + 1;
+        }
+        int temp;
+        temp = array[min_idx];
+        array[min_idx] = array[step];
+        array[step] = temp;
+        step = step + 1;
+    }
+    return array[0];
 }
 ```
 **Computing of the power function for positive integers**
